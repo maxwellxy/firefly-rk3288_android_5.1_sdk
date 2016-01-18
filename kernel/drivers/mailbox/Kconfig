@@ -1,0 +1,41 @@
+menuconfig MAILBOX
+	bool "Mailbox Hardware Support"
+	help
+	  Mailbox is a framework to control hardware communication between
+	  on-chip processors through queued messages and interrupt driven
+	  signals. Say Y if your platform supports hardware mailboxes.
+
+if MAILBOX
+config PL320_MBOX
+	bool "ARM PL320 Mailbox"
+	depends on ARM_AMBA
+	help
+	  An implementation of the ARM PL320 Interprocessor Communication
+	  Mailbox (IPCM), tailored for the Calxeda Highbank. It is used to
+	  send short messages between Highbank's A9 cores and the EnergyCore
+	  Management Engine, primarily for cpufreq. Say Y here if you want
+	  to use the PL320 IPCM support.
+
+config ROCKCHIP_MAILBOX
+	bool "Rockchip Soc Intergrated Mailbox Support"
+	depends on ARCH_ROCKCHIP
+	help
+	  This driver provides support for inter-processor communication
+	  between CPU cores and MCU processor on Some Rockchip SOCs.
+	  Please check it that the Soc you use have Mailbox hardware.
+		Say Y here if you want to use the Rockchip Mailbox support.
+
+config SCPI_PROTOCOL
+        bool "ARM System Control and Power Interface (SCPI) Message Protocol"
+        select ROCKCHIP_MBOX
+        help
+          System Control and Power Interface (SCPI) Message Protocol is
+          defined for the purpose of communication between the Application
+          Cores(AP) and the System Control Processor(SCP). The mailbox
+          provides a mechanism for inter-processor communication between SCP
+          and AP.
+
+          This protocol library provides interface for all the client drivers
+          making use of the features offered by the SCP.
+
+endif

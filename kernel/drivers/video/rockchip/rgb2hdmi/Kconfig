@@ -1,0 +1,6 @@
+
+config FIREFLY_RGB2HDMI
+        bool "Firefly RGB2HDMI Out support"
+        help
+          Support Firefly rgb2hdmi if you say y here
+

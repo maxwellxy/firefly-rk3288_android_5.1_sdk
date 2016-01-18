@@ -1,0 +1,27 @@
+config ARCH_ROCKCHIP
+	bool "Rockchip SoCs" if ARCH_MULTI_V7
+	select PIE
+	select PINCTRL
+	select PINCTRL_ROCKCHIP
+	select ARCH_REQUIRE_GPIOLIB
+	select ARM_GIC
+	select CACHE_L2X0
+	select HAVE_ARM_SCU if SMP
+	select HAVE_ARM_TWD if LOCAL_TIMERS
+	select HAVE_ARM_ARCH_TIMER
+	select HAVE_SMP
+	select LOCAL_TIMERS if SMP
+	select COMMON_CLK
+	select GENERIC_CLOCKEVENTS
+	select CLKSRC_OF if OF
+	select ARCH_HAS_CPUFREQ
+	select ARCH_HAS_OPP
+	select ARM_AMBA
+	select DMADEVICES
+	select PL330_DMA
+	select FIQ_GLUE
+	select ARM_ERRATA_818325 if !ARM_TRUSTZONE
+	select ARM_ERRATA_821420 if !ARM_TRUSTZONE
+	select MFD_SYSCON
+
+source "arch/arm/mach-rockchip/Kconfig.common"

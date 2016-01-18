@@ -1,0 +1,238 @@
+/*
+ * Copyright (C) 2014 Firefly, Inc.
+ * arch/arm/boot/dts/lcd-ips5k0350fpc-mipi.dtsi
+ * create date: 2014-04-15
+ * lcd model: ips5k0350fpc
+ * resolution: 1080X1920
+ * mipi channel: single 
+ */
+
+/ {
+	backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm1 0 10000>;
+		rockchip,pwm_id= <1>;
+		/* | dark(255-221) | light scale(220-0) | , scale_div=255*/
+		brightness-levels = </*255 254 253 252 251 250 249 248 247 246 245 244 243 242 241 240 239 238 237 236 235 234 233 232 231 230 229 228 227 226 225 224 223 222 221 220 219 218 217 216 215 */214 213 212 211 210 209 208 207 206 205 204 203 202 201 200 199 198 197 196 195 194 193 192 191 190 189 188 187 186 185 184 183 182 181 180 179 178 177 176 175 174 173 172 171 170/* 169 168 167 166 165 164 163 162 161 160 159 158 157 156 155 154 153 152 151 150 149 148 147 146 145 144 143 142 141 140 139 138 137 136 135 134 133 132 131 130 129 128 127 126 125 124 123 122 121 120 119 118 117 116 115 114 113 112 111 110 109 108 107 106 105 104 103 102 101 100 99 98 97 96 95 94 93 92 91 90 89 88 87 86 85 84 83 82 81 80 79 78 77 76 75 74 73 72 71 70 69 68 67 66 65 64 63 62 61 60 59 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0*/>;
+		default-brightness-level = <180>;
+		enable-gpios = <&gpio8 GPIO_A6 GPIO_ACTIVE_HIGH>;
+	};
+
+		/* about mipi */
+		disp_mipi_init: mipi_dsi_init{
+					compatible = "rockchip,mipi_dsi_init";
+					rockchip,screen_init	= <1>;
+					rockchip,dsi_lane		= <4>;
+					rockchip,dsi_hs_clk		= <1000>;
+					rockchip,mipi_dsi_num	= <1>;
+		};
+		disp_mipi_power_ctr: mipi_power_ctr {
+					compatible = "rockchip,mipi_power_ctr";
+					mipi_lcd_rst:mipi_lcd_rst{
+							compatible = "rockchip,lcd_rst";
+							rockchip,gpios = <&gpio0 GPIO_B5 GPIO_ACTIVE_LOW>;
+							rockchip,delay = <10>;
+					};
+					mipi_lcd_en:mipi_lcd_en {
+							compatible = "rockchip,lcd_en";
+							rockchip,gpios = <&gpio7 GPIO_A3 GPIO_ACTIVE_HIGH>;
+							rockchip,delay = <10>;
+					};
+
+		};
+		disp_mipi_init_cmds: screen-on-cmds {
+					rockchip,cmd_debug = <0>;
+					compatible = "rockchip,screen-on-cmds";
+					
+					rockchip,on-cmds1 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xB0 0x04>;
+							rockchip,cmd_delay = <0>;
+					};
+
+					rockchip,on-cmds2 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x05 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+
+					rockchip,on-cmds3 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x05 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+		
+					rockchip,on-cmds4 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xB3 0x14 0x00 0x00 0x00 0x00 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds5 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xB6 0x3A 0xC3>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds6 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC0 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds7 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC1 0x84 0x60 0x10 0xEB 0xFF 0x6F 0xCE 0xFF 0xFF 0x17 0x12 0x58 0x73 0xAE 0x31 0x20 0xC6 0xFF 0xFF 0x1F 0xF3 0xFF 0x5F 0x10 0x10 0x10 0x10 0x00 0x62 0x01 0x22 0x22 0x00 0x01>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds8 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC2 0x31 0xF7 0x80 0x06 0x08 0x80 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds9 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC4 0x70 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x0C 0x06 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x0C 0x06>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds10 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC6 0xC8 0x08 0x67 0x08 0x67 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x16 0x18 0x08 0xC8 0x08 0x67 0x08 0x67 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x16 0x18 0x08>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds11 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC7 0x00 0x10 0x13 0x1E 0x2E 0x3C 0x47 0x54 0x3B 0x40 0x4A 0x5F 0x68 0x70 0x75 0x00 0x10 0x13 0x1E 0x2E 0x3C 0x47 0x54 0x3B 0x40 0x4A 0x5F 0x68 0x70 0x75>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds12 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xC8 0x00 0x00 0x00 0x00 0x00 0xFC 0x00 0x00 0x00 0x00 0x00 0xFC 0x00 0x00 0x00 0x00 0x00 0xFC 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds13 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xCB 0x31 0xFC 0x3F 0x8C 0x00 0x00 0x00 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					rockchip,on-cmds14 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xD0 0x11 0x81 0xBB 0x19 0x99 0x4C 0x19 0x19 0x0C 0x00>;
+							rockchip,cmd_delay = <0>;
+					};
+					
+					rockchip,on-cmds15 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xD3 0x1B 0x33 0xBB 0xBB 0xB3 0x33 0x33 0x33 0x01 0x01 0x00 0xA0 0xD8 0xA0 0x0D 0x4A 0x4A 0x44 0x3B 0x37 0x72 0x07 0x3D 0xBF 0x33>;
+							rockchip,cmd_delay = <0>;
+					};	
+					
+					rockchip,on-cmds16 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xD5 0x06 0x00 0x00 0x01 0x3A 0x01 0x3A>;
+							rockchip,cmd_delay = <0>;
+					};
+					
+					rockchip,on-cmds17 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xD5 0x06 0x00 0x00 0x01 0x3A 0x01 0x3A>;
+							rockchip,cmd_delay = <0>;
+					};
+
+					rockchip,on-cmds18 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xCC 0x0B>;
+							rockchip,cmd_delay = <0>;
+					};
+
+					rockchip,on-cmds19 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x29 0xD6 0x01>;
+							rockchip,cmd_delay = <0>;
+					};
+					
+					rockchip,on-cmds20 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x05 0x29>;
+							rockchip,cmd_delay = <0>;
+					};
+
+					rockchip,on-cmds21 {
+							compatible = "rockchip,on-cmds";
+							rockchip,cmd_type = <LPDT>;
+							rockchip,dsi_id = <0>;
+							rockchip,cmd = <0x05 0x11>;
+							rockchip,cmd_delay = <200>;
+					};
+		};
+
+		disp_timings: display-timings {
+                        native-mode = <&timing0>;
+                        compatible = "rockchip,display-timings";
+                        timing0: timing0 {
+				screen-type = <SCREEN_MIPI>;
+				lvds-format = <LVDS_8BIT_2>;
+				out-face    = <OUT_P888>;
+				color-mode = <COLOR_RGB>;
+				clock-frequency = <120000000>;
+				hactive = <1080>;
+				vactive = <1920>;
+				hsync-len = <20>;
+				hback-porch = <60>;
+				hfront-porch = <90>;
+				
+				vsync-len = <2>;
+				vback-porch = <4>;
+				vfront-porch = <8>;
+				
+				hsync-active = <1>;
+				vsync-active = <1>;
+				de-active = <0>;
+				pixelclk-active = <1>;
+				swap-rb = <0>;
+				swap-rg = <0>;
+				swap-gb = <0>;
+                     	};
+               };
+};
+
+&dsihost0 {
+	status = "okay";
+};
