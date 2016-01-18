@@ -1,0 +1,917 @@
+<?xml version="1.0" ?>
+<BoardFile>
+		<BoardXmlVersion version="v0.0xd.0">
+		</BoardXmlVersion>
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="OV8825" ></SensorName>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1B"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB5" active="0"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="back"></SensorFacing>
+					<SensorInterface interface="MIPI"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Mipi" lane="2"  phyIndex="0" sensorFmt="CamSys_Fmt_Raw_10b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="BuiltInSensor"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="3"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="20" rated="80" vcmmax="100" stepmode="13"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="Internal"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="0"></FlashTrigger>
+					<FlashEn ioname="NC" active="0"></FlashEn>
+					<FlashModeType mode="1"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="1"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="1"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="1"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="1"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="1"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="1"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="1920" height="1080"></PreviewSize>
+				<FaceDetect support="0" MaxNum="1"></FaceDetect>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="0"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="1"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="1"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="OV8858" ></SensorName>
+					<SensorLens name="LG-9569A2"></SensorLens>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1B"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB5" active="0"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="back"></SensorFacing>
+					<SensorInterface interface="MIPI"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Mipi" lane="2"  phyIndex="0" sensorFmt="CamSys_Fmt_Raw_10b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="BuiltInSensor"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="3"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="0" rated="100" vcmmax="100" stepmode="4"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="Internal"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="0"></FlashTrigger>
+					<FlashEn ioname="NC" active="0"></FlashEn>
+					<FlashModeType mode="1"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="1"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="1"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="1"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="1"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="1"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="1"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="0" height="0"></PreviewSize>
+				<FaceDetect support="0" MaxNum="1"></FaceDetect>
+				<Cproc support="1" contrast="1.1" saturation="1.0" hue="0" brightness="0"></Cproc>
+				<Gammaout support = "0" gamma = "1.0" offset = "0"></Gammaout>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="0"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="1"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="1"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+        <CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="OV5648" ></SensorName>
+					<SensorLens name="CHT-842B-MD"></SensorLens>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1B"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB5" active="0"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="back"></SensorFacing>
+					<SensorInterface interface="MIPI"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Mipi" lane="2"  phyIndex="0" sensorFmt="CamSys_Fmt_Raw_10b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="BuiltInSensor"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="3"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="0" rated="100" vcmmax="100" stepmode="4"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="Internal"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="0"></FlashTrigger>
+					<FlashEn ioname="NC" active="0"></FlashEn>
+					<FlashModeType mode="1"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="1"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="1"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="1"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="1"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="1"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="1"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="0" height="0"></PreviewSize>
+				<FaceDetect support="0" MaxNum="1"></FaceDetect>
+				<Cproc support="1" contrast="1.1" saturation="1.0" hue="0" brightness="0"></Cproc>
+
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="0"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="1"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="1"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>		
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="OV2659" ></SensorName>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1A"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB4" active="1"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="front"></SensorFacing>
+					<SensorInterface mode="CCIR601"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Cif" sensor_d0_to_cif_d ="4" cif_num="0" sensorFmt="CamSys_Fmt_Raw_12b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="NC"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="0"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="20" rated="80" vcmmax="100" stepmode="13"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="NC"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="1"></FlashTrigger>
+					<FlashEn ioname="NC" active="1"></FlashEn>
+					<FlashModeType mode="0"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>					
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="0"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="0"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="0"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="0"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="0"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="0"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="800" height="600"></PreviewSize>
+				<FaceDetect support="0" MaxNum="0"></FaceDetect>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="1"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="0"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="0"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="GC2155" ></SensorName>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1A"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB4" active="1"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="front"></SensorFacing>
+					<SensorInterface mode="CCIR601"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Cif" sensor_d0_to_cif_d ="4" cif_num="0" sensorFmt="CamSys_Fmt_Raw_12b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="NC"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="0"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="20" rated="80" vcmmax="100" stepmode="13"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="NC"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="1"></FlashTrigger>
+					<FlashEn ioname="NC" active="1"></FlashEn>
+					<FlashModeType mode="0"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>					
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="0"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="0"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="0"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="0"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="0"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="0"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="800" height="600"></PreviewSize>
+				<FaceDetect support="0" MaxNum="0"></FaceDetect>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="1"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="0"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="0"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="OV2680" ></SensorName>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1B"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB4" active="1"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="back"></SensorFacing>
+					<SensorInterface mode="CCIR601"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Cif" sensor_d0_to_cif_d ="4" cif_num="0" sensorFmt="CamSys_Fmt_Raw_12b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="NC"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="0"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="20" rated="80" vcmmax="100" stepmode="13"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="NC"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="1"></FlashTrigger>
+					<FlashEn ioname="NC" active="1"></FlashEn>
+					<FlashModeType mode="0"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>					
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="0"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="0"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="0"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="0"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="0"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="0"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="800" height="600"></PreviewSize>
+				<FaceDetect support="0" MaxNum="0"></FaceDetect>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="1"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="0"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="0"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+		<CamDevie>
+			<HardWareInfo>
+				<Sensor>
+					<SensorName name="GS8604"></SensorName>
+		`			<SensorLens name="9569A2"></SensorLens>
+					<SensorDevID IDname="CAMSYS_DEVID_SENSOR_1B"></SensorDevID>
+					<SensorHostDevID busnum="CAMSYS_DEVID_MARVIN" ></SensorHostDevID>
+					<SensorI2cBusNum busnum="3"></SensorI2cBusNum>
+					<SensorI2cAddrByte byte="2"></SensorI2cAddrByte>
+					<SensorI2cRate rate="100000"></SensorI2cRate>
+					<SensorMclk mclk="24000000"></SensorMclk>
+					<SensorAvdd name="NC" min="0" max="0"></SensorAvdd>
+					<SensorDovdd name="NC" min="18000000" max="18000000"></SensorDovdd>
+					<SensorDvdd name="NC" min="0" max="0"></SensorDvdd>
+					<SensorGpioPwdn ioname="RK30_PIN1_PB5" active="0"></SensorGpioPwdn>
+					<SensorGpioRst ioname="NC" active="0"></SensorGpioRst>
+					<SensorGpioPwen ioname="RK30_PIN0_PD0" active="1"></SensorGpioPwen>
+					<SensorFacing facing="back"></SensorFacing>
+					<SensorInterface interface="MIPI"></SensorInterface>
+					<SensorMirrorFlip mirror="0"></SensorMirrorFlip>
+					<SensorOrientation orientation="0"></SensorOrientation>
+					<SensorPowerupSequence seq="1234"></SensorPowerupSequence>					
+					<SensorFovParemeter h="60.0" v="60.0"></SensorFovParemeter>
+					<SensorAWB_Frame_Skip fps="15"></SensorAWB_Frame_Skip>					
+					<SensorPhy phyMode="CamSys_Phy_Mipi" lane="2"  phyIndex="0" sensorFmt="CamSys_Fmt_Raw_10b"></SensorPhy>
+				</Sensor>
+				<VCM>
+					<VCMDrvName name="BuiltInSensor"></VCMDrvName>
+					<VCMName name="NC"></VCMName>
+					<VCMI2cBusNum busnum="3"></VCMI2cBusNum>
+					<VCMI2cAddrByte byte="0"></VCMI2cAddrByte>
+					<VCMI2cRate rate="0"></VCMI2cRate>
+					<VCMVdd name="NC" min="0" max="0"></VCMVdd>
+					<VCMGpioPwdn ioname="NC" active="0"></VCMGpioPwdn>
+					<VCMGpioPower ioname="NC" active="0"></VCMGpioPower>
+					<VCMCurrent start="0" rated="100" vcmmax="100" stepmode="4"  drivermax="100"></VCMCurrent>
+				</VCM>
+				<Flash>
+					<FlashName name="Internal"></FlashName>
+					<FlashI2cBusNum busnum="0"></FlashI2cBusNum>
+					<FlashI2cAddrByte byte="0"></FlashI2cAddrByte>
+					<FlashI2cRate rate="0"></FlashI2cRate>
+					<FlashTrigger ioname="NC" active="0"></FlashTrigger>
+					<FlashEn ioname="NC" active="0"></FlashEn>
+					<FlashModeType mode="1"></FlashModeType>
+					<FlashLuminance luminance="0"></FlashLuminance>
+					<FlashColorTemp colortemp="0"></FlashColorTemp>
+				</Flash>
+			</HardWareInfo>
+			<SoftWareInfo>
+				<AWB>
+					<AWB_Auto support="1"></AWB_Auto>
+					<AWB_Incandescent support="1"></AWB_Incandescent>
+					<AWB_Fluorescent support="1"></AWB_Fluorescent>
+					<AWB_Warm_Fluorescent support="1"></AWB_Warm_Fluorescent>
+					<AWB_Daylight support="1"></AWB_Daylight>
+					<AWB_Cloudy_Daylight support="1"></AWB_Cloudy_Daylight>
+					<AWB_Twilight support="1"></AWB_Twilight>
+					<AWB_Shade support="1"></AWB_Shade>
+				</AWB>
+				<Sence>
+					<Sence_Mode_Auto support="1"></Sence_Mode_Auto>
+					<Sence_Mode_Action support="1"></Sence_Mode_Action>
+					<Sence_Mode_Portrait support="1"></Sence_Mode_Portrait>
+					<Sence_Mode_Landscape support="1"></Sence_Mode_Landscape>
+					<Sence_Mode_Night support="1"></Sence_Mode_Night>
+					<Sence_Mode_Night_Portrait support="1"></Sence_Mode_Night_Portrait>
+					<Sence_Mode_Theatre support="1"></Sence_Mode_Theatre>
+					<Sence_Mode_Beach support="1"></Sence_Mode_Beach>
+					<Sence_Mode_Snow support="1"></Sence_Mode_Snow>
+					<Sence_Mode_Sunset support="1"></Sence_Mode_Sunset>
+					<Sence_Mode_Steayphoto support="1"></Sence_Mode_Steayphoto>
+					<Sence_Mode_Pireworks support="1"></Sence_Mode_Pireworks>
+					<Sence_Mode_Sports support="1"></Sence_Mode_Sports>
+					<Sence_Mode_Party support="1"></Sence_Mode_Party>
+					<Sence_Mode_Candlelight support="1"></Sence_Mode_Candlelight>
+					<Sence_Mode_Barcode support="1"></Sence_Mode_Barcode>
+					<Sence_Mode_HDR support="1"></Sence_Mode_HDR>
+				</Sence>
+				<Effect>
+					<Effect_None support="1"></Effect_None>
+					<Effect_Mono support="1"></Effect_Mono>
+					<Effect_Solarize support="1"></Effect_Solarize>
+					<Effect_Negative support="1"></Effect_Negative>
+					<Effect_Sepia support="1"></Effect_Sepia>
+					<Effect_Posterize support="1"></Effect_Posterize>
+					<Effect_Whiteboard support="1"></Effect_Whiteboard>
+					<Effect_Blackboard support="1"></Effect_Blackboard>
+					<Effect_Aqua support="1"></Effect_Aqua>
+				</Effect>
+				<FocusMode>
+					<Focus_Mode_Auto support="1"></Focus_Mode_Auto>
+					<Focus_Mode_Infinity support="1"></Focus_Mode_Infinity>
+					<Focus_Mode_Marco support="1"></Focus_Mode_Marco>
+					<Focus_Mode_Fixed support="1"></Focus_Mode_Fixed>
+					<Focus_Mode_Edof support="1"></Focus_Mode_Edof>
+					<Focus_Mode_Continuous_Video support="0"></Focus_Mode_Continuous_Video>
+					<Focus_Mode_Continuous_Picture support="0"></Focus_Mode_Continuous_Picture>
+				</FocusMode>
+				<FlashMode>
+					<Flash_Mode_Off support="1"></Flash_Mode_Off>
+					<Flash_Mode_On support="1"></Flash_Mode_On>
+					<Flash_Mode_Torch support="1"></Flash_Mode_Torch>
+					<Flash_Mode_Auto support="1"></Flash_Mode_Auto>
+					<Flash_Mode_Red_Eye support="1"></Flash_Mode_Red_Eye>
+				</FlashMode>
+				<AntiBanding>
+					<Anti_Banding_Auto support="1"></Anti_Banding_Auto>
+					<Anti_Banding_50HZ support="1"></Anti_Banding_50HZ>
+					<Anti_Banding_60HZ support="1"></Anti_Banding_60HZ>
+					<Anti_Banding_Off support="1"></Anti_Banding_Off>
+				</AntiBanding>
+				<HDR support="1"></HDR>
+				<ZSL support="1"></ZSL>
+				<DigitalZoom support="1"></DigitalZoom>
+				<Continue_SnapShot support="1"></Continue_SnapShot>
+				<InterpolationRes resolution="0"></InterpolationRes>
+				<PreviewSize width="0" height="0"></PreviewSize>
+				<FaceDetect support="0" MaxNum="1"></FaceDetect>
+				<Cproc support="0" contrast="1.1" saturation="1.0" hue="0" brightness="0"></Cproc>
+				<Gammaout support = "0" gamma = "1.0" offset = "0"></Gammaout>
+				<DV>
+					<DV_QCIF name="qcif" width="176" height="144" fps="10" support="1"></DV_QCIF>
+					<DV_QVGA name="qvga" width="320" height="240" fps="10" support="1"></DV_QVGA>
+					<DV_CIF name="cif" width="352" height="288" fps="10" support="1"></DV_CIF>
+					<DV_VGA name="480p" width="640" height="480" fps="10" support="0"></DV_VGA>
+					<DV_480P name="480p" width="720" height="480" fps="10" support="0"></DV_480P>
+					<DV_720P name="720p" width="1280" height="720" fps="10" support="1"></DV_720P>
+					<DV_1080P name="1080p" width="1920" height="1080" fps="10" support="1"></DV_1080P>
+				</DV>
+			</SoftWareInfo>
+		</CamDevie>
+</BoardFile>

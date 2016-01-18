@@ -1,0 +1,53 @@
+Usage information for the mlsl driver self-test
+-----------------------------------------------
+
+The driver self-test is intended to help check the correctness
+of mlsl on new platforms.  It performs a variety of tests in
+an attempt to test the interface between the host processor
+and the MPU.
+
+1. Building the self-test application:
+
+The driver self-test code should be compiled into an executable
+with the included Makefile.
+The resulting executable should be deployed to the target device.
+
+2. Using the self-test application
+
+The self-test application takes several command line arguments.
+
+2.1 Required arguments:
+
+2.2 Optional arguments
+
+  -a 0xXX : where XX is the address of the accelerometer
+  -d 0xXX : where XX is the first register on the accelerometer 
+			that contains sensor data
+  -l 0xXX : where XX is the number of sensor data registers
+  -w 0xXX : where XX is the expected value of the whoami register on the MPU
+             the default is 0x68
+
+2.3 Helper & Flags
+
+  -h : print help summary
+  -v : verbose mode, lots of output from the tests
+  -f : abort after the first failed test. 
+ 	   By default it will continue until the end and exit.
+
+2.3 Example usage
+
+   ./driver_self_test -a 0x18 -d 0x02 -l 0x06
+
+2.4 Test output
+
+   The self-test application outputs its results to both the console and a 
+   test report file.  The output file is called test_report.txt.  For each test,
+   the output contains a short description of the test and an indication as
+   to whether the test passed or failed.  Not all tests may be implemented for
+   all platforms.  The self-test application will indicate which tests are 
+   unimplemented; these tests will be marked as failed.
+
+   When all implemented tests pass, the mlsl should be considered ready for use
+   with the mpl.
+
+

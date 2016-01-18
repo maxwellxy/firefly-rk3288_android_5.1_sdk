@@ -1,0 +1,11 @@
+--- mllite/mlFIFO.c	(revision 6215)
++++ mllite/mlFIFO.c	(revision 6240)
+@@ -689,7 +689,7 @@
+                 }
+                 return result;
+             }
+-            if (MPL_LOG_NDEBUG)
++            if (!MPL_LOG_NDEBUG)
+                 print_debug_dmp_output(buf, read);
+             result = inv_process_fifo_packet(buf);
+             if (result) {

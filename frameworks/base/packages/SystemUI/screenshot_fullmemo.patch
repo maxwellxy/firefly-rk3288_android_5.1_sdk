@@ -1,0 +1,68 @@
+commit b203731f3748e1a87b2b5b0709f020bc7abdb332
+Author: lixiong <lx@mid-server3.(none)>
+Date:   Tue Jun 30 19:48:21 2015 +0800
+
+    modify screenshot when memory is full
+
+diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/GlobalScreenshot.java b/packages/SystemUI/src/com/android/systemui/screenshot/GlobalScreenshot.java
+index b673dd6..7997cbb 100755
+--- a/packages/SystemUI/src/com/android/systemui/screenshot/GlobalScreenshot.java
++++ b/packages/SystemUI/src/com/android/systemui/screenshot/GlobalScreenshot.java
+@@ -71,6 +71,7 @@ import java.io.FileOutputStream;
+ import java.io.FileNotFoundException;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
++import android.os.StatFs;
+ /**
+  * POD used in the AsyncTask which saves an image in the background.
+  */
+@@ -127,7 +128,6 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
+     SaveImageInBackgroundTask(Context context, SaveImageInBackgroundData data,
+             NotificationManager nManager, int nId) {
+         Resources r = context.getResources();
+-
+         // Prepare all the output metadata
+         mImageTime = System.currentTimeMillis();
+         String imageDate = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date(mImageTime));
+@@ -144,6 +144,15 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
+             mImageFilePath = String.format(SCREENSHOT_FILE_PATH_TEMPLATE_UMS, imageDir,
+                     SCREENSHOTS_DIR_NAME, mImageFileName);
+         }
++		//判断内存是否满
++		StatFs stat = new StatFs(imageDir);
++        long blockSize = stat.getBlockSize();
++        long availableBlocks = stat.getAvailableBlocks();
++        long rest =  availableBlocks * blockSize;	
++		int memoryCount = data.image.getByteCount();
++		if(rest <= memoryCount) {
++        	data.result = 3;
++        }
+         // Create the large notification icon
+         mImageWidth = data.image.getWidth();
+         mImageHeight = data.image.getHeight();
+@@ -244,6 +253,9 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
+             params[0].clearContext();
+             return null;
+         }
++		if(params[0].result == 3) {
++			return params[0];
++        }
+ 
+         // By default, AsyncTask sets the worker thread to have background thread priority, so bump
+         // it back up so that we save a little quicker.
+@@ -265,7 +277,6 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
+                     mScreenshotumsDir = new File(String.format("%s/%s", imageDir,SCREENSHOTS_DIR_NAME));
+ 		}	
+                     mScreenshotumsDir.mkdirs();
+-
+             saveMyBitmap(image,mImageFilePath);
+ 	    File f = new File(mImageFilePath);
+ 	    long len=f.length();
+@@ -343,7 +354,6 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
+             params.clearContext();
+             return;
+         }
+-
+         if (params.result > 0) {
+             // Show a message that we've failed to save the image to disk
+             GlobalScreenshot.notifyScreenshotError(params.context, mNotificationManager);

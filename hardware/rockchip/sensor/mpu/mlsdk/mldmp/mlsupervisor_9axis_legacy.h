@@ -1,0 +1,9 @@
+
+#ifndef __INV_SUPERVISOR_9X_LEGACY_H__
+#define __INV_SUPERVISOR_9X_LEGACY_H__
+
+#define MLEnable9axisFusion inv_enable_9x_fusion
+#define MLDisable9axisFusion inv_disable_9x_fusion
+#define MLMaintainHeading inv_maintain_heading
+
+#endif // __INV_SUPERVISOR_9X_LEGACY_H__

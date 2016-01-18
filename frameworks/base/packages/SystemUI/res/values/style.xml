@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="minWindowAnim" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/min_window_open</item>
+        <item name="android:windowExitAnimation">@anim/min_window_close</item>
+    </style>  
+</resources>

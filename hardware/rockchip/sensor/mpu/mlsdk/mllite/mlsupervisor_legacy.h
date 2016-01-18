@@ -1,0 +1,9 @@
+#ifdef INV_USE_LEGACY_NAMES
+#ifndef INV_MLSUPERVISOR_LEGACY_H__
+#define INV_MLSUPERVISOR_LEGACY_H__
+#define MLResetMagCalibration inv_reset_compass_calibration
+#define MLSensorFusionSupervisorInit inv_init_sensor_fusion_supervisor
+#define MLAccelCompassSupervisor inv_accel_compass_supervisor
+#define MLPressureSupervisor inv_pressure_supervisor
+#endif
+#endif

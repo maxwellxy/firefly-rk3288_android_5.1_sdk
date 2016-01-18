@@ -1,0 +1,28 @@
+\documentclass[a4paper, twoside]{book}
+
+\usepackage[utf8]{inputenc}
+\usepackage{dreamchip}
+
+
+\title{@DOXYGEN_LATEX_MODULE_NAME@ @DOXYGEN_LATEX_MODULE_TYPE_DESC@}
+\newcommand{\modulestate}{@DOXYGEN_LATEX_MODULE_STATE_DESC@}
+\author{Dream Chip Technologies GmbH}
+%\coauthor{X Y}
+\date{\today}
+
+
+\makeindex
+\setcounter{tocdepth}{3}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+
+\maketitlepage
+
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}

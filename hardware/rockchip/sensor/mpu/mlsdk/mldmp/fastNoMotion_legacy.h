@@ -1,0 +1,13 @@
+
+#ifndef __INV_FASTNOMOTION_LEGACY_H__
+#define __INV_FASTNOMOTION_LEGACY_H__
+
+#define InitFastNoMotion inv_init_fast_nomot
+#define FastNoMotionProcess inv_process_fast_nomot
+#define EnableFastNoMotion inv_enable_fast_nomot
+#define DisableFastNoMotion inv_disable_fast_nomot
+#define ProcessMotion inv_set_motion_state
+#define DetermineMotion inv_update_fast_nomot
+
+#endif // __INV_FASTNOMOTION_LEGACY_H__
+

@@ -1,0 +1,82 @@
+---- mPollFds Matches (82 in 4 files) ----
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    for (i = 0; i < (int)ARRAY_SIZE(mPollFds); i++) {
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[i].fd = -1;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[i].events = 0;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[MPUIRQ_FD].fd = mpu_int_fd;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[MPUIRQ_FD].events = POLLIN;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[ACCELIRQ_FD].fd = accel_fd;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[ACCELIRQ_FD].events = POLLIN;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[TIMERIRQ_FD].fd = timer_fd;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[TIMERIRQ_FD].events = POLLIN;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    poll(mPollFds, ARRAY_SIZE(mPollFds), 0); //check which ones need to be cleared
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    for (i = 0; i < ARRAY_SIZE(mPollFds); i++) {
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        int cur_fd = mPollFds[i].fd;
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        if (mPollFds[i].revents & POLLIN) {
+MPLSensor.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):        mPollFds[i].revents = 0;
+MPLSensor.h (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    struct pollfd mPollFds[4];
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    struct pollfd mPollFds[numFds];
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].fd = mSensors[mpl]->getFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].fd = ((MPLSensor*)mSensors[mpl])->getAccelFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].fd = ((MPLSensor*)mSensors[mpl])->getTimerFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[light].fd = mSensors[light]->getFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[light].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[light].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[proximity].fd = mSensors[proximity]->getFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[proximity].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[proximity].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[pressure].fd = mSensors[pressure]->getFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[pressure].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[pressure].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].fd = wakeFds[0];
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].fd = ((MPLSensor*)mSensors[mpl])->getPowerFd();
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].events = POLLIN;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    close(mPollFds[wake].fd);
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if ((mPollFds[i].revents & POLLIN) || (sensor->hasPendingEvents())) {
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[i].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_accel].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_timer].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_timer].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            n = poll(mPollFds, numFds, nbEvents ? 0 : polltime);
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if (mPollFds[wake].revents & POLLIN) {
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                int result = read(mPollFds[wake].fd, &msg, 1);
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                mPollFds[wake].revents = 0;
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if(mPollFds[mpl_power].revents & POLLIN) {
+Sensors.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                mPollFds[mpl_power].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    struct pollfd mPollFds[numFds];
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].fd = mSensors[mpl]->getFd();
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].events = POLLIN;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].fd = ((MPLSensor*)mSensors[mpl])->getAccelFd();
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].events = POLLIN;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_accel].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].fd = ((MPLSensor*)mSensors[mpl])->getTimerFd();
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].events = POLLIN;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_timer].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].fd = wakeFds[0];
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].events = POLLIN;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[wake].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].fd = ((MPLSensor*)mSensors[mpl])->getPowerFd();
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].events = POLLIN;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    mPollFds[mpl_power].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):    close(mPollFds[wake].fd);
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):			LOGD("%s:revents=0x%x\n",__func__,mPollFds[i].revents);
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if ((mPollFds[i].revents & POLLIN) || (sensor->hasPendingEvents())) {
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[i].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_accel].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_timer].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                    mPollFds[mpl_timer].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            n = poll(mPollFds, numFds, nbEvents ? 0 : polltime);
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if (mPollFds[wake].revents & POLLIN) {
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                int result = read(mPollFds[wake].fd, &msg, 1);
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                mPollFds[wake].revents = 0;
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):            if(mPollFds[mpl_power].revents & POLLIN) {
+Sensors_mpl.cpp (y:\android\android4.0\android-4.0.1_r1\hardware\rk29\sensor):                mPollFds[mpl_power].revents = 0;

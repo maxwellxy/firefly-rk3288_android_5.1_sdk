@@ -1,0 +1,36 @@
+diff --git a/services/core/java/com/android/server/AlarmManagerService.java b/services/core/java/com/android/server/AlarmManagerService.java
+index 65a5c23..32b1a32 100644
+--- a/services/core/java/com/android/server/AlarmManagerService.java
++++ b/services/core/java/com/android/server/AlarmManagerService.java
+@@ -702,6 +702,14 @@ class AlarmManagerService extends SystemService {
+             windowLength = AlarmManager.INTERVAL_HOUR;
+         }
+ 
++	int alarmType = type;	
++	if (alarmType == 0) {
++	    alarmType = 1;
++	} else if (alarmType == 2) {
++	    alarmType = 3;
++	}
++
++
+         // Sanity check the recurrence interval.  This will catch people who supply
+         // seconds when the API expects milliseconds.
+         if (interval > 0 && interval < MIN_INTERVAL) {
+@@ -741,6 +749,7 @@ class AlarmManagerService extends SystemService {
+         final int userId = UserHandle.getCallingUserId();
+ 
+         synchronized (mLock) {
++	    type = alarmType;
+             if (DEBUG_BATCH) {
+                 Slog.v(TAG, "set(" + operation + ") : type=" + type
+                         + " triggerAtTime=" + triggerAtTime + " win=" + windowLength
+@@ -870,7 +879,7 @@ class AlarmManagerService extends SystemService {
+ 
+     void dumpImpl(PrintWriter pw) {
+         synchronized (mLock) {
+-            pw.println("Current Alarm Manager state:");
++            pw.println("ywz 1106 Current Alarm Manager state:");
+             final long nowRTC = System.currentTimeMillis();
+             final long nowELAPSED = SystemClock.elapsedRealtime();
+             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

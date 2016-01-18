@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAKE_CMD="make VERBOSE=0 TARGET=android CROSS=/home/android/android4.0/android-4.0.1_r1/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin/arm-eabi- ANDROID_ROOT=/home/android/android4.0/android-4.0.1_r1 KERNEL_ROOT=/home/android/android4.0/android-4.0.1_r1/kernel PRODUCT=rk29sdk DEVICE=MPU3050 MPL_LIB_NAME=mplmpu"
+$MAKE_CMD -f Android-shared.mk clean
+
+
+
+MAKE_CMD="make VERBOSE=0 TARGET=android CROSS=/home/android/android4.0/android-4.0.1_r1/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin/arm-eabi- ANDROID_ROOT=/home/android/android4.0/android-4.0.1_r1 KERNEL_ROOT=/home/android/android4.0/android-4.0.1_r1/kernel PRODUCT=rk29sdk DEVICE=MPU3050 MPL_LIB_NAME=mplmpu"
+
+$MAKE_CMD -f Android-static.mk clean

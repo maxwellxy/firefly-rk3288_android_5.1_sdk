@@ -1,0 +1,11 @@
+// This file defines lint configurations that are private to this project/unit.
+
+// All messages that are disabled must be commented
+// WHO disabled it, WHEN was this introduced and WHY was it disabled.
+
+//  Disabled 25.06.10 by Klaus Kaiser.
+//  This is not a relevant warning. Committee Draft January 18, 1999 od ANSI C
+//  standard says in 6.7.2.2
+//  "The identifiers in an enumerator list are declared as constants that have type int and
+//  may appear wherever such are permitted."
+-e641

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<office-package>
+    <app package="com.mt.mtxx.mtxx" phonemode="false" halfscreen="false"/>
+    <app package="com.meitu.meiyancamera" phonemode="false" halfscreen="false"/>
+    <app package="com.baidu.baiducamera" phonemode="false" halfscreen="false"/>
+    <app package="com.qiyi.video" phonemode="false" halfscreen="false"/>
+    <app package="com.qiyi.video.pad" phonemode="false" halfscreen="false"/>
+    <app package="com.qiyi.video.pad.intel" phonemode="false" halfscreen="false"/>
+    <app package="com.sohu.tv" phonemode="false" halfscreen="false"/>
+    <app package="com.sohu.sohuvideo" phonemode="false" halfscreen="false"/>
+    <app package="com.youku.phone" phonemode="false" halfscreen="false"/>
+    <app package="com.sohu.newsclient" phonemode="false" halfscreen="false"/>
+    <app package="com.letv.android.client.pad" phonemode="false" halfscreen="false"/>
+    <app package="com.hdzdy.game" phonemode="false" halfscreen="false"/>
+    <app package="com.iflytek.inputmethod" phonemode="false" halfscreen="false"/>
+    <app package="com.baidu.input" phonemode="false" halfscreen="false"/>
+    <app package="com.gamedo.ZombieTerminator.bd" phonemode="false" halfscreen="false"/>
+
+    <app package="com.tencent.mm" phonemode="true" halfscreen="false"/>
+    <app package="com.yongqv.XXL2048" phonemode="true" halfscreen="false"/>
+  <app package="cn.wps.moffice_eng" phonemode="false" halfscreen="false"/>
+
+<app package="com.microsoft.office.excel" phonemode="false" halfscreen="true"/>
+<app package="com.microsoft.office.word" phonemode="false"  halfscreen="true"/>
+<app package="com.microsoft.office.powerpoint" phonemode="false"  halfscreen="true"/>
+    <app package="com.android.calculator2" phonemode="false" halfscreen="true"/>
+
+    <app package="com.tencent.qqpimsecure" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.bad2good" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.dayandnight" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.memory" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.lovehealthy" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.organized" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.talk2kiki" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.recommendapp" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.video" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.shadow" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.takecar" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.travelsafety" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.seaworld" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.show" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.newyear" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.behaviour" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.babydrawing" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.findCha" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.songIV" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.familytree" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.voicerecognition" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.clock" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.shoes" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.birthdayparty" phonemode="false" halfscreen="false"/>
+    <app package="com.babytree.apps.pregnancy" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.puzzle" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.song" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.songII" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.dj" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.painting" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.paintingII" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.chef" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.abc" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.antonym" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.arithmetic" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.cars" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.findfriends" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.dailycommodities" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.vegetable" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.number" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.fruit.activity" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.meteorological" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.education.shape" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.education.color_new" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.babyhospital" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.movebubble" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.concert" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.findnumber" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.occupation" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.clothes" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.different" phonemode="false" halfscreen="false"/>
+    <app package="com.sinyee.babybus.cookingpercussion" phonemode="false" halfscreen="false"/>
+</office-package>

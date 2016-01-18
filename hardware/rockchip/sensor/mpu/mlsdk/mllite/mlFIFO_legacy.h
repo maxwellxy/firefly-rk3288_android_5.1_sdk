@@ -1,0 +1,58 @@
+#ifdef INV_USE_LEGACY_NAMES
+#ifndef INV_FIFO_LEGACY_H__
+#define INV_FIFO_LEGACY_H__
+
+#define MLSetFIFORate inv_set_fifo_rate
+#define MLGetFIFORate inv_get_fifo_rate
+#define GetSampleStepSizeMs inv_get_sample_step_size_ms
+#define GetSampleFrequencyHz inv_get_sample_frequency
+#define MLDecodeTemperature inv_decode_temperature
+#define RegisterHighRateProcess inv_register_fifo_rate_process
+#define UnRegisterHighRateProcess inv_unregister_fifo_rate_process
+#define RunHighRateProcessFuncs inv_run_fifo_rate_processes
+#define FIFOSendQuaternion inv_send_quaternion
+#define FIFOSendGyro inv_send_gyro
+#define FIFOSendAccel inv_send_accel
+#define FIFOSendLinearAccel inv_send_linear_accel
+#define FIFOSendLinearAccelWorld inv_send_linear_accel_in_world
+#define FIFOSendControlData inv_send_cntrl_data
+#define FIFOSendRaw inv_send_sensor_data
+#define FIFOSendRawExternal inv_send_external_sensor_data
+#define FIFOSendGravity inv_send_gravity
+#define FIFOSendDMPPacketNumber inv_send_packet_number
+#define FIFOSendQuantAccel inv_send_quantized_accel
+#define FIFOSendEis inv_send_eis
+#define FIFOGetAccel  inv_get_accel
+#define FIFOGetQuaternion inv_get_quaternion
+#define FIFOGetQuaternion6Axis inv_get_6axis_quaternion
+#define FIFOGetRelativeQuaternion inv_get_relative_quaternion
+#define FIFOGetGyro inv_get_gyro
+#define FIFOSetLinearAccelFilterCoef inv_set_linear_accel_filter_coef
+#define FIFOGetLinearAccel inv_get_linear_accel
+#define FIFOGetLinearAccelWorld inv_get_linear_accel_in_world
+#define FIFOGetControlData inv_get_control_data
+#define FIFOGetSensorData inv_get_gyro_and_accel_sensor
+#define FIFOGetSensorGyroData inv_get_gyro_sensor
+#define FIFOGetTemperature inv_get_temperature
+#define FIFOGetGravBody inv_get_gravity
+#define FIFOGetDecodedAccel inv_get_unquantized_accel
+#define FIFOGetQuantAccel inv_get_quantized_accel
+#define FIFOGetExternalSensorData inv_get_external_sensor_data
+#define FIFOGetEis inv_get_eis
+#define FIFOGetAccelFloat inv_get_accel_float
+#define FIFOGetQuaternionFloat inv_get_quaternion_in_float
+#define MLProcessFIFOData inv_process_fifo_packet
+#define readAndProcessFIFO inv_read_and_process_fifo
+#define MLSetProcessedDataCallback inv_set_fifo_processed_callback
+#define FIFOParamInit inv_init_fifo_param
+#define FIFOClose inv_close_fifo
+#define FIFOSetGyroDataSource inv_set_gyro_data_source
+#define FIFODecodeQuantAccel inv_decode_quantized_accel
+#define getGyroMagSqrd inv_get_gyro_sum_of_sqr
+#define getAccMagSqrd inv_accel_sum_of_sqr
+#define overRideQuaternion inv_override_quaternion
+#define FIFOGetPacketSize inv_get_fifo_packet_size
+
+
+#endif // INV_FIFO_LEGACY_H__
+#endif

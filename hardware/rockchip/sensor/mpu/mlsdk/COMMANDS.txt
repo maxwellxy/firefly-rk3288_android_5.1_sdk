@@ -1,0 +1,3 @@
+make VERBOSE=1 TARGET=android DEVICE=MPU3050 ANDROID_ROOT=/media/backup/ubuntutools/cmnew KERNEL_ROOT=/media/data/platform/sensation/pyramid-2.6.35_mr  CROSS=/media/backup/ubuntutools/cmnew/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin/arm-eabi- PRODUCT=passion MPL_LIB_NAME=mplmpu echo_in_colors=echo  -f Android-shared.mk
+
+make VERBOSE=1 TARGET=android DEVICE=MPU3050 ANDROID_ROOT=/media/backup/ubuntutools/cmnew KERNEL_ROOT=/media/data/platform/sensation/pyramid-2.6.35_mr  CROSS=/media/backup/ubuntutools/cmnew/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin/arm-eabi- PRODUCT=passion MPL_LIB_NAME=mplmpu echo_in_colors=echo  -f Android-static.mk

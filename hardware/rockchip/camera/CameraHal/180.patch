@@ -1,0 +1,50 @@
+diff --git a/CameraHal/CameraHal.h b/CameraHal/CameraHal.h
+index 9f55908..b7fa248 100755
+--- a/CameraHal/CameraHal.h
++++ b/CameraHal/CameraHal.h
+@@ -319,6 +319,9 @@ namespace android {
+ #define CONFIG_CAMERA_ORIENTATION_SKYPE     0
+ #define CONFIG_CAMERA_FRONT_ORIENTATION_SKYPE     0
+ #define CONFIG_CAMERA_BACK_ORIENTATION_SKYPE      0
++#define CONFIG_CAMERA_ORIENTATION_QQ     1
++#define CONFIG_CAMERA_FRONT_ORIENTATION_QQ     90
++#define CONFIG_CAMERA_BACK_ORIENTATION_QQ      0
+ 
+ #define CONFIG_CAMERA_FRONT_PREVIEW_FPS_MIN    3000        // 3fps
+ #define CONFIG_CAMERA_FRONT_PREVIEW_FPS_MAX    40000        //30fps
+diff --git a/CameraHal/CameraHal_Module.cpp b/CameraHal/CameraHal_Module.cpp
+index f8d5d89..8a9a6e7 100755
+--- a/CameraHal/CameraHal_Module.cpp
++++ b/CameraHal/CameraHal_Module.cpp
+@@ -1045,6 +1045,31 @@ int camera_get_camera_info(int camera_id, struct camera_info *info)
+     info->facing = gCamInfos[camera_id].facing_info.facing;
+     info->orientation = gCamInfos[camera_id].facing_info.orientation;       
+ #endif
++#if CONFIG_CAMERA_ORIENTATION_QQ
++    process_name[0] = 0x00; 
++    sprintf(process_name,"/proc/%d/cmdline",getCallingPid());
++    fp = open(process_name, O_RDONLY);
++    if (fp < 0) {
++        memset(process_name,0x00,sizeof(process_name));
++        LOGE("%s(%d): Obtain calling process info failed",__FUNCTION__,__LINE__);
++    } else {
++        memset(process_name,0x00,sizeof(process_name));
++        read(fp, process_name, 30);
++        close(fp);
++        fp = -1;
++    }
++
++    info->facing = gCamInfos[camera_id].facing_info.facing;
++    if (strstr(process_name,"com.tencent.mm")) {
++        info->orientation = (info->facing == CAMERA_FACING_BACK)? CONFIG_CAMERA_BACK_ORIENTATION_QQ : CONFIG_CAMERA_FRONT_ORIENTATION_QQ;       
++    } else {        
++        info->orientation = gCamInfos[camera_id].facing_info.orientation;       
++    }
++#else
++    info->facing = gCamInfos[camera_id].facing_info.facing;
++    info->orientation = gCamInfos[camera_id].facing_info.orientation;       
++#endif
++
+ end:
+     LOGD("%s(%d): camera_%d facing(%d), orientation(%d)",__FUNCTION__,__LINE__,camera_id,info->facing,info->orientation);
+     return rv;

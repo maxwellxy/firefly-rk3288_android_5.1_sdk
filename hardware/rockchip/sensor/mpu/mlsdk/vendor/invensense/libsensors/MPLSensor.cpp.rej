@@ -1,0 +1,102 @@
+--- vendor/invensense/libsensors/MPLSensor.cpp	(revision 436)
++++ vendor/invensense/libsensors/MPLSensor.cpp	(working copy)
+@@ -590,75 +590,87 @@
+     if (inv_dmp_open() != INV_SUCCESS) {
+         LOGE("Fatal Error : could not open DMP correctly.\n");
+     }
+ 
+     result = inv_set_mpu_sensors(ALL_MPL_SENSORS_NP); /* default to all sensors, also makes 9axis enable work */
+     LOGE_IF(result != INV_SUCCESS,
+             "Fatal Error : could not set enabled sensors.");
+ 
+     result = inv_load_calibration();
+     if (!result)
+         LOGV("Calibration file successfully loaded");
+     else
+         LOGE("Could not open or load MPL calibration file (%d)", result);
+ 
+     /* check for the 9axis fusion library */
+-    void* h_dmp_lib = dlopen(MPL_LIB_NAME, RTLD_NOW);
++    void *h_dmp_lib = dlopen(MPL_LIB_NAME, RTLD_NOW);
+     if(!h_dmp_lib) {
+         LOGE("%s not found, 9x sensor fusion disabled (%s)",
+              MPL_LIB_NAME, dlerror());
+     } else {
+         mldl_cfg = inv_get_dl_config();
++        
+         if (!mldl_cfg->slave[EXT_SLAVE_TYPE_COMPASS]) {
+             LOGW("No compass configured on this platform : "
+                  "mldl_cfg->slave[EXT_SLAVE_TYPE_COMPASS] = NULL\n");
++                 
+         } else if (mldl_cfg->slave[EXT_SLAVE_TYPE_COMPASS]->id == COMPASS_ID_AK8975) {
+-            void* h_akm_lib = dlopen(AKM_LIB_NAME, RTLD_NOW);
++            void *h_akm_lib = dlopen(AKM_LIB_NAME, RTLD_NOW);
+             if (h_akm_lib) {
+                 const char* error;
+                 error = dlerror();
+                 inv_error_t (*fp_inv_external_slave_akm8975_open)() =
+-                    (inv_error_t(*)()) dlsym(h_dmp_lib, "inv_external_slave_akm8975_open");
++                    (inv_error_t(*)()) dlsym(
++                        h_akm_lib, "inv_external_slave_akm8975_open");
+                 if (fp_inv_external_slave_akm8975_open) {
+                     result = (*fp_inv_external_slave_akm8975_open)();
+-                    LOGE_IF(result != INV_SUCCESS, "external_slave_akm8975_open failed.");
+-                    loadCompassCalibrationEnabler(h_dmp_lib, "9x_fusion_external");
++                    LOGE_IF(result != INV_SUCCESS, 
++                            "inv_external_slave_akm8975_open failed.");
++                    loadCompassCalibrationEnabler(h_dmp_lib, 
++                                                  "9x_fusion_external");
+                 } else {
+                     LOGE("Unable to find symbol 'inv_external_slave_akm8975_open'");
+                 }
+             } else {
+-                LOGE("could not find akm partner lib, using InvenSense internals.");
++                LOGE("could not find AKM partner library %s => "
++                     "using InvenSense internals.", AKM_LIB_NAME);
+                 loadCompassCalibrationEnabler(h_dmp_lib, "9x_fusion");
+             }
++            
+         } else if (mldl_cfg->slave[EXT_SLAVE_TYPE_COMPASS]->id == COMPASS_ID_AMI306) {
+-            void* h_ami_lib = dlopen(AICHI_LIB_NAME, RTLD_NOW);
++            void *h_ami_lib = dlopen(AICHI_LIB_NAME, RTLD_NOW);
+             if (h_ami_lib) {
+                 const char* error;
+                 error = dlerror();
+                 inv_error_t (*fp_inv_external_slave_ami306_open)() =
+-                        (inv_error_t(*)()) dlsym(h_dmp_lib, "external_slave_ami306_open");
++                        (inv_error_t(*)()) dlsym(
++                            h_ami_lib, "inv_external_slave_ami306_open");
+                 if (fp_inv_external_slave_ami306_open) {
+                     result = (*fp_inv_external_slave_ami306_open)();
+-                    LOGE_IF(result != INV_SUCCESS, "fp_inv_external_slave_ami306_open failed");
+-                    loadCompassCalibrationEnabler(h_dmp_lib, "9x_fusion_external");
++                    LOGE_IF(result != INV_SUCCESS, 
++                            "inv_external_slave_ami306_open failed.");
++                    loadCompassCalibrationEnabler(h_dmp_lib, 
++                                                  "9x_fusion_external");
+                 } else {
+-                    LOGE("Unable to find symbol 'fp_inv_external_slave_ami306_open'");
++                    LOGE("Unable to find symbol 'inv_external_slave_ami306_open'");
+                 }
+             } else {
+-                LOGE("could not find ami partner lib, using InvenSense internals.");
++                LOGE("could not find Aichi partner library %s => "
++                     "using InvenSense internals.", AICHI_LIB_NAME);
+                 loadCompassCalibrationEnabler(h_dmp_lib, "9x_fusion");
+             }
++            
+         } else {
+             loadCompassCalibrationEnabler(h_dmp_lib, "9x_fusion");
+         }
+         nineAxisSF.enable();
+     }
+ 
+     /* enable basic bias trackers for gyros */
+     result = inv_enable_bias_no_motion();
+     LOGE_IF(result, "enable_bias_no_motion returned %d\n", result);
+     result = inv_enable_bias_from_gravity(true);
+     LOGE_IF(result, "enable_bias_from_gravity returned %d\n", result);
+     result = inv_enable_bias_from_LPF(true);
+     LOGE_IF(result, "enable_bias_from_LPF returned %d\n", result);
+     result = inv_set_dead_zone_normal(true);
+     LOGE_IF(result, "set_dead_zone_normal returned %d\n", result);

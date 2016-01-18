@@ -1,0 +1,13 @@
+#ifdef INV_USE_LEGACY_NAMES
+#ifndef INV_MLDL_CFG_LEGACY_H__
+#define INV_MLDL_CFG_LEGACY_H__
+#define MLEnableBiasNoMotion inv_enable_bias_no_motion
+#define MLDisableBiasNoMotion inv_disable_bias_no_motion
+#define MLEnableSetBias inv_enable_set_bias
+#define MLDisableSetBias inv_disable_set_bias
+#define MLSetGyroBiasInHwUnits inv_set_gyro_bias_in_hw_unit
+#define MLSetGyroBiasinDPS inv_set_gyro_bias_in_dps
+#define MLSetGyroBiasinDPSFloat inv_set_gyro_bias_in_dps_float
+#define MLConvertBias inv_convert_bias
+#endif
+#endif
