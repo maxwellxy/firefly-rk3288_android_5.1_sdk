@@ -1,0 +1,26 @@
+on post-fs-data
+    mkdir /data/logs 0770 system log
+
+on property:persist.service.aplogfs.enable=0
+    stop ap_logfs
+
+on property:persist.service.aplogfs.enable=1
+    setprop persist.service.apklogfs.enable 0
+    restart ap_log_srv
+
+on property:persist.service.apklogfs.enable=0
+    stop apk_logfs
+
+on property:persist.service.apklogfs.enable=1
+    setprop persist.service.aplogfs.enable 0
+    restart ap_log_srv
+
+service apk_logfs /system/bin/logcat_ep.sh /system/bin/logcatext -b all -n 20 -r5000 -v threadtime -f /data/logs/aplogs/aplog
+    disabled
+
+service ap_logfs /system/bin/logcat_ep.sh /system/bin/logcat -b all -n 20 -r5000 -v threadtime -f /data/logs/aplogs/aplog
+    disabled
+
+service ap_log_srv /system/bin/start_log_srv.sh
+    class main
+    oneshot

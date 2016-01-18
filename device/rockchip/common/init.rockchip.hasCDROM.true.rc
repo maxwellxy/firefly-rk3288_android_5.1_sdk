@@ -1,0 +1,12 @@
+on init
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+    export EXTERNAL_STORAGE_FLASH /mnt/internal_sd
+
+on property:sys.usb.config=mass_storage
+    write /sys/class/android_usb/f_mass_storage/lun/file ${ro.factory.cdrom}
+
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/f_mass_storage/lun/file ${ro.factory.cdrom}
+

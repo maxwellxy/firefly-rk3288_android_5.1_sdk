@@ -1,0 +1,18 @@
+# Rules for fmd
+type fmd, domain;
+type fmd_exec, exec_type, file_type;
+init_daemon_domain(fmd)
+
+allow fmd fmdev_device:chr_file rw_file_perms;
+allow fmd rpc:unix_stream_socket connectto;
+allow fmd fmd_data_file:dir rw_dir_perms;
+allow fmd fmd_data_file:file create_file_perms;
+allow fmd rpcd_data_file:sock_file write;
+
+# mr1 changes
+allow fmd rpcd_data_file:dir r_dir_perms;
+allow fmd socket_device:sock_file write;
+allow fmd self:capability dac_override;
+unix_socket_connect(fmd, rpc_recv, rpc);
+unix_socket_connect(fmd, rpc_send, rpc);
+unix_socket_connect(fmd, rpc_reg, rpc);

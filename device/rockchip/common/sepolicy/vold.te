@@ -1,0 +1,16 @@
+allow vold unlabeled:file rw_file_perms;
+allow vold kernel:system module_request;
+allow vold rootfs:file { execute execute_no_trans };
+allow vold dm_device:blk_file rw_file_perms;
+allow vold system_prop:property_service set;
+allow vold self:capability { setuid setgid };
+allow vold fuse_device:chr_file getattr;
+allow vold proc:file rw_file_perms;
+allow vold usb_device:dir r_dir_perms;
+allow vold usb_device:chr_file rw_file_perms;
+allow vold metadata_file:dir rw_dir_perms;
+allow vold metadata_file:file create_file_perms;
+allow vold nvm_block_device:blk_file rw_file_perms;
+allow vold nvm_data_file:dir r_dir_perms;
+allow vold fuse_device:chr_file rw_file_perms;
+allow vold toolbox_exec:file { execute execute_no_trans r_file_perms };

@@ -1,0 +1,5 @@
+# Additional rules for wpa
+allow wpa radio_device:chr_file r_file_perms;
+ptest_only(`
+allow wpa init_shell:unix_dgram_socket { sendto };
+')

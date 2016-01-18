@@ -1,0 +1,2 @@
+# bootanimation oneshot service
+allow bootanim mediaserver:binder { call transfer };

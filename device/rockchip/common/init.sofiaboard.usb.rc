@@ -1,0 +1,174 @@
+# Copyright (C) 2012-2013 Intel Mobile Communications GmbH
+# Copyright (C) 2012 The Android Open Source Project
+#
+# USB configuration common for all android devices
+#
+# IMC Additions for VID/PID set using official 'Intel' identity
+
+
+# Initialisation, sets up the unique serial number
+# ================================================
+
+on init
+    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+    write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
+    write /sys/class/android_usb/android0/iProduct ${ro.product.model}
+    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+    write /sys/class/android_usb/android0/f_mass_storage/inquiry_string "1"
+    write /sys/class/android_usb/android0/f_rndis/manufacturer ${ro.product.manufacturer}
+    write /sys/class/android_usb/android0/f_rndis/vendorID 2207
+    write /sys/class/android_usb/android0/f_rndis/wceis 1
+    mkdir /dev/usb-ffs 0770 shell shell
+    mkdir /dev/usb-ffs/adb 0770 shell shell
+    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
+    write /sys/class/android_usb/android0/f_ffs/aliases adb
+
+on boot
+    write /sys/class/android_usb/f_acm/port0/data_string at_commands
+    write /sys/class/android_usb/f_acm/port0/iad_bFunctionProtocol 0
+    write /sys/class/android_usb/f_acm/port0/ctrl_bInterfaceProtocol 0
+    write /sys/class/android_usb/f_acm/port1/data_string oct_trace
+    write /sys/class/android_usb/f_acm/port1/iad_bFunctionProtocol 0
+    write /sys/class/android_usb/f_acm/port1/ctrl_bInterfaceProtocol 0
+    write /sys/class/android_usb/f_acm/port2/data_string gti_ipicom
+    write /sys/class/android_usb/f_acm/port2/iad_bFunctionProtocol 0
+    write /sys/class/android_usb/f_acm/port2/ctrl_bInterfaceProtocol 0
+
+# Configurations specifically added (or modified) for Intel Mobile Communications
+# ===============================================================================
+#
+# Used Synonyms (keywords for activation) together with applicable USB Class (if appropriate)
+# -------------------------------------------------------------------------------------------
+#
+# adb
+# acm               (CDC-ACM) Serial Gadget (number of channels depends on PID)
+# mtp               Media Transfer Protocol
+# ptp               Photo Transfer Protocol
+# rndis             USB Tethering (CDC-ECM, RNDIS)
+#
+# These are presented in ascending order of PID, which is restricted into the
+# range 0x08EB through 0x09EB
+#
+# 0x08EC .. 0x08F6 were devised from the XMM6181/XMM2231 projects
+#
+# 0x0920 .. 0x0930 were added for the XMM6321 project
+#
+# Note that the usage of "acm" is special since it has to support varying numbers
+# of CDC-ACM channels, and so the incoming string is expected to have a trailing
+# tag to show this: this is not copied into the function list.
+
+
+# 0x8087:0x08EF : ADB-only USB configuration
+# ------------------------------------------
+
+on property:sys.usb.config=adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 08F4
+    write /sys/class/android_usb/android0/functions adb,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x0928 : ADB plus 3xCDC plus MTP
+# ---------------------------------------
+
+on property:sys.usb.config=mtp,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 0928
+    write /sys/class/android_usb/android0/functions mtp,adb,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x0929 : ADB plus 3xCDC plus PTP
+# ---------------------------------------
+
+on property:sys.usb.config=ptp,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 0929
+    write /sys/class/android_usb/android0/functions ptp,adb,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x092A : 3xCDC plus MTP
+# ------------------------------
+
+on property:sys.usb.config=mtp
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 092A
+    write /sys/class/android_usb/android0/functions mtp,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x092B : 3xCDC plus PTP
+# ------------------------------
+
+on property:sys.usb.config=ptp
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 092B
+    write /sys/class/android_usb/android0/functions ptp,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x092D : ADB plus 3xCDC plus USB Tethering (ECM)
+# -------------------------------------------------------
+
+on property:sys.usb.config=rndis,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 092D
+    write /sys/class/android_usb/android0/functions rndis,adb,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x0930: 3xCDC plus USB Tethering (ECM)
+# ---------------------------------------------
+
+on property:sys.usb.config=rndis
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 0930
+    write /sys/class/android_usb/android0/functions rndis,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x093A	
+# --------------------------------------------------
+
+on property:sys.usb.config=mass_storage
+	write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 093A
+    write /sys/class/android_usb/android0/functions mass_storage,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config}
+
+# 0x8087:0x093B
+#---------------------------------------------------
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 8087
+    write /sys/class/android_usb/android0/idProduct 093B
+    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/f_acm/instances 3
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+

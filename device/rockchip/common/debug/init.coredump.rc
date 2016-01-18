@@ -1,0 +1,9 @@
+on early-init
+    setrlimit 4 -1 -1
+
+on post-fs-data
+    mkdir /data/logs/core 0750 root log
+    write /proc/sys/kernel/core_pattern /data/logs/core/%t_%e_%p.core
+
+on property:persist.core.enabled=0
+    setrlimit 4 0 0

@@ -1,0 +1,185 @@
+
+on early-init
+
+    # bluetooth LPM
+    chmod 0220 /proc/bluetooth/sleep/lpm
+    chmod 0220 /proc/bluetooth/sleep/btwrite
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/lpm
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwrite
+
+on init
+
+    symlink /etc/bluez/bcm432x/BCM4329B1_TestOnly_0237_26MHz_SEMCO_B23.hcd /bcm4329_samsung.hcd
+    symlink /etc/bluez/bcm432x/BCM4329B1_USI_WM-BN-BM-01.hcd /bcm4329_usi.hcd
+    symlink /etc/bluez/bcm432x/BCM4329B1_002.002.023.0389.0000_Cybertan-Foxconn_Cls2_extLNA_EDRmaxInputLev+PeakDEVM_NT.hcd /bcm4329_cybertan.hcd
+
+on boot
+
+#    insmod /system/lib/modules/rtk_btusb.ko
+
+
+# permissions for bluetooth.
+    mkdir /data/misc/bluetoothd 0775 bluetooth net_bt_stack
+    setprop ro.bt.bdaddr_path "/data/misc/bluetoothd/bt_addr"
+    chown bluetooth net_bt_stack ro.bt.bdaddr_path
+    
+# for rtl bluetooth
+    chown bluetooth net_bt_stack /data/misc/Bluetooth
+    mkdir /data/misc/bluedroid 0770 bluetooth net_bt_stack
+
+    chmod 0660 /dev/rtk_btusb
+    chown bluetooth net_bt_stack /dev/rtk_btusb
+
+    chown bluetooth net_bt_stack ro.bt.bdaddr_path
+    chown bluetooth net_bt_stack /system/etc/bluetooth
+    chown bluetooth net_bt_stack /data/misc/bluetooth
+    setprop ro.bt.bdaddr_path "/data/misc/bluetooth/bdaddr"    
+
+# for wifi
+    # mt7601u
+    chmod 0644 /system/lib/modules/mtprealloc7601Usta.ko
+
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets/tmp 0440 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    
+    mkdir /data/misc/wifi 0770 wifi wifi
+    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+    chmod 0660 /data/misc/wifi/p2p_supplicant.conf
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    chmod 777 /data/misc/wifi/sockets
+    mkdir /data/misc/wpa_supplicant 0770 wifi wifi
+    chown wifi wifi /data/misc/wifi 
+    chown system wifi /data/misc/wifi/entropy.bin
+    chown wifi wifi /data/misc/wifi/p2p_supplicant.conf
+    chown wifi wifi /data/misc/wifi/wpa_supplicant.conf
+
+# bluetooth power up/down interface
+    chmod 0660 /dev/ttyS0
+    chmod 0660 /dev/ttyS1
+    chmod 0660 /dev/vflash
+    chown bluetooth net_bt_stack /dev/vflash
+    chown bluetooth net_bt_stack /dev/ttyS1
+    chown bluetooth net_bt_stack /dev/ttyS0
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chmod 0664 /sys/class/rfkill/rfkill0/state
+
+    chmod 0660 /dev/bthwctl
+    chown bluetooth net_bt_stack /dev/bthwctl
+    mkdir /data/bluetooth 0771 bluetooth net_bt_stack
+
+#for nfc
+    chmod 0660 /dev/bcm2079x
+    chown nfc nfc /dev/bcm2079x
+    mkdir /data/nfc
+    mkdir /data/nfc/param
+    chmod 0700 /data/nfc
+    chmod 0700 /data/nfc/param
+    chown nfc nfc /data/nfc
+    chown nfc nfc /data/nfc/param
+
+#for rda bt
+    chmod 0664 /dev/tcc_bt_dev
+    chown bluetooth net_bt_stack /dev/tcc_bt_dev
+
+    chmod 0664 /dev/voice_modem
+    chown bluetooth net_bt_stack /dev/voice_modem
+
+# for bcm wifi
+########## 3.0.x <= kernel version <= 3.4.x ##########
+service wpa_supplicant1 /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -O/data/misc/wifi/sockets \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    #      we will start as root and wpa_supplicant will switch to user wifi
+    #      after setting up the capabilities required for WEXT
+    #      user wifi
+    #      group wifi inet keystore
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service p2p_supplicant1 /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf -N \
+    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
+    -I/system/etc/wifi/p2p_supplicant_overlay.conf \
+    -O/data/misc/wifi/sockets -puse_p2p_group_interface=1 \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+#      we will start as root and wpa_supplicant will switch to user wifi
+#      after setting up the capabilities required for WEXT
+#      user wifi
+#      group wifi inet keystore
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+########## 3.0.x <= kernel version <= 3.4.x ##########
+
+########## kernel version >= 3.10.x ##########
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/p2p_supplicant_overlay.conf \
+    -puse_p2p_group_interface=1p2p_device=1 \
+    -m/data/misc/wifi/p2p_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+########## kernel version >= 3.10.x ##########
+	
+# for rtl wifi
+service rtw_suppl_con /system/bin/wpa_supplicant_rtl \
+    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin -N \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -O/data/misc/wifi/sockets \
+    -g@android:wpa_wlan0
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service rtw_suppl /system/bin/wpa_supplicant_rtl \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -O/data/misc/wifi/sockets \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+# for esp wifi
+service esp_supplicant /system/bin/wpa_supplicant_esp \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf -N \
+    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
+    -I/system/etc/wifi/p2p_supplicant_overlay.conf \
+    -O/data/misc/wifi/sockets \
+    -puse_p2p_group_interface=1 -e/data/misc/wifi/entropy.bin \
+    -g@android:wpa_wlan0
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service hostapd /system/bin/hostapd /data/misc/wifi/hostapd.conf
+    class main
+    disabled
+    oneshot

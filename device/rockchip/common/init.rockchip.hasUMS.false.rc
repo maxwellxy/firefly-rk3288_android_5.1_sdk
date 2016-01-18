@@ -1,0 +1,5 @@
+on init
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+    export EXTERNAL_STORAGE_FLASH /mnt/internal_sd

@@ -1,0 +1,34 @@
+# Additional mediaserver rules
+#allow mediaserver kmem_device:chr_file rw_file_perms;
+allow mediaserver rpc:unix_stream_socket connectto;
+allow mediaserver vpu_device:chr_file rw_file_perms;
+allow mediaserver rpcd_data_file:sock_file write;
+allow mediaserver nvm_block_device:blk_file rw_file_perms;
+allow mediaserver nvm_data_file:dir rw_dir_perms;
+allow mediaserver nvm_data_file:file create_file_perms;
+
+# mr1 changes
+allow mediaserver mvpipe_device:chr_file rw_file_perms;
+allow mediaserver rpcd_data_file:dir r_dir_perms;
+allow mediaserver voemcrypto_device:chr_file rw_file_perms;
+allow mediaserver default_prop:property_service set;
+allow mediaserver radio_device:chr_file rw_file_perms;
+allow gpsd socket_device:sock_file write;
+unix_socket_connect(mediaserver, rpc_recv, rpc);
+unix_socket_connect(mediaserver, rpc_send, rpc);
+unix_socket_connect(mediaserver, rpc_reg, rpc);
+allow mediaserver system_server:unix_stream_socket { read write };
+allow mediaserver surfaceflinger:unix_stream_socket { read write };
+allow mediaserver self:netlink_kobject_uevent_socket create_socket_perms;
+allow mediaserver system_prop:property_service set;
+allow mediaserver video_device:chr_file rw_file_perms;
+allow mediaserver rga_device:chr_file rw_file_perms;
+allow mediaserver camdata_file:dir create_dir_perms;
+allow mediaserver camdata_file:file create_file_perms;
+allow mediaserver untrusted_app:dir search;
+allow mediaserver untrusted_app:file { open read };
+allow mediaserver graphics_device:dir { search };
+allow mediaserver bootanim:binder { call transfer };
+allow mediaserver platform_app:dir { search };
+allow mediaserver platform_app:file r_file_perms;
+allow mediaserver system_app_data_file:file rw_file_perms;

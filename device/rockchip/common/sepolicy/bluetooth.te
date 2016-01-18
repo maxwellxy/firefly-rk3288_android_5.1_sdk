@@ -1,0 +1,11 @@
+# Additional rules for bluetooth
+allow bluetooth tty_device:chr_file rw_file_perms;
+# mr1
+allow bluetooth nvm_data_file:file create_file_perms;
+allow bluetooth nvm_data_file:dir create_dir_perms;
+# /sys/class/rfkill/rfkill0/state
+allow bluetooth sysfs:file write;
+allow bluetooth serial_device:chr_file rw_file_perms;
+allow bluetooth vflash_device:chr_file rw_file_perms;
+allow bluetooth rtkbt_device:chr_file rw_file_perms;
+allow bluetooth self:netlink_socket { create bind write read };

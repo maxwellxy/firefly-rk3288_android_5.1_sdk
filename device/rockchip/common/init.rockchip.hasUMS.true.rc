@@ -1,0 +1,4 @@
+on init
+    export EXTERNAL_STORAGE /mnt/internal_sd
+    export EXTERNAL_STORAGE_FLASH /mnt/internal_sd
+    export EMULATED_STORAGE_SOURCE /mnt/internal_sd

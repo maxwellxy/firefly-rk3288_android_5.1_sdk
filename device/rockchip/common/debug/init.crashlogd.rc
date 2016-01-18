@@ -1,0 +1,13 @@
+on post-fs-data
+    mkdir /data/tombstones 0755 system system
+    mkdir /data/system 0755 system system
+    mkdir /data/system/dropbox 0700 system system
+    mkdir /data/logs/crashlogs 0775 system log
+    mkdir /data/logs/modemcrash 0775 system system
+    mkdir /data/logs/stats 0775 system system
+    mkdir /data/logs/aplogs 0775 system log
+    mkdir /data/logs/tmp 0775 system log
+
+
+service crashlogd /system/bin/crashlogd
+    class late_start

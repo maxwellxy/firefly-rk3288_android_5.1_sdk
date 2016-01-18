@@ -1,0 +1,4 @@
+# Rules for fg_conf
+type fg_conf, domain;
+type fg_conf_exec, exec_type, file_type;
+init_daemon_domain(fg_conf)

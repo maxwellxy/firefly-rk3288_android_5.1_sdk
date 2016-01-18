@@ -1,0 +1,482 @@
+import /init.rockchip.rc
+import /init.wifi.${ro.bootmode}.rc
+import /init.gnss.${ro.bootmode}.rc
+import /init.bluetooth.rc
+import /init.ksm.rc
+import /init.zram.rc
+import /init.${ro.hardware}.environment.rc
+
+on early-init
+    mount debugfs debugfs /sys/kernel/debug mode=0755
+    #setprop persist.tool_enable 0
+    export CLASSPATH /system/framework/userExperienceService.jar
+
+# Enable native bridge for target executables
+    mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+
+on property:ro.enable.native.bridge.exec=1
+	copy /system/etc/binfmt_misc/arm_exe	/proc/sys/fs/binfmt_misc/register
+	copy /system/etc/binfmt_misc/arm_dyn	/proc/sys/fs/binfmt_misc/register
+
+on property:ro.enable.native.bridge.exec64=1
+    copy /system/etc/binfmt_misc/arm64_exe /proc/sys/fs/binfmt_misc/register
+    copy /system/etc/binfmt_misc/arm64_dyn /proc/sys/fs/binfmt_misc/register
+
+on init
+
+
+
+    # Need read permission to /proc/cmdline for audio
+    chmod 0444 /proc/cmdline
+    mkdir /nvm_fs_partition 0660 misc misc
+    restorecon /nvm_fs_partition
+
+    # Symlink for Widevine keybox
+    symlink /nvm_fs_partition/factory /factory
+
+# Once nvm partition is setup, create directory structure and set permissions.
+# NVM dependent services are disabled by default; start them from here.
+on property:init.svc.setup_fs_nvm=stopped
+
+    wait /dev/block/platform/soc0/e0000000.noc/by-name/ImcPartID076
+    mount ext4 /dev/block/platform/soc0/e0000000.noc/by-name/ImcPartID076 /nvm_fs_partition nosuid nodev data=journal
+
+    # After mount, owner is root
+    chown misc misc /nvm_fs_partition
+
+    mkdir /nvm_fs_partition/factory 0660 misc misc
+    mkdir /nvm_fs_partition/nvm 0770 misc audio
+    restorecon_recursive /nvm_fs_partition
+    start nvm_uagent
+    start init_wlan_nvm
+    start ril-daemon
+    start ril-daemon2
+
+on property:persist.ril-daemon.disable=0
+    stop ril-daemon2
+
+on property:persist.ril-daemon.disable=1
+    stop ril-daemon
+    stop ril-daemon2
+
+on property:persist.ril-daemon.disable=dsds
+    start ril-daemon2
+
+on property:persist.tool_enable=1
+    start ipcsd
+    start phonetool_btapp
+
+on property:sys.boot_completed=1
+    setprop persist.sys.first_booting false
+
+on property:persist.rftest.enable=1
+    start rftest
+
+on property:persist.rftest.enable=0
+    stop rftest
+
+on post-fs-data
+    chown root root /sys/devices/1d000000.vmodem/modem_state
+    chmod 660 /sys/devices/1d000000.vmodem/modem_state
+    chown root root /sys/class/misc/vmodem/modem_state
+    chmod 660 /sys/class/misc/vmodem/modem_state
+    chown radio radio /sys/class/misc/vmodem/modem_state
+    chmod 660 /sys/class/misc/vmodem/modem_state
+    mkdir /data/media 0770 media_rw media_rw
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    mkdir /data/fmd 0770 radio radio
+
+    chown dhcp dhcp /data/misc/dhcp
+    setprop vold.post_fs_data_done 1
+
+
+
+
+	# Set cpufreq boost for ondemand governor
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/boost_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/boost_freq
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/boost_pulse
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/boost_pulse
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/touchboostpulse
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/touchboostpulse
+
+    # Set this property to enable Thermal service
+    setprop persist.service.thermal 1
+
+    # Properties for Thermal Service
+    setprop persist.thermal.debug.xml 0
+    setprop ro.thermal.ituxversion 2.5
+    setprop persist.thermal.shutdown.msg 1
+    setprop persist.thermal.shutdown.vibra 1
+    setprop persist.thermal.shutdown.tone 1
+    #setprop persist.thermal.display.msg 1
+    #setprop persist.thermal.display.vibra 1
+
+    # Permissions for Thermal Management
+    chown system system /sys/class/thermal/thermal_zone0/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone0/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone1/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone1/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone2/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone2/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone3/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone3/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone4/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone4/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone5/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone5/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone6/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone6/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone7/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone7/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone8/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone8/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone9/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone9/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone10/trip_point_0_temp
+    chown system system /sys/class/thermal/thermal_zone10/trip_point_1_temp
+    chown system system /sys/class/thermal/thermal_zone0/emul_temp
+    chown system system /sys/class/thermal/thermal_zone1/emul_temp
+    chown system system /sys/class/thermal/thermal_zone2/emul_temp
+    chown system system /sys/class/thermal/thermal_zone3/emul_temp
+    chown system system /sys/class/thermal/thermal_zone4/emul_temp
+    chown system system /sys/class/thermal/thermal_zone5/emul_temp
+    chown system system /sys/class/thermal/thermal_zone6/emul_temp
+    chown system system /sys/class/thermal/thermal_zone7/emul_temp
+    chown system system /sys/class/thermal/thermal_zone8/emul_temp
+    chown system system /sys/class/thermal/thermal_zone9/emul_temp
+    chown system system /sys/class/thermal/thermal_zone10/emul_temp
+
+    # Permissions for Thermal Management
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/thermal_scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu1/cpufreq/thermal_scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu2/cpufreq/thermal_scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu3/cpufreq/thermal_scaling_max_freq
+    chown system system /sys/class/thermal/thermal_zone1/kernel
+    chown system system /sys/devices/soc0/e0000000.noc/ef010000.l2_noc/e2000000.ahb_per/e2e00000.gpu/pm_max_state
+
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/thermal_scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu1/cpufreq/thermal_scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu2/cpufreq/thermal_scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu3/cpufreq/thermal_scaling_max_freq
+    chmod 0664 /sys/class/mali/pm/max_freq_level
+    chmod 0664 /sys/class/thermal/thermal_zone1/kernel
+    chmod 0664 /sys/devices/soc0/e0000000.noc/ef010000.l2_noc/e2000000.ahb_per/e2e00000.gpu/pm_max_state
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+
+    # backlight permission
+    chown system system /sys/class/backlight/pwm-backlight/brightness
+
+    # Permissions for SVB sensors
+    # Proximity and light sensor
+    chown system system /sys/class/i2c-adapter/i2c-2/2-0039/enable_ps_sensor
+    chown system system /sys/class/i2c-adapter/i2c-2/2-0039/enable_als_sensor
+    # Accelerometer sensor
+    chown system system /sys/class/i2c-adapter/i2c-2/2-0019/pollrate_ms
+    chown system system /sys/class/i2c-adapter/i2c-2/2-0019/enable_device
+    # Magnetometer sensor
+    chown system system /sys/class/i2c-adapter/i2c-2/2-001e/pollrate_ms
+    chown system system /sys/class/i2c-adapter/i2c-2/2-001e/enable_device
+    # Gyroscope sensor
+    chown system system /sys/class/i2c-adapter/i2c-2/2-006a/pollrate_ms
+    chown system system /sys/class/i2c-adapter/i2c-2/2-006a/enable_device
+
+    mkdir /data/misc/system_relro 0771 system system
+#	# TEE RPC
+#    chown system system /dev/tee_rpc
+#    chmod 0666 /dev/tee_rpc
+
+
+on boot
+# Define TCP buffer sizes for various networks
+#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
+    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.lte     524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.hspap   32768,262144,1048576,4096,16384,262144
+    setprop net.tcp.buffersize.hspa    16384,87380,262144,4096,16384,262144
+    setprop net.tcp.buffersize.hsupa   16384,87380,262144,4096,16384,110208
+    setprop net.tcp.buffersize.hsdpa   16384,87380,262144,4096,16384,110208
+    setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.edge    4093,26280,110208,4096,16384,110208
+    setprop net.tcp.buffersize.gprs    4092,8760,65536,4096,8760,65536
+    setprop net.tcp.buffersize.evdo    4094,87380,262144,4096,16384,262144
+
+# sofia-3gr pwm-backlight node path
+    chown system system /sys/class/backlight/pwm-backlight/brightness
+
+# Change TCP Net-Core buffers sizes to improve cellular data throughput
+     write /proc/sys/net/core/rmem_default 1048576
+     write /proc/sys/net/core/wmem_default 524288
+     write /proc/sys/net/core/rmem_max 2097152
+     write /proc/sys/net/core/wmem_max 1048576
+     write /proc/sys/net/ipv4/tcp_mem  "83520 111360 2097152"
+
+# for debug video.
+    mkdir /data/video_dumps
+    chown media audio /data/video_dumps
+    chmod 0777 /data/video_dumps
+
+#on charger
+#    class_start charger
+#    start crashlogd
+#    start console
+
+#service batteryserver /charger
+#    class charger
+#    user root
+#    console
+#    oneshot
+
+
+on property:persist.sys.first_booting=true
+    mkdir /data/hwuihas/ 0777 root root
+    chmod 777 /data/hwuihas/
+    copy /system/etc/hwuishader.bin /data/hwuihas/hwuishader.bin
+    copy /system/etc/hwuihas.bin /data/hwuihas/hwuihas.bin
+    chmod 777 /data/hwuihas/hwuishader.bin
+    chmod 777 /data/hwuihas/hwuihas.bin
+
+
+on fs
+    mount_all ./fstab.sofiaboard
+#for sensors
+    chmod 0660 /dev/mma8452_daemon
+    chown system system /dev/mma8452_daemon
+    chmod 0660 /dev/akm8975_dev
+    chown system system /dev/akm8975_dev
+    chmod 0660 /dev/akm8975_aot
+    chown system system /dev/akm8975_aot
+    chmod 0660 /dev/akm8963_dev
+    chown system system /dev/akm8963_dev
+    chmod 0660 /dev/akm_dev
+    chown system system /dev/akm_dev
+    chmod 0660 /dev/gyrosensor
+    chown system system /dev/gyrosensor
+    chmod 0660 /dev/angle
+    chown system system /dev/angle
+    chmod 0660 /dev/accel
+    chown system system /dev/accel
+    chmod 0660 /dev/compass
+    chown system system /dev/compass
+    chmod 0660 /dev/lightsensor
+    chown system system /dev/lightsensor
+    chmod 0660 /dev/psensor
+    chown system system /dev/psensor
+    chmod 0660 /dev/temperature
+    chown system system /dev/temperature
+    chmod 0660 /dev/pressure
+    chown system system /dev/pressure
+
+
+
+#for mpu sensor
+chown system system /dev/iio:device0
+chown system system /sys/bus/iio/devices/trigger0/name
+chown system system /sys/bus/iio/devices/iio:device0/accl_bias
+chown system system /sys/bus/iio/devices/iio:device0/accl_enable
+chown system system /sys/bus/iio/devices/iio:device0/accl_matrix
+chown system system /sys/bus/iio/devices/iio:device0/buffer/length
+chown system system /sys/bus/iio/devices/iio:device0/buffer/enable
+chown system system /sys/bus/iio/devices/iio:device0/compass_enable
+chown system system /sys/bus/iio/devices/iio:device0/compass_matrix
+chown system system /sys/bus/iio/devices/iio:device0/dmp_event_int_on
+chown system system /sys/bus/iio/devices/iio:device0/dmp_firmware
+chown system system /sys/bus/iio/devices/iio:device0/dmp_int_on
+chown system system /sys/bus/iio/devices/iio:device0/dmp_on
+chown system system /sys/bus/iio/devices/iio:device0/dmp_output_rate
+chown system system /sys/bus/iio/devices/iio:device0/event_display_orientation
+chown system system /sys/bus/iio/devices/iio:device0/firmware_loaded
+chown system system /sys/bus/iio/devices/iio:device0/gyro_enable
+chown system system /sys/bus/iio/devices/iio:device0/gyro_matrix
+chown system system /sys/bus/iio/devices/iio:device0/in_accel_scale
+chown system system /sys/bus/iio/devices/iio:device0/in_anglvel_scale
+chown system system /sys/bus/iio/devices/iio:device0/in_magn_scale
+chown system system /sys/bus/iio/devices/iio:device0/key
+chown system system /sys/bus/iio/devices/iio:device0/power_state
+chown system system /sys/bus/iio/devices/iio:device0/quaternion_on
+chown system system /sys/bus/iio/devices/iio:device0/sampling_frequency
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_x_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_y_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_z_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_x_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_y_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_z_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_x_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_y_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_z_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_r_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_x_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_y_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_z_en
+chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_timestamp_en
+chown system system /sys/bus/iio/devices/iio:device0/self_test
+chown system system /sys/bus/iio/devices/iio:device0/tap_on
+chown system system /sys/bus/iio/devices/iio:device0/temperature
+chown system system /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+chmod 0666 /dev/iio:device0
+chmod 0666 /sys/bus/iio/devices/trigger0/name
+chmod 0666 /sys/bus/iio/devices/iio:device0/accl_bias
+chmod 0666 /sys/bus/iio/devices/iio:device0/accl_enable
+chmod 0666 /sys/bus/iio/devices/iio:device0/accl_matrix
+chmod 0666 /sys/bus/iio/devices/iio:device0/buffer/length
+chmod 0666 /sys/bus/iio/devices/iio:device0/buffer/enable
+chmod 0666 /sys/bus/iio/devices/iio:device0/compass_enable
+chmod 0666 /sys/bus/iio/devices/iio:device0/compass_matrix
+chmod 0666 /sys/bus/iio/devices/iio:device0/dmp_event_int_on
+chmod 0666 /sys/bus/iio/devices/iio:device0/dmp_firmware
+chmod 0666 /sys/bus/iio/devices/iio:device0/dmp_int_on
+chmod 0666 /sys/bus/iio/devices/iio:device0/dmp_on
+chmod 0666 /sys/bus/iio/devices/iio:device0/dmp_output_rate
+chmod 0666 /sys/bus/iio/devices/iio:device0/event_display_orientation
+chmod 0666 /sys/bus/iio/devices/iio:device0/firmware_loaded
+chmod 0666 /sys/bus/iio/devices/iio:device0/gyro_enable
+chmod 0666 /sys/bus/iio/devices/iio:device0/gyro_matrix
+chmod 0666 /sys/bus/iio/devices/iio:device0/in_accel_scale
+chmod 0666 /sys/bus/iio/devices/iio:device0/in_anglvel_scale
+chmod 0666 /sys/bus/iio/devices/iio:device0/in_magn_scale
+chmod 0666 /sys/bus/iio/devices/iio:device0/key
+chmod 0666 /sys/bus/iio/devices/iio:device0/power_state
+chmod 0666 /sys/bus/iio/devices/iio:device0/quaternion_on
+chmod 0666 /sys/bus/iio/devices/iio:device0/sampling_frequency
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_x_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_y_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_z_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_x_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_y_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_z_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_x_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_y_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_z_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_r_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_x_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_y_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_z_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/scan_elements/in_timestamp_en
+chmod 0666 /sys/bus/iio/devices/iio:device0/self_test
+chmod 0666 /sys/bus/iio/devices/iio:device0/tap_on
+chmod 0666 /sys/bus/iio/devices/iio:device0/temperature
+chmod 0666 /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+on charger
+     mount ext4 /dev/block/platform/soc0/e0000000.noc/by-name/ImcPartID068 /system ro
+     start setup_fs_nvm
+
+# virtual sdcard daemon running as media_rw (1023)
+#service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
+#    class late_start
+#
+#service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+#    class late_start
+#    disabled
+#
+#service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
+#    class late_start
+#    disabled
+
+service bootring /system/bin/audio_pcb 2 /system/media/audio/boot.wav -D 0 -d 0 -p 240 -n 16 -t 1 -u 10
+    class main
+    disabled
+    oneshot
+
+service ipcsd /system/bin/ipcsd --apint=UDSOCKS_,gateway --ext=TTY,/dev/ttyGS2 --mex=TTY,/dev/mvpipe-GTI
+    class main
+    disabled
+    user root
+    group root
+
+service rpcServer /system/bin/rpcServer
+    socket msmSock stream 660 system radio
+    class core
+    user radio
+    group radio inet net_raw net_admin
+
+service setup_fs_nvm /system/bin/setup_fs_nvm /dev/block/platform/soc0/e0000000.noc/by-name/ImcPartID076
+    class core
+    user root
+    group root
+    oneshot
+
+service nvm_uagent /system/bin/nvm_useragent
+    class main
+    disabled
+    user radio
+    group misc radio
+
+service rftest /system/bin/rftest
+    socket rftest stream 660 system inet
+    class core
+    user root
+    group root
+    disabled
+    oneshot
+
+service rpc-daemon /system/bin/rpc-daemon
+    socket rpc_send stream 660 system radio
+    socket rpc_recv stream 660 system radio
+    socket rpc_reg stream 660 system radio
+    group  radio system inet net_raw net_admin
+    user radio
+    class core
+    disabled
+
+on property:msm.start=true
+    start rpc-daemon
+
+service ril-daemon2 /system/bin/rild -c 2
+   class main
+   socket rild2 stream 660 root radio
+   socket rild-debug2 stream 660 radio system
+   user root
+   group radio cache inet misc audio log root
+
+
+
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_bt-pan /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service pekallfmrserver /system/bin/pekallfmrserver
+    class main
+    user audio
+    group system audio
+    onrestart restart root
+
+service init_wlan_nvm /system/bin/sh /system/etc/wifi/wlan_nvm_init.sh
+    class main
+    disabled
+    oneshot
+
+service pluginservice /system/bin/pluginservice
+    user system
+    group root system radio
+    class main
+
+service fmd /system/bin/fmd -c /dev/fmdev_device -l /data/fmd/fmd.log -p /data/fmd/fmd.log.prev
+    class main
+    user radio
+    oneshot
+    group system radio
+# ----------------- BEGIN MIX-IN DEFINITIONS -----------------
+# Mix-In definitions are auto-generated by mixin-update
+##############################################################
+# Source: device/intel/mixins/groups/debug-logs/true/init.rc
+##############################################################
+import /init.logs.rc
+##############################################################
+# Source: device/intel/mixins/groups/debug-crashlogd/true/init.rc
+##############################################################
+import /init.crashlogd.rc
+##############################################################
+# Source: device/intel/mixins/groups/debug-coredump/true/init.rc
+##############################################################
+#import /init.coredump.rc
+# ------------------ END MIX-IN DEFINITIONS ------------------

@@ -1,0 +1,15 @@
+# Additional rules for init
+allow init self:capability sys_module;
+allow init radio_service:service_manager { add };
+allow init logcat_exec:file rx_file_perms;
+allow init toolbox_exec:file rx_file_perms;
+recovery_only(`
+  domain_trans(init, rootfs, busybox)
+')
+ptest_only(`
+allow init self:tcp_socket { create setopt bind };
+allow init port:tcp_socket { name_bind };
+allow init node:tcp_socket { node_bind };
+allow init self:tcp_socket { listen };
+allow init self:tcp_socket { accept getopt write read };
+')

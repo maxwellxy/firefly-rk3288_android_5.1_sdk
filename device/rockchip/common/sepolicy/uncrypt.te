@@ -1,0 +1,2 @@
+allow uncrypt media_rw_data_file:dir { getattr search};
+allow uncrypt media_rw_data_file:file r_file_perms;

@@ -1,0 +1,7 @@
+# Additional netd rules
+# Allow netd to load modules
+allow netd kernel:system module_request;
+allow netd self:capability sys_module;
+# Triggers a sys_module denial, but kernel has CONFIG_MODULES=n.
+dontaudit netd self:capability sys_module;
+allow netd kernel:system module_request;

@@ -1,0 +1,24 @@
+# Rules for lbsd (gps related)
+type lbsd, domain;
+type lbsd_exec, exec_type, file_type;
+allow lbsd gps_data_file:file create_file_perms;
+allow lbsd gps_data_file:dir create_dir_perms;
+allow lbsd gps_socket:sock_file write;
+allow lbsd init:unix_stream_socket { accept listen read write getopt };
+allow lbsd shell_exec:file { read getattr open execute execute_no_trans };
+allow lbsd lbsd_exec:file { read getattr open execute execute_no_trans };
+allow lbsd toolbox_exec:file { read getattr open execute execute_no_trans };
+allow lbsd gps_device:chr_file { read write getattr open ioctl };
+allow lbsd self:capability { dac_override };
+
+allow lbsd rpcd_data_file:sock_file write;
+allow system_server lbsd:unix_stream_socket { connectto };
+allow system_server gps_data_file:dir { search }; 
+allow lbsd rpc:unix_stream_socket { connectto };
+allow lbsd rpc_recv_socket:sock_file write; 
+allow lbsd rpc_send_socket:sock_file write;
+allow lbsd rpc_reg_socket:sock_file write;
+ptest_only(`
+allow lbsd system_file:file { entrypoint };
+')
+init_daemon_domain(lbsd)

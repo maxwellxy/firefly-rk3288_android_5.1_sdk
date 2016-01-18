@@ -1,0 +1,3 @@
+# Additional rules for ueventd
+allow ueventd nvm_data_file:dir { search };
+allow ueventd nvm_data_file:file r_file_perms;

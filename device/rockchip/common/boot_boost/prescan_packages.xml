@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<prescan_packages>
+    <!--<package type="0" path="/system/priv-app/Settings/Settings.apk"/>
+    <package type="0" path="system/app/Provision/Provision.apk"/>
+    <package type="0" path="/system/app/Launcher3/Launcher3.apk"/>
+    <package type="0" path="/system/priv-app/SettingsProvider/SettingsProvider.apk"/>
+    <package type="0" path="/system/priv-app/MediaProvider/MediaProvider.apk"/>
+    <package type="1" path="/system/app/LatinIME/LatinIME.apk"/>
+    <package type="0" path="system/priv-app/FusedLocation/FusedLocation.apk"/>
+    <package type="0" path="/system/priv-app/DownloadProvider/DownloadProvider.apk"/>
+    <package type="0" path="/system/app/GoogleServicesFramework/GoogleServicesFramework.apk"/>
+    <package type="0" path="/system/app/PackageInstaller/PackageInstaller.apk"/>-->
+    <package type="0" path="/system/app/Launcher3"/>
+    <package type="0" path="/system/priv-app/Settings"/>
+    <package type="0" path="/system/priv-app/SystemUI"/>
+    <package type="0" path="/system/priv-app/SettingsProvider"/>
+    <package type="0" path="/system/priv-app/MediaProvider"/>
+    <package type="0" path="/system/priv-app/FusedLocation"/>
+    <!--<package type="1" path="/system/app/LatinIME"/>-->
+    <package type="0" path="/system/priv-app/GoogleServicesFramework"/>
+    <package type="0" path="/system/priv-app/GmsCore"/>
+    <package type="1" path="/system/app/LatinImeGoogle"/>
+</prescan_packages>

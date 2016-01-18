@@ -1,0 +1,10 @@
+# Additional rules for drmserver
+# For accessing /data/wvkeybox
+allow drmserver system_data_file:dir { write add_name };
+allow drmserver system_data_file:file { write create open };
+
+allow drmserver gpu_device:chr_file rw_file_perms;
+allow drmserver video_device:chr_file rw_file_perms;
+
+# for xts to get device id
+allow drmserver rknand_device:chr_file { open getattr read write ioctl };

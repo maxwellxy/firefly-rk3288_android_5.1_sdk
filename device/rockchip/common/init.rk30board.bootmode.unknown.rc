@@ -1,0 +1,9 @@
+on fs
+    insmod /rk30xxnand_ko.ko
+# mount mtd partitions
+#    mount ext4 mtd@system /system wait ro noatime nodiratime noauto_da_alloc
+#    start readahead
+#    mount ext4 mtd@metadata /metadata wait noatime nodiratime nosuid nodev noauto_da_alloc
+#    mount ext4 mtd@userdata /data wait noatime nodiratime nosuid nodev noauto_da_alloc
+#    mount ext4 mtd@cache /cache wait noatime nodiratime nosuid nodev noauto_da_alloc
+    mount_all fstab.rk30board

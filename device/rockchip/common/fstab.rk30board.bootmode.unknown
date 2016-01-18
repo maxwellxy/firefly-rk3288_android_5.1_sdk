@@ -1,0 +1,21 @@
+# Android fstab file.
+#<src>                                          <mnt_point>         <type>    <mnt_flags and options>                       <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+/dev/block/rknand_system                   /system             ext4      ro,noatime,nodiratime,noauto_da_alloc,discard                                 wait,resize,check
+# use this line below instead to enable verity
+#/dev/block/rknand_system                 /system             ext4      ro,noatime,nodiratime,noauto_da_alloc                                          wait,check,verify
+/dev/block/rknand_cache                    /cache              ext4      noatime,nodiratime,nosuid,nodev,noauto_da_alloc,discard                       wait
+/dev/block/rknand_metadata                 /metadata           ext4      noatime,nodiratime,nosuid,nodev,noauto_da_alloc,discard                       wait,check
+/dev/block/rknand_userdata                 /data               f2fs      noatime,nodiratime,nosuid,nodev,errors=recover                                wait,check,forceencrypt=/metadata/key_file
+/dev/block/rknand_userdata                 /data               ext4      noatime,nodiratime,nosuid,nodev,noauto_da_alloc,discard,errors=panic          wait,check,forceencrypt=/metadata/key_file
+# /dev/block/rknand_radical_update           /radical_update     ext4      noatime,nodiratime,nosuid,nodev,noauto_da_alloc,discard          wait
+
+/devices/virtual/block/rknand_user              /mnt/internal_sd     vfat      defaults        voldmanaged=internal_sd:auto,noemulatedsd
+/devices/ff0c0000.rksdmmc/mmc_host/mmc          /mnt/external_sd     vfat      defaults        voldmanaged=external_sd:auto
+# Vold does not support multi device path yet
+# /devices/ff580000.usb                           /mnt/usb_storage     vfat      defaults        voldmanaged=usb_storage:auto
+# /devices/ff500000.usb                           /mnt/usb_storage     vfat      defaults        voldmanaged=usb_storage:auto
+/devices/ff540000.usb                           /mnt/usb_storage     vfat      defaults        voldmanaged=usb_storage:auto
+/dev/block/zram0                                none                swap      defaults                                              zramsize=533413200

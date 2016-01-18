@@ -1,0 +1,8 @@
+# Rules for logconfig
+type logconfig, domain;
+type logconfig_exec, exec_type, file_type;
+init_daemon_domain(logconfig)
+
+allow logconfig property_socket:sock_file write;
+allow logconfig system_prop:property_service set;
+allow logconfig init:unix_stream_socket connectto;

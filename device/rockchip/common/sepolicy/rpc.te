@@ -1,0 +1,33 @@
+# Rules for rpc (Server, Notifier and daemon)
+type rpc, domain;
+type rpc_exec, exec_type, file_type;
+init_daemon_domain(rpc)
+
+allow rpc rpcd_data_file:dir rw_dir_perms;
+allow rpc rpcd_data_file:file create_file_perms;
+allow rpc default_prop:property_service set;
+allow rpc self:capability { setuid net_admin dac_override};
+allow rpc shell_exec:file { read execute open execute_no_trans };
+allow rpc toolbox_exec:file { read getattr open execute execute_no_trans };
+
+# rpc accesses /data/rpc_reg and /data/rpc_recv
+file_type_auto_trans(rpc, system_data_file, rpcd_data_file)
+allow rpc property_socket:sock_file write;
+
+# Below lines must be fixed
+allow rpc init:unix_stream_socket connectto;
+allow rpc system_data_file:dir { search remove_name };
+allow rpc sysfs:file { read write };
+
+# mr1 changes
+allow rpc radio_device:chr_file rw_file_perms;
+allow rpc rpc_block_device:blk_file { read open r_file_perms};
+allow rpc mvpipe_device:chr_file rw_file_perms;
+allow rpc system_data_file:sock_file unlink;
+# below line must be better specified "modem_state" is manipulated
+#allow rpc sysfs:file write;
+allow rpc block_device:dir search;
+allow rpc self:netlink_kobject_uevent_socket { create setopt bind read };
+#allow rpc block_device:blk_file read;
+
+allow rpc socket_device:sock_file write;

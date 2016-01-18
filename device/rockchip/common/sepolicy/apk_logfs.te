@@ -1,0 +1,8 @@
+# Rules for apk_logfs
+type apk_logfs, domain;
+domain_trans(init, logcat_exec, apk_logfs)
+
+allow apk_logfs log_data_file:dir rw_dir_perms;
+allow apk_logfs log_data_file:file create_file_perms;
+allow apk_logfs self:capability { dac_read_search dac_override };
+allow apk_logfs self:capability2 syslog;

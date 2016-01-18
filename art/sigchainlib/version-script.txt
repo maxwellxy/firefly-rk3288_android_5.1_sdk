@@ -1,0 +1,14 @@
+{
+global:
+  ClaimSignalChain;
+  EnsureFrontOfChain;
+  UnclaimSignalChain;
+  InvokeUserSignalHandler;
+  InitializeSignalChain;
+  SetSpecialSignalHandlerFn;
+  sigaction;
+  signal;
+  sigprocmask;
+local:
+  *;
+};

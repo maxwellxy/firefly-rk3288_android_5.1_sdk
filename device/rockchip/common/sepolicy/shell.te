@@ -1,0 +1,5 @@
+# Additional rules for shell
+allow shell toolbox_exec:file { read getattr open execute execute_no_trans };
+allow shell logcat_exec:file { read getattr open execute execute_no_trans };
+allow shell serial_device:chr_file rw_file_perms;
+allow shell proc_cpuinfo:file mounton;

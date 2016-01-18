@@ -1,0 +1,19 @@
+# Rules for crashlogd
+type crashlogd, domain;
+type crashlogd_exec, exec_type, file_type;
+init_daemon_domain(crashlogd)
+
+userdebug_or_eng(`
+unconfined_domain(crashlogd)
+
+allow crashlogd default_prop:property_service set;
+allow crashlogd domain:process getattr;
+allow domain crashlogd:fd use;
+
+allow crashlogd { dumpstate_exec logcat_exec shell_exec su_exec vdc_exec zygote_exec }:file execute_no_trans;
+allow crashlogd anr_data_file:dir relabelto;
+allow crashlogd ctl_default_prop:property_service set;
+
+allow crashlogd system_file:file execute_no_trans;
+allow crashlogd toolbox_exec:file execute_no_trans;
+')

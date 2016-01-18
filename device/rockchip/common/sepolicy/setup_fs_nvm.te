@@ -1,0 +1,16 @@
+# Rules for setup_fs_nvm
+type setup_fs_nvm, domain;
+type setup_fs_nvm_exec, exec_type, file_type;
+init_daemon_domain(setup_fs_nvm)
+
+allow setup_fs_nvm kernel:process setsched;
+allow setup_fs_nvm nvm_block_device:blk_file rw_file_perms;
+allow setup_fs_nvm rootfs:dir mounton;
+allow setup_fs_nvm nvm_data_file:dir { mounton };
+
+# Below lines must be fixed
+#allow setup_fs_nvm labeledfs:filesystem { mount unmount };
+allow setup_fs_nvm rootfs:file { execute execute_no_trans };
+allow setup_fs_nvm system_file:file execute_no_trans;
+allow setup_fs_nvm block_device:dir search;
+allow setup_fs_nvm self:capability sys_admin;

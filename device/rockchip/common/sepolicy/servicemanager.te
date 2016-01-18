@@ -1,0 +1,10 @@
+# Additional rules for servicemanager
+allow servicemanager pekallfmrserver:dir search;
+allow servicemanager pekallfmrserver:file { read open };
+allow servicemanager pekallfmrserver:process getattr;
+allow servicemanager crashlogd:dir search;
+allow servicemanager crashlogd:file { read open };
+allow servicemanager crashlogd:process getattr;
+allow servicemanager init:dir search;
+allow servicemanager init:file { read open };
+allow servicemanager init:process getattr;

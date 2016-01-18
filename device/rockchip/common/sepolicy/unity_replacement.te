@@ -1,0 +1,2 @@
+# enable unity replacement
+allow system_server apk_data_file:lnk_file { create unlink };

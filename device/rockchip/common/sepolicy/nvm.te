@@ -1,0 +1,10 @@
+# Rules for nvm (nvm_useragent)
+type nvm, domain;
+type nvm_exec, exec_type, file_type;
+init_daemon_domain(nvm)
+
+allow nvm radio_device:chr_file rw_file_perms;
+allow nvm nvm_block_device:blk_file rw_file_perms;
+allow nvm self:capability { sys_admin dac_override dac_read_search };
+allow nvm nvm_data_file:dir { rw_dir_perms mounton };
+allow nvm nvm_data_file:file create_file_perms;

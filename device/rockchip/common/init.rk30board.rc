@@ -1,0 +1,163 @@
+import init.${ro.hardware}.bootmode.${ro.bootmode}.rc
+import init.${ro.hardware}.environment.rc
+import init.rockchip.rc
+import init.connectivity.rc
+import init.box.samba.rc
+
+on post-fs
+    insmod /system/lib/modules/ump.ko
+    insmod /system/lib/modules/mali.ko
+    insmod /system/lib/modules/mali_kbase.ko
+    insmod /system/lib/modules/rk30_mirroring.ko
+    insmod /system/lib/modules/rk29-ipp.ko
+    insmod /system/lib/modules/rk29-ipp.ko.3.0.36+
+    insmod /system/lib/modules/rk29-ipp.ko.3.0.101+
+
+    # Turn on swap
+    swapon_all /fstab.rk30board
+
+on post-fs-data
+  
+    # AP6476 GPS permission
+    chmod 755 /system/bin/glgps
+    chown root system /system/bin/glgps
+    chmod 644 /system/lib/hw/gps.default.so
+    chown root system /system/lib/hw/gps.default.so
+    mkdir /data/gps 0770 system net_bt_stack
+
+    ##$_rbox_$_modify_$_chenzhi_20120309
+    ##$_rbox_$_modify_$_begin
+    mkdir /data/misc/ppp 777 system system
+    chmod 777 /data/misc/ppp
+    copy /etc/ppp/pap-secrets /data/misc/ppp/pap-secrets
+    copy /etc/ppp/pppoe.conf /data/misc/ppp/pppoe.conf
+    ##$_rbox_$_modify_$_end
+
+on boot
+
+    restorecon_recursive /sys/devices/system/cpu/cpufreq/interactive
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+
+    # Assume SMP uses shared cpufreq policy for all CPUs
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown system system  /sys/devices/ffa30000.gpu/dvfs
+
+    chown system system /sys/devices/system/cpu/cpu1/online
+    chmod 0660 /sys/devices/system/cpu/cpu1/online
+
+    chown system system /sys/module/rockchip_pm/parameters/policy
+    chmod 0660 /sys/module/rockchip_pm/parameters/policy
+
+    # b/13568411: make lazy vfree flush thresholds match flush_tlb_range
+    write /proc/sys/vm/lazy_vfree_tlb_flush_all_threshold 524288
+
+    chown wifi wifi /sys/class/rkwifi/driver 
+    chown wifi wifi /sys/class/rkwifi/power
+    chown wifi wifi /sys/class/rkwifi/chip
+    chown wifi wifi /sys/class/rkwifi/preload
+
+    write /proc/sys/net/core/rmem_max 1048576
+    write /proc/sys/net/core/wmem_max 1048576
+
+    # backlight
+    chown system system /sys/class/backlight/rk28_bl/brightness
+    
+    # for hdmi
+    chown root system /sys/class/display/HDMI/enable
+    chown root system /sys/class/display/HDMI/mode
+    chown root system /sys/class/display/HDMI/scale
+
+    chown root system /sys/class/graphics/fb0/bcsh
+    chown root system /sys/class/graphics/fb0/dsp_lut
+    chmod 0664 /sys/class/graphics/fb0/bcsh
+    chmod 0664 /sys/class/graphics/fb0/dsp_lut
+
+	chown system graphics /sys/class/graphics/fb0/scale
+	chmod 0664 /sys/class/graphics/fb0/scale
+
+    chown system system /sys/mali400_utility/utility
+    chmod 0664 /sys/mali400_utility/utility
+
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+     
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+
+    #add for usb otg by huangjc
+    chown system system /sys/bus/platform/drivers/usb20_otg/force_usb_mode
+    chmod 0664 /sys/bus/platform/drivers/usb20_otg/force_usb_mode
+
+# cpu min freq must change to 126M when boot completed
+on property:sys.boot_completed=1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 0
+    setprop persist.sys.first_booting false
+
+# for telephony function
+on property:ro.boot.baseband=N/A
+    setprop ro.radio.noril false
+    start ril-daemon
+
+##$_rbox_$_modify_$_chenzhi_20120309
+##$_rbox_$_modify_$_begin
+service pppoe_setup /system/bin/pppoe-setup
+    disabled
+    oneshot
+
+service pppoe_start /system/bin/pppoe-start
+    disabled
+    oneshot
+
+service bplus_helper  /system/bin/bplus_helper
+    class main
+    oneshot
+
+service pppoe_stop /system/bin/pppoe-stop
+    disabled
+    oneshot
+##$_rbox_$_modify_$_end
+
+
+service drmservice /system/bin/drmservice
+        class main
+        oneshot
+
+service catlog system/bin/busybox sh /system/bin/catlog.sh
+        disabled
+        oneshot
+
+on property:sys.boot_completed=1
+        start catlog
+	
+#switch ubuntu
+service switch_ubuntu /system/bin/busybox  sh  /system/bin/switch_ubuntu.sh
+    disabled
+    oneshot
+
+on property:app.switch_ubuntu.start=1
+    start switch_ubuntu

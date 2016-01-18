@@ -1,0 +1,27 @@
+# Additional rules for rild
+allow rild rpc:unix_stream_socket connectto;
+allow rild rpcd_data_file:sock_file write;
+allow rild socket_device:sock_file write;
+
+# mr1 changes
+allow rild nvm_block_device:blk_file rw_file_perms;
+allow rild nvm_data_file:dir { read write search add_name };
+allow rild nvm_data_file:file { rw_file_perms create };
+allow rild rpcd_data_file:dir r_dir_perms;
+allow rild socket_device:sock_file write;
+unix_socket_connect(rild, msmSock, rpc);
+unix_socket_connect(rild, rpc_recv, rpc);
+unix_socket_connect(rild, rpc_send, rpc);
+unix_socket_connect(rild, rpc_reg, rpc);
+# ppp for 3G dongle 
+allow rild ppp_device:chr_file rw_file_perms;
+allow rild net_radio_prop:property_service set;
+allow rild ppp_exec:file {execute execute_no_trans open};
+allow rild ppp_exec:file getattr;
+allow rild ppp_exec:file { read };
+allow rild self:capability { setuid setgid dac_override };
+# for 3G dongle in userdubg mode
+allow rild toolbox_exec:file {getattr execute_no_trans execute read open};
+allow rild system_data_file:dir {write add_name};
+allow rild system_data_file:file {create write};
+allow rild self:capability { sys_admin };

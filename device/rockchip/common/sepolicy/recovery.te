@@ -1,0 +1,29 @@
+
+recovery_only(`
+    allow recovery ctl_rildaemon_prop:property_service set;
+    allow recovery rootfs:dir { rw_dir_perms create relabelfrom relabelto setattr };
+    allow recovery rootfs:lnk_file { create_file_perms relabelfrom relabelto }; 
+    allow recovery rootfs:file create_file_perms;
+    allow recovery rootfs:file rx_file_perms;
+    allow recovery sysfs_devices_system_cpu:file rw_file_perms;
+    allow recovery self:capability { mknod sys_boot };
+    allow recovery usbfs:dir rw_dir_perms;
+    allow recovery kernel:system module_request;
+    allow recovery serial_device:chr_file rw_file_perms;
+    allow recovery vfat:file r_file_perms;
+    allow recovery device:file rw_file_perms;
+    allow recovery device:dir rw_dir_perms;
+    allow recovery device:chr_file create_file_perms;
+    allow recovery console_device:chr_file create_file_perms;
+    allow recovery cache_file:dir { mounton };
+    allow recovery proc_sysrq:file rw_file_perms;
+    allow recovery media_rw_data_file:dir { search open read };
+    allow recovery vfat:dir rw_dir_perms;
+    allow recovery media_rw_data_file:file { open read };
+
+	allow recovery ru_file:file execute_no_trans;
+	allow recovery ru_file:{ file lnk_file } { create_file_perms relabelfrom relabelto };
+	allow recovery ru_file:dir { create_dir_perms relabelfrom relabelto };
+    allow recovery rootfs:file rx_file_perms;
+    allow recovery device:file create_file_perms;
+')

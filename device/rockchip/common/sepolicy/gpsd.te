@@ -1,0 +1,22 @@
+wakelock_use(gpsd)
+# Additional rules for gpsd
+allow gpsd rpc:unix_stream_socket connectto;
+allow gpsd rpcd_data_file:sock_file write;
+allow gpsd lbsd_exec:file { read getattr open execute execute_no_trans };
+allow gpsd self:capability dac_override;
+allow gpsd toolbox_exec:file { read getattr open execute execute_no_trans };
+allow gpsd lbsd_exec:file entrypoint;
+allow gpsd log_data_file:dir { write add_name };
+allow gpsd log_data_file:file create_file_perms;
+allow gpsd gps_socket:sock_file write;
+
+# Below lines must be fixed
+allow gpsd init:unix_stream_socket { rw_socket_perms listen accept };
+
+# mr1
+allow gpsd rpcd_data_file:dir r_dir_perms;
+
+allow gpsd socket_device:sock_file write;
+unix_socket_connect(gpsd, rpc_recv, rpc);
+unix_socket_connect(gpsd, rpc_send, rpc);
+unix_socket_connect(gpsd, rpc_reg, rpc);

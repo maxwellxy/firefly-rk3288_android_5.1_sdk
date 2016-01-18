@@ -1,0 +1,28 @@
+# Additional device definitions
+
+type mvpipe_device, dev_type;
+
+type fmdev_device, dev_type;
+
+type nvm_block_device, dev_type;
+
+type rpc_block_device, dev_type;
+
+type system_block_device, dev_type;
+
+type tee_rpc_device, dev_type;
+
+type voemcrypto_device, dev_type;
+type ddr_device, dev_type;
+type rga_device, dev_type;
+type ipp_device, dev_type;
+type vflash_device, dev_type;
+type timer_device, dev_type;
+type vpu_device, dev_type;
+type hevc_device, dev_type;
+type rtkbt_device, dev_type;
+# for rknand device
+type rknand_device, dev_type;
+
+# for sensor device
+type sensor_device, dev_type;

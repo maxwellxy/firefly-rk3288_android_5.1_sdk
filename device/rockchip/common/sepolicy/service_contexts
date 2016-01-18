@@ -1,0 +1,4 @@
+# Additional service_contexts definitions
+fmradioservice                u:object_r:radio_service:s0
+oemtelephony                  u:object_r:radio_service:s0
+msm.registry                  u:object_r:system_app_service:s0

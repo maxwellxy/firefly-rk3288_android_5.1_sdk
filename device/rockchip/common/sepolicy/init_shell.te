@@ -1,0 +1,26 @@
+# Additional rules for init_shell
+allow init_shell toolbox_exec:file execute_no_trans;
+
+# Below lines must be fixed
+allow init_shell self:capability sys_module;
+allow init_shell system_prop:property_service set;
+#allow init_shell labeledfs:filesystem remount;
+allow init_shell nvm_block_device:blk_file rw_file_perms;
+allow init_shell kernel:process setsched;
+#allow init_shell system_file:dir rw_dir_perms;
+#allow init_shell system_file:lnk_file create;
+allow init_shell system_file:dir r_dir_perms;
+allow init_shell system_block_device:blk_file r_file_perms;
+ptest_only(`
+allow init_shell self:tcp_socket { create connect read getopt write setopt accept };
+allow init_shell block_device:blk_file r_file_perms;
+allow init_shell shell_exec:file execute_no_trans;
+allow init_shell vfat:filesystem { mount unmount };
+allow init_shell port:tcp_socket { name_connect };
+allow init_shell labeledfs:filesystem { remount };
+allow init_shell system_file:dir rw_dir_perms;
+allow init_shell rpc_block_device:blk_file { read };
+allow init_shell self:udp_socket { create ioctl };
+allow init_shell ctl_default_prop:property_service { set };
+allow init_shell system_file:lnk_file {  create };
+')
