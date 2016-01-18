@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<hardwareAcc-package>
+<app package="bench" mode="4"/>
+<app package="mark" mode="4"/>
+<app package="aurorasoftworks" mode="4" />
+<app package="rightware" mode="4" />
+<app package="browser" mode="0"/>
+<app package="setting" mode = "2"/>
+<app package="result" mode = "1"/>
+<app package="calculator" mode = "1"/>
+<app package="clock" mode = "1"/>
+<app package="music" mode = "1"/>
+<app package="explorer" mode = "1"/>
+<app package="home" mode = "3"/>
+<app package="launcher" mode = "3"/>
+<app package="com.replica.replicaisland" mode="4"/>
+<app package="com.android.cts" mode="4" />
+<app package="com.tactel.electopia" mode="4" />
+</hardwareAcc-package>

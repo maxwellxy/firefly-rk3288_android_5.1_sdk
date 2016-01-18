@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2015 Intel Mobile Communications GmbH
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Auto set language by sim card settings ui -->
+    <string name="auto_language_title">Automatic Language</string>
+    <string name="auto_language_summaryOn">Auto set language according to SIM card country code info</string>
+    <string name="auto_language_summaryOff">Auto set language according to SIM card country code info</string>
+
+    <!-- Power save mode -->
+    <string name="power_save_basic_settings">Basic controls</string>
+    <string name="show_power_save_indicator">Show indicator</string>
+    <string name="show_power_save_indicator_summary">Show power save mode enabled indicator on status bar</string>
+    <string name="turn_on_automatically">Turn on power save mode automatically</string>
+    <string name="turn_on_automatically_summary">When battery is less than 15%, turn on power save mode</string>
+    <string name="power_save_sub_settings">Feature controls</string>
+    <string name="limit_cpu">Limit CPU performance</string>
+    <string name="limit_cpu_summary">Limit CPU maximum frequency</string>
+    <string name="limit_brightness">Reduce backlight brightness</string>
+    <string name="limit_brightness_summary">Reduce brightness of backlight to save power</string>
+    <string name="limit_location">Disable location services</string>
+    <string name="limit_location_summary">GPS location services will be disabled</string>
+    <string name="limit_network">Restrict network access</string>
+    <string name="limit_network_summary">Most background data will be disabled</string>
+    <string name="limit_animation">No animation transaction</string>
+    <string name="limit_animation_summary">Window animation transaction will be disabled</string>
+    <string name="power_save_tips">Tips</string>
+</resources>

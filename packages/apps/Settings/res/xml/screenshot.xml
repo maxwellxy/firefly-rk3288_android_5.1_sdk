@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+            android:key="category_screenshot"
+            android:title="@string/screenshot_manager"/>
+   <ListPreference
+            android:entries="@array/screenshot_delay_entries"
+            android:entryValues="@array/screenshot_delay_values"
+            android:key="screenshot_delay"
+            android:persistent="true"
+            android:title="@string/screenshot_delay_title"
+           
+         
+       />
+   <ListPreference
+            android:entries="@array/screenshot_storage_location"
+            android:entryValues="@array/screenshot_strorage_location_values"
+            android:key="screenshot_storage"
+            android:persistent="true"
+            android:title="@string/screenshot_storage_title"
+       
+       />
+   <CheckBoxPreference
+            android:key="screenshot_show"
+            android:title="@string/screenshot_show"
+            android:persistent="true"
+       />
+   <Preference
+           android:key="screenshot_version"
+           android:title="@string/screenshot_version"
+       />
+</PreferenceScreen>

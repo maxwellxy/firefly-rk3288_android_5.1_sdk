@@ -1,0 +1,24 @@
+commit 7f055f49a3d8aa7ed580001d5825614d8826857d
+Author: zyh <zyh@rock-chips.com>
+Date:   Thu Nov 27 15:07:09 2014 +0800
+
+    show the Camera2 on Launcher and add the resource for video
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+old mode 100644
+new mode 100755
+index e187f99..1fcd775
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -67,6 +67,7 @@
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+ 
+             <meta-data
+diff --git a/res/drawable-sw600dp-xxhdpi/ic_capture_video.png b/res/drawable-sw600dp-xxhdpi/ic_capture_video.png
+new file mode 100644
+index 0000000..dc3d026
+Binary files /dev/null and b/res/drawable-sw600dp-xxhdpi/ic_capture_video.png differ

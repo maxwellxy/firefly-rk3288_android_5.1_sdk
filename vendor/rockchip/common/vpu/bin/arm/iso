@@ -1,0 +1,114 @@
+#!/system/bin/busybox1.11 sh
+
+SETPROP=/system/bin/setprop
+GETPROP=/system/bin/getprop
+ECHO="/system/bin/log -t ISOSH"
+
+$ECHO "Method: $1"
+$ECHO "Param1: $2"
+
+#define defalut loop device
+loopdevice="/dev/block/loop7"
+
+#check /mnt/iso
+checkdevicebusy() {
+	local number=`lsof|grep  /mnt/iso | busybox wc -l`
+	$ECHO "checkdevicebusy(): $number"
+	return $number
+}
+
+#get free loop device for iso
+getfreeloop() {
+	$ECHO "getfreeloop in***********"
+	local loop=0
+	while [ $loop -le 7 ]
+	do
+		local device="/dev/block/loop$loop"
+		local status=`busybox1.11 losetup $device`
+		$ECHO "getfreeloop $device : $status"
+		if [ "$status" = "" ] ; then
+			$ECHO "getfreeloop origin:$loopdevice<---target:$device"
+			loopdevice=$device
+			return 
+		fi
+		loop=$(( $loop + 1 ))
+	done
+}
+
+releaseLoop() {
+	local devicename=`$GETPROP "sys.video.loop" ""`
+	local status=`busybox1.11 losetup $devicename`
+	if [ "$status" != "" ] ; then
+		$ECHO "releaseLoop $devicename"
+		Unmount $devicename
+	fi
+}
+
+getFreeLoopDevice() {
+	local devicename=`busybox1.11 losetup -f`
+	$ECHO "getFreeLoopDevice: $devicename"
+	local loop=0
+	while [ $loop -le 7 ]
+	do
+		local device="/dev/loop$loop"
+		if [ "$devicename" = "$device" ] ; then
+			loopdevice="/dev/block/loop$loop"
+			$ECHO "getFreeLoopDevice: $loopdevice"
+			return
+		fi
+		loop=$(( $loop + 1 ))
+	done
+}
+
+Mount() {
+	$ECHO "Mount"
+	$ECHO "Mount(): $1 "
+	$ECHO "Mount(): $2"
+	while read LINE;
+	do
+		$ECHO "Path: $LINE"
+		busybox1.11 losetup $1 "$LINE"
+		if [ "$?" != 0 ] ; then
+			$ECHO "busybox1.11 losetup $1 "$LINE" $?"
+			return
+		fi
+		busybox1.11 mount -t udf $1 /mnt/iso >> /data/iso.txt
+		if [ "$?" != 0 ] ; then
+			$ECHO "busybox1.11 mount -t udf $1 /mnt/iso $?"
+			return
+		fi
+	done < $2
+	$SETPROP "sys.video.loop" "$loopdevice"
+	exit 0
+}
+
+Unmount() {
+	$ECHO "Unmount: $1"
+	busybox1.11 losetup -d $1
+	if [ "$?" != 0 ] ; then
+		$ECHO "busybox1.11 losetup -d $1, result $?"
+		return
+	fi
+	usleep 100
+	busybox1.11 umount -l /mnt/iso
+	if [ "$?" != 0 ] ; then
+		$ECHO "busybox1.11 umount -l /mnt/iso, result $?"
+		return
+	fi
+}
+
+if [ $1 == "mount" ]; then
+	checkdevicebusy
+	releaseLoop
+	getfreeloop
+	Mount $loopdevice $2
+	rm -rf $2
+elif [ $1 == "unmount" ]; then
+	$ECHO "unmount"
+	local devicename=`$GETPROP "sys.video.loop" ""`
+	$ECHO "unmount:$devicename***********"
+	Unmount $devicename
+	$SETPROP "sys.video.loop" ""
+elif [ $1 == "reset" ]; then
+	busybox1.11 pkill mediaserver
+fi

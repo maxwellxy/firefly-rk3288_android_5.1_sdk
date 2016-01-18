@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--$_FOR_ROCKCHIP_RBOX_$-->
+<!--$_rbox_$_modify_$_chenzhi_20120309: add for pppoe-->
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="pppoe_connect"
+        android:title="@string/pppoe_connect"
+        android:persistent="false" />
+    
+    <ListPreference
+        android:key="physical_interface"
+        android:title="@string/pppoe_phy_iface"
+        android:summary="@string/pppoe_phy_iface_summary"
+        android:entries="@array/entries_pppoe_phy_iface"
+        android:entryValues="@array/entryvalues_pppoe_phy_iface"
+        android:dialogTitle="@string/pppoe_phy_iface_dialog_title" />
+
+    <PreferenceScreen
+        android:key="pppoe_add_account"
+        android:title="@string/pppoe_add_account"
+        android:persistent="false"> 
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.android.settings"
+            android:targetClass="com.android.settings.pppoe.PppoeAccountsSettings" />
+    </PreferenceScreen>
+
+</PreferenceScreen>

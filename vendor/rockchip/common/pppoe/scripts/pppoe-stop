@@ -1,0 +1,110 @@
+#!/system/bin/busybox sh
+# ../scripts/pppoe-stop.  Generated from pppoe-stop.in by configure.
+#***********************************************************************
+#
+# pppoe-stop
+#
+# Shell script to bring down a PPPoE connection
+#
+# Copyright (C) 2000 Roaring Penguin Software Inc.
+#
+# $Id$
+#
+# This file may be distributed under the terms of the GNU General
+# Public License.
+#
+# LIC: GPL
+#
+# Usage: pppoe-stop [config_file]
+# If config_file is omitted, defaults to /etc/ppp/pppoe.conf
+#
+#***********************************************************************
+
+# Set to "C" locale so we can parse messages from commands
+LANG=C
+export LANG
+
+SETPROP=/system/bin/setprop
+
+ECHO="/system/bin/log -t pppoe_stop"
+#ECHO=echo
+DEBUG=/data/misc/ppp/debug
+ME="`busybox basename $0`"
+#LOGGER="/usr/bin/logger -t $ME"
+CONFIG="$1"
+if [ "$CONFIG" = "" ] ; then
+    CONFIG=/data/misc/ppp/pppoe.conf
+fi
+
+if [ ! -f "$CONFIG" -o ! -r "$CONFIG" ] ; then
+    $ECHO "$ME: Cannot read configuration file '$CONFIG'"
+    exit 1
+fi
+export CONFIG
+. $CONFIG
+
+PPPOE_PIDFILE="$PIDFILE.pppoe"
+PPPD_PIDFILE="$PIDFILE.pppd_pppoe"
+STARTPID="$PIDFILE.start"
+
+# Backward config file compatibility
+if test "$DEMAND" = "" ; then
+	DEMAND=no
+fi
+
+# Ignore SIGTERM
+trap "" 15
+
+# Check for pidfile
+if [ -r "$PIDFILE" ] ; then
+    PID=`cat $PIDFILE`
+
+    # Check if still running
+    kill -0 $PID > /dev/null 2>&1
+    if [ $? != 0 ] ; then
+	$ECHO "$ME: The pppoe-connect script (PID $PID) appears to have died"
+    fi
+
+    # Kill pppd, which should in turn kill pppoe
+    if [ -r "$PPPD_PIDFILE" ] ; then
+	PPPD_PID=`cat "$PPPD_PIDFILE"`
+#	$LOGGER -p daemon.notice "Killing pppd"
+	$ECHO "Killing pppd ($PPPD_PID)" >> $DEBUG
+	kill $PPPD_PID > /dev/null 2>&1 || exit 1
+    fi
+
+    # Kill pppoe-start
+    PIDS=`cat $STARTPID`
+    kill -0 $PIDS > /dev/null 2>&1
+    if [ $? = 0 ] ; then
+#	$LOGGER -p daemon.notice "Killing pppoe-connect"
+	kill $PIDS > /dev/null 2>&1
+    fi
+
+    # Kill pppoe-connect
+#    $LOGGER -p daemon.notice "Killing pppoe-connect"
+    $ECHO "Killing pppoe-connect ($PID)" >> $DEBUG
+    kill -9 $PID > /dev/null 2>&1
+
+    # Kill pppd again, in case it's still hanging around
+    if [ -r "$PPPD_PIDFILE" ] ; then
+	PPPD_PID=`cat "$PPPD_PIDFILE"`
+	kill -9 $PPPD_PID > /dev/null 2>&1 || exit 1
+    fi
+
+    busybox rm -f "$PIDFILE" "$PPPD_PIDFILE" "$PPPOE_PIDFILE" "$STARTPID"
+else
+    $ECHO "$ME: No PPPoE connection appears to be running"
+    exit 1
+fi
+
+$SETPROP "net.pppoe.status" "disconnected"
+
+#restore ethernet default gateway
+DEFAULT_GW=`getprop "net.eth.gw"`
+GW_METRIC=`getprop "net.eth.gw.metric"
+$ECHO $DEFAULT_GW
+$ECHO $GW_METRIC
+busybox route add default gw $DEFAULT_GW metric $GW_METRIC
+
+exit 0

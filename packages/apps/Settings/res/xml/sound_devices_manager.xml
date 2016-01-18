@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--$_FOR_ROCKCHIP_RBOX_$-->		
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
+	android:key="sound_devices_manager_screen">
+
+	<PreferenceCategory android:key="sound_playback_list"
+		android:title="@string/sound_output_devices">
+	</PreferenceCategory>
+
+</PreferenceScreen>
