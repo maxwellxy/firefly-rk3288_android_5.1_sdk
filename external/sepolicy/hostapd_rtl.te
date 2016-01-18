@@ -1,0 +1,26 @@
+# userspace wifi access points
+type hostapd_rtl, domain;
+type hostapd_rtl_exec, exec_type, file_type;
+
+net_domain(hostapd_rtl)
+
+allow hostapd_rtl self:capability { net_admin net_raw setuid setgid };
+allow hostapd_rtl self:netlink_socket create_socket_perms;
+allow hostapd_rtl self:packet_socket create_socket_perms;
+allow hostapd_rtl self:netlink_route_socket nlmsg_write;
+
+allow hostapd_rtl wifi_data_file:file rw_file_perms;
+allow hostapd_rtl wifi_data_file:dir create_dir_perms;
+type_transition hostapd_rtl wifi_data_file:dir wpa_socket "sockets";
+type_transition hostapd_rtl wifi_data_file:dir wpa_socket "hostapd";
+allow hostapd_rtl wpa_socket:dir create_dir_perms;
+allow hostapd_rtl wpa_socket:sock_file create_file_perms;
+allow hostapd_rtl netd:fd use;
+allow hostapd_rtl netd:udp_socket { read write };
+allow hostapd_rtl netd:fifo_file { read write };
+# TODO: Investigate whether these inherited sockets should be closed on exec.
+allow hostapd_rtl netd:netlink_kobject_uevent_socket { read write };
+allow hostapd_rtl netd:netlink_nflog_socket { read write };
+allow hostapd_rtl netd:netlink_route_socket { read write };
+allow hostapd_rtl netd:unix_stream_socket { read write };
+allow hostapd_rtl netd:unix_dgram_socket { read write };

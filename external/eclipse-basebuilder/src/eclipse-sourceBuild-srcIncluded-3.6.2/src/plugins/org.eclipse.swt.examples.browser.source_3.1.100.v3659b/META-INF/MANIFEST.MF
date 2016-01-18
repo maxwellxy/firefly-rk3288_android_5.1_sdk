@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.examples.browser;version="3.1.10
+ 0.v3659b";roots:="browserexamplesrc"
+Bundle-Version: 3.1.100.v3659b
+Bundle-Name: %plugin.SWTBrowserExample.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.examples.browser.source
+

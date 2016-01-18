@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mkdir $WORKSPACE/builds
+cd $WORKSPACE/builds
+mkdir -p $WORKSPACE/builds/N
+mkdir -p $WORKSPACE/builds/transfer/files/testUpdates-N
+#$WORKSPACE/org.eclipse.releng.eclipsebuilder/bootstrapHudson.sh -test -skipTest -buildDirectory $WORKSPACE/builds/N -hudson -sign -updateSite $WORKSPACE/builds/transfer/files/testUpdates-N N
+$WORKSPACE/org.eclipse.releng.eclipsebuilder/bootstrapHudson.sh -test -skipTest -buildDirectory $WORKSPACE/builds/N -hudson -updateSite $WORKSPACE/builds/transfer/files/testUpdates-N N

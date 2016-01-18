@@ -1,0 +1,87 @@
+<project default="main" basedir=".">
+	
+	<property name="builderDirectory" value="c:\plugins"/>
+	
+<target name="checkBinary">
+	<exec executable="htmldoc" failonerror="false" failifexecutionfails="false"/>		
+</target>
+	
+<target name="compileSrc" depends="checkBinary">
+    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+    <javac verbose="true" failonerror="false"  srcdir="${builderDirectory}\tools" destdir="${builderDirectory}\tools" />     
+    <available classname="ReadFile" classpath="${builderDirectory}\tools" property="compileSrc"/>
+</target>
+  
+		
+<property name="doczipfile" value="doc.zip"/>
+<property name="scriptName" value="test.sh"/>
+<property name="fileRegexp" value="doc"/>
+<property name="xmlFileName" value="toc.xml"/>
+<property name="htmlFileName" value="toc.html"/>
+<property name="styleSheet" value="${builderDirectory}/tools/toc.xsl"/>	
+	
+<target name="main" depends="compileSrc" if="compileSrc">
+		<antcall target="genPdf">
+			<param name="docPlugin" value="org.eclipse.jdt.doc.isv" />
+		</antcall>	
+			<antcall target="genPdf">
+			<param name="docPlugin" value="org.eclipse.jdt.doc.user" />
+		</antcall>
+		<antcall target="genPdf">
+			<param name="docPlugin" value="org.eclipse.platform.doc.user" />
+		</antcall>
+		<antcall target="genPdf">
+			<param name="docPlugin" value="org.eclipse.pde.doc.user" />
+		</antcall>
+	 <!--   <antcall target="genPdf">
+			<param name="docPlugin" value="org.eclipse.platform.doc.isv" />
+		</antcall> -->
+	
+</target>
+
+<target name="genPdf" depends="unzipDoc,parseFiles,genDoc,assemble" />
+
+<target name="findDocZip">
+		<available file="${buildDirectory}/plugins/${docPlugin}/${doczipfile}" property="doc.zip.present"/>
+</target>
+		
+<target name="unzipDoc" depends="findDocZip" if = "doc.zip.present">
+<unzip src="${buildDirectory}/plugins/${docPlugin}/${doczipfile}" dest="${buildDirectory}/plugins/${docPlugin}/"></unzip>
+<property name="unzipDoc" value="true"/>
+</target>
+
+<target name="parseFiles" if = "unzipDoc">
+<taskdef name="ReadFile" classname="ReadFile" classpath="${builderDirectory}\tools" />
+    <ReadFile xmlFileName="${xmlFileName}" initialPath="${buildDirectory}" htmlFileName="${htmlFileName}" docDir="${buildDirectory}/plugins/${docPlugin}" ScriptName="${scriptName}" scriptParam="htmldoc --book -f" styleSheet="${styleSheet}" docName="${docPlugin}.${buildId}.pdf" />
+     <property name="parseFiles" value="true"/>
+</target>
+
+<target name="genDoc" if = "parseFiles">
+   <!--generate the doc in pdf format -->      
+   <chmod file="${buildDirectory}/plugins/${docPlugin}/${scriptName}" perm="700"/>
+      <exec dir="${buildDirectory}/plugins/${docPlugin}"  executable="${buildDirectory}/plugins/${docPlugin}/${scriptName}"/>
+      <property name="genDoc" value="true"/>
+</target>
+     
+ <target name="assemble" if = "genDoc">    
+      <property name="postingDirectory" value="${buildDirectory}" />
+      <zip destfile="${postingDirectory}/${buildLabel}/${docPlugin}.${buildId}.pdf.zip"
+       basedir="${buildDirectory}/plugins/${docPlugin}/"
+       includes="*.pdf"
+     />
+     <property name="assemble" value="true"/>
+ 	  <antcall target = "cleanUp"/>
+ </target>
+  
+ <target name="cleanUp" if = "assemble">
+ <delete>
+    <fileset dir="${builderDirectory}" includes="**/*.xml.2"/>
+    <fileset dir="${builderDirectory}" includes="**/*${buildId}.pdf"/>
+     <fileset dir="${builderDirectory}" includes="**/${scriptName}"/>
+ 	<fileset dir="${builderDirectory}" includes="**/toc.html"/>
+  </delete>
+   <property name="cleanUp" value="true"/>
+ </target>
+ 
+     
+</project>

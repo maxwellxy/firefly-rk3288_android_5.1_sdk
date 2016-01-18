@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.equinox.server.servletbridge" default="build.update.jar" basedir=".">
+
+	<target name="init">
+		<property name="feature.temp.folder" value="${basedir}/feature.temp.folder"/>
+		<property name="feature.destination" value="${basedir}"/>
+		<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+	</target>
+
+	<target name="all.plugins" depends="init">
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.servletbridge.extensionbundle" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.http.servlet" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.http.servletbridge" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+	</target>
+	<target name="all.features" depends="init">
+	</target>
+	<target name="update.feature" depends="init">
+	</target>
+
+	<target name="all.children" depends="init,all.features,all.plugins,update.feature">
+	</target>
+
+	<target name="children" if="include.children">
+		<antcall target="all.children"/>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the feature: org.eclipse.equinox.server.servletbridge.">
+		<antcall target="all.children">
+			<param name="target" value="build.jars"/>
+		</antcall>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.sources"/>
+		</antcall>
+	</target>
+
+	<target name="build.zips" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.zips"/>
+		</antcall>
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the feature jar of: org.eclipse.equinox.server.servletbridge for an update site.">
+		<antcall target="all.children">
+			<param name="target" value="build.update.jar"/>
+		</antcall>
+		<property name="feature.base" value="${feature.temp.folder}"/>
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E"/>
+		<antcall target="gather.bin.parts" inheritAll="false">
+			<param name="os" value="*"/>
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="updateJar.omitRootfiles" value="true"/>
+			<param name="ws" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="nl" value="*"/>
+		</antcall>
+		<jar destfile="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.jar" basedir="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts">
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E"/>
+		<copy todir="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="feature.xml"/>
+				<include name="rootfiles/"/>
+				<include name="license.html"/>
+				<include name="feature.properties"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E/feature.xml"  selfVersion="1.0.0.v20100510-42A79oB5855K5E" featureIds="" pluginIds="org.eclipse.equinox.http.servlet:0.0.0,1.1.0.v20100503,org.eclipse.equinox.http.servletbridge:0.0.0,1.0.200.v20100503,org.eclipse.equinox.servletbridge.extensionbundle:0.0.0,1.2.0.v20100503,"/>
+		<eclipse.gatherFeature 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${feature.temp.folder}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E"
+		   baseDirectory="${basedir}"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="feature.base">
+		<mkdir dir="${feature.base}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E"/>
+		<antcall target="children">
+			<param name="target" value="gather.bin.parts"/>
+			<param name="destination.temp.folder" value="${feature.base}/plugins"/>
+		</antcall>
+		<copy todir="${feature.base}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="feature.xml"/>
+				<include name="rootfiles/"/>
+				<include name="license.html"/>
+				<include name="feature.properties"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.base}/features/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E/feature.xml"  selfVersion="1.0.0.v20100510-42A79oB5855K5E" featureIds="" pluginIds="org.eclipse.equinox.http.servlet:0.0.0,1.1.0.v20100503,org.eclipse.equinox.http.servletbridge:0.0.0,1.0.200.v20100503,org.eclipse.equinox.servletbridge.extensionbundle:0.0.0,1.2.0.v20100503,"/>
+		<antcall target="rootFiles">
+			<param name="rootTarget" value="rootFiles${os}_${ws}_${arch}"/>
+		</antcall>
+	</target>
+	<target name="rootFiles" unless="updateJar.omitRootfiles">
+		<antcall target="${rootTarget}"/>
+	</target>
+
+	<target name="rootFileswin32_win32_x86">
+		<mkdir dir="${feature.base}/win32.win32.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/win32.win32.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileswin32_win32_x86_64">
+		<mkdir dir="${feature.base}/win32.win32.x86_64/${collectingFolder}/"/>
+		<copy todir="${feature.base}/win32.win32.x86_64/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileswce_ppc_win32_arm">
+		<mkdir dir="${feature.base}/wce_ppc.win32.arm/${collectingFolder}/"/>
+		<copy todir="${feature.base}/wce_ppc.win32.arm/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_x86">
+		<mkdir dir="${feature.base}/linux.gtk.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_ppc">
+		<mkdir dir="${feature.base}/linux.gtk.ppc/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.ppc/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_ppc64">
+		<mkdir dir="${feature.base}/linux.gtk.ppc64/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.ppc64/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_x86_64">
+		<mkdir dir="${feature.base}/linux.gtk.x86_64/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.x86_64/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_s390x">
+		<mkdir dir="${feature.base}/linux.gtk.s390x/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.s390x/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_gtk_s390">
+		<mkdir dir="${feature.base}/linux.gtk.s390/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.gtk.s390/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileslinux_motif_x86">
+		<mkdir dir="${feature.base}/linux.motif.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/linux.motif.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilessolaris_gtk_sparc">
+		<mkdir dir="${feature.base}/solaris.gtk.sparc/${collectingFolder}/"/>
+		<copy todir="${feature.base}/solaris.gtk.sparc/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilessolaris_gtk_x86">
+		<mkdir dir="${feature.base}/solaris.gtk.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/solaris.gtk.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilessolaris_motif_sparc">
+		<mkdir dir="${feature.base}/solaris.motif.sparc/${collectingFolder}/"/>
+		<copy todir="${feature.base}/solaris.motif.sparc/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesaix_motif_ppc">
+		<mkdir dir="${feature.base}/aix.motif.ppc/${collectingFolder}/"/>
+		<copy todir="${feature.base}/aix.motif.ppc/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesaix_gtk_ppc64">
+		<mkdir dir="${feature.base}/aix.gtk.ppc64/${collectingFolder}/"/>
+		<copy todir="${feature.base}/aix.gtk.ppc64/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFileshpux_motif_ia64_32">
+		<mkdir dir="${feature.base}/hpux.motif.ia64_32/${collectingFolder}/"/>
+		<copy todir="${feature.base}/hpux.motif.ia64_32/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesmacosx_carbon_x86">
+		<mkdir dir="${feature.base}/macosx.carbon.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/macosx.carbon.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86">
+		<mkdir dir="${feature.base}/macosx.cocoa.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/macosx.cocoa.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86_64">
+		<mkdir dir="${feature.base}/macosx.cocoa.x86_64/${collectingFolder}/"/>
+		<copy todir="${feature.base}/macosx.cocoa.x86_64/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesqnx_photon_x86">
+		<mkdir dir="${feature.base}/qnx.photon.x86/${collectingFolder}/"/>
+		<copy todir="${feature.base}/qnx.photon.x86/${collectingFolder}/" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}/rootfiles">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="rootFilesgroup_group_group">
+		<antcall target="rootFileswin32_win32_x86"/>
+		<antcall target="rootFileswin32_win32_x86_64"/>
+		<antcall target="rootFileswce_ppc_win32_arm"/>
+		<antcall target="rootFileslinux_gtk_x86"/>
+		<antcall target="rootFileslinux_gtk_ppc"/>
+		<antcall target="rootFileslinux_gtk_ppc64"/>
+		<antcall target="rootFileslinux_gtk_x86_64"/>
+		<antcall target="rootFileslinux_gtk_s390x"/>
+		<antcall target="rootFileslinux_gtk_s390"/>
+		<antcall target="rootFileslinux_motif_x86"/>
+		<antcall target="rootFilessolaris_gtk_sparc"/>
+		<antcall target="rootFilessolaris_gtk_x86"/>
+		<antcall target="rootFilessolaris_motif_sparc"/>
+		<antcall target="rootFilesaix_motif_ppc"/>
+		<antcall target="rootFilesaix_gtk_ppc64"/>
+		<antcall target="rootFileshpux_motif_ia64_32"/>
+		<antcall target="rootFilesmacosx_carbon_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86_64"/>
+		<antcall target="rootFilesqnx_photon_x86"/>
+	</target>
+
+	<target name="zip.distribution" depends="init" description="Create a zip containing all the plug-ins and features for the feature: org.eclipse.equinox.server.servletbridge.">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="gather.bin.parts">
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="os" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="ws" value="*"/>
+			<param name="nl" value="*"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.sources" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.equinox.server.servletbridge.source_1.0.0.v20100510-42A79oB5855K5E/src"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.src.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.logs" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+			<param name="include.children" value="true"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.log.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the feature: org.eclipse.equinox.server.servletbridge of all the zips, jars and logs created.">
+		<delete file="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.jar"/>
+		<delete file="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.bin.dist.zip"/>
+		<delete file="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.log.zip"/>
+		<delete file="${feature.destination}/org.eclipse.equinox.server.servletbridge_1.0.0.v20100510-42A79oB5855K5E.src.zip"/>
+		<delete dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="clean"/>
+		</antcall>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/features/org.eclipse.equinox.server.servletbridge/" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+		<antcall target="all.children">
+			<param name="target" value="refresh"/>
+		</antcall>
+	</target>
+	<target name="gather.sources">
+		<antcall target="children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.equinox.server.servletbridge.source_1.0.0.v20100510-42A79oB5855K5E/src"/>
+		</antcall>
+	</target>
+
+	<target name="gather.logs" depends="init">
+		<mkdir dir="${feature.temp.folder}/plugins"/>
+		<property name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		</antcall>
+	</target>
+
+</project>

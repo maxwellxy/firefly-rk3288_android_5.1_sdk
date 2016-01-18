@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resource Monitoring Core Resources Extensions (Incubation)
+Bundle-SymbolicName: org.eclipse.core.resources.jmx;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
+Import-Package: javax.management,
+ javax.management.remote,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime;common=split,
+ org.eclipse.core.runtime.jobs,
+ org.eclipse.equinox.jmx.common,
+ org.eclipse.equinox.jmx.server,
+ org.eclipse.osgi.util,
+ org.osgi.framework,
+ org.osgi.service.log,
+ org.osgi.util.tracker
+Bundle-Activator: org.eclipse.core.internal.resources.jmx.Activator
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ CDC-1.0/Foundation-1.0,
+ J2SE-1.3

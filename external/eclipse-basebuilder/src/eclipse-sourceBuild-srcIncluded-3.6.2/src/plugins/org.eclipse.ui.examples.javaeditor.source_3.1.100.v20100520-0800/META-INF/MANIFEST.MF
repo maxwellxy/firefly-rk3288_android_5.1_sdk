@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.examples.javaeditor;version="3.1.
+ 100.v20100520-0800";roots:="templateeditorexamplesrc,javaeditorexampl
+ esrc"
+Bundle-Version: 3.1.100.v20100520-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.javaeditor.source
+

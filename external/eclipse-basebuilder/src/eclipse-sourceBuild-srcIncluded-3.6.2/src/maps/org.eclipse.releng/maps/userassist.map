@@ -1,0 +1,26 @@
+!***************  UA CONTRIBUTION  *********************************************
+
+!**** Help
+plugin@org.eclipse.help=v20100524,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.help.appserver=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.help.base=r36_20101123,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.help.ui=r36_20101116,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.help.webapp=r36_20101130,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+!**** Welcome
+plugin@org.eclipse.ui.intro=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.intro.universal=r36_v20100702,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+!**** Cheat sheets
+plugin@org.eclipse.ui.cheatsheets=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+!**** Browser
+plugin@org.eclipse.ui.browser=r36_20101216,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+!**** Forms
+plugin@org.eclipse.ui.forms=r36_v20100702,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+!**** Tests
+plugin@org.eclipse.ua.tests=r36_r20100816,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ua.tests.doc=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.tests.forms=v20100517,kmoir@dev.eclipse.org:/cvsroot/eclipse,

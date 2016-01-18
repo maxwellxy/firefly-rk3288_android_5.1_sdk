@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.team.cvs.ssh2;version="3.2.300.I2010
+ 0526-0800";roots:="."
+Bundle-Version: 3.2.300.I20100526-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.team.cvs.ssh2.source
+

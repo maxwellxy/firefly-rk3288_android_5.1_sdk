@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.runtime.compatibility.auth;vers
+ ion="3.2.200.v20100517";roots:="."
+Bundle-Version: 3.2.200.v20100517
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.runtime.compatibility.auth.sourc
+ e
+

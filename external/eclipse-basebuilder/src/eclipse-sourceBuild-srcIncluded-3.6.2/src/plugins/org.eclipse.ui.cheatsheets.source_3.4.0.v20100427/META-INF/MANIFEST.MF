@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %PROVIDER_NAME
+Eclipse-SourceBundle: org.eclipse.ui.cheatsheets;version="3.4.0.v20100
+ 427";roots:="."
+Bundle-Version: 3.4.0.v20100427
+Bundle-Name: %PLUGIN_NAME
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.cheatsheets.source
+

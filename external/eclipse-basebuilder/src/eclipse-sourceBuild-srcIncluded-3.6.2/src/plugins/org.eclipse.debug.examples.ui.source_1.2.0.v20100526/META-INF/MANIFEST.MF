@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Eclipse-SourceBundle: org.eclipse.debug.examples.ui;version="1.2.0.v20
+ 100526";roots:="."
+Bundle-Version: 1.2.0.v20100526
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.debug.examples.ui.source
+

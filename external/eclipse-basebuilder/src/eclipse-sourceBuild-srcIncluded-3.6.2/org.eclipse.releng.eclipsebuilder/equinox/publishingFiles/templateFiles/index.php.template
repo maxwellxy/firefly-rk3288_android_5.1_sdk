@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>equinox osgi downloads</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="author" content="Eclipse Foundation, Inc." />
+	<meta name="keywords" content="eclipse,project,plug-ins,plugins,java,ide,swt,refactoring,free java ide,tools,platform,open source,development environment,development,ide" />
+      <link rel="stylesheet" type="text/css" href="../../../eclipse.org-common/themes/Phoenix/css/visual.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="../../../eclipse.org-common/themes/Phoenix/css/layout.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="../../../eclipse.org-common/themes/Phoenix/css/print.css" media="print" />
+	<script type="text/javascript">
+
+sfHover = function() {
+	var sfEls = document.getElementById("leftnav").getElementsByTagName("LI");
+	for (var i=0; i<sfEls.length; i++) {
+		sfEls[i].onmouseover=function() {
+			this.className+=" sfhover";
+		}
+		sfEls[i].onmouseout=function() {
+			this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+		}
+	}
+}
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+</script>
+</head>
+<body>
+
+<div id="header">
+	<a href="http://www.eclipse.org/"><img src="../../../eclipse.org-common/themes/Phoenix/images/header_logo.gif" width="163" height="68" border="0" alt="Eclipse Logo" class="logo" /></a>
+	<div id="searchbar">
+		<img src="../../../eclipse.org-common/themes/Phoenix/images/searchbar_transition.gif" width="92" height="26" class="transition" alt="" />
+		<img src="../../../eclipse.org-common/themes/Phoenix/images/searchbar_header.gif" width="64" height="17" class="header" alt="Search" />
+		<form method="get" action="http://www.eclipse.org/search/search.cgi">
+			<input type="hidden" name="t" value="All" />
+			<input type="hidden" name="t" value="Doc" />
+			<input type="hidden" name="t" value="Downloads" />
+			<input type="hidden" name="t" value="Wiki" />
+			<input type="hidden" name="wf" value="574a74" />
+			<input type="text" name="q" value="" />
+			<input type="image" class="button" src="../../../eclipse.org-common/themes/Phoenix/images/searchbar_submit.gif" alt="Submit" onclick="this.submit();" />
+		</form>
+	</div>
+	<ul id="headernav">
+		<li class="first"><a href="http://www.eclipse.org/org/foundation/contact.php">Contact</a></li>
+		<li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+	</ul>
+</div>
+
+<div id="leftcol">
+<ul id="leftnav">
+<li><a href="#Equinox">Eclipse Equinox</a></li>
+<li><a href="#Framework">Framework</a></li>
+<li><a href="#Addon">Add-on Bundles</a></li>
+<li><a href="#Incubator">Incubator</a></li>
+<li><a href="#ProvisioningIncubator">Provisioning Incubator</a></li>
+<li><a href="#Other">Other</a></li>
+<li><a href="#Launchers">Launchers</a></li>
+ 
+  </li>
+  <li style="background-image: url(../../../eclipse.org-common/themes/Phoenix/images/leftnav_fade.jpg); background-repeat: repeat-x; border-style: none;">
+			<br /><br /><br /><br /><br />
+  </li>
+</ul>
+
+</div>
+
+<div id="midcolumn">
+		<table BORDER=0 CELLSPACING=5 CELLPADDING=2 WIDTH="100%" > 
+		<tr> 
+			<td> 
+				<p><b><font face="Verdana" size="+2">Equinox @type@ Build: @buildid@</font></b><br> @date@. 
+				These downloads are provided under the <a href="http://www.eclipse.org/legal/epl/notice.html">
+				Eclipse Foundation Software User Agreement</a>.</p>
+			</td><tr><tr>
+		<tr>
+			<td width="75%">
+		   		<?php
+				$servername = $_SERVER["SERVER_NAME"];
+				if (! preg_match("/.eclipse.org/i",$servername)) {
+				        echo "<br> To download a file via HTTP click on its corresponding http link below.";
+				} else {
+				    echo "<br>";
+				} ?>   <BR>Click <a href="verifyMD5.html">here</a> for instructions on how to verify the 
+				integrity of your downloads.</p></td></tr>
+			</td>
+		</tr>
+		<tr></tr>
+                <tr><td><a href="apitools/index.html"><b>API Tools Version Verification Report</b></a> This tool verifies the versions of the plugins against Eclipse 3.6.  Exclusions are listed in org.eclipse.releng/apiexclude/exclude_list_external.txt.</td></tr>
+               <tr><td><a href="apitools/report.html"><b>API Tools Post-API Freeze Report</b></a>  This report describes API changes since 3.6M6.  Exclusions are listed in org.eclipse.releng/apiexclude/exclude_list.txt.</td></tr>		
+		</table>
+</div>
+
+<?php 
+
+function column($servername) {
+
+      echo "<td width=\"7%\"><b>Download</b></td>";
+      echo "<td width=\"7%\"><b>Size</b></td>";
+      echo "<td width=\"40%\"><b>File</b></td>";
+      echo "<td width=\"11%\"><b>Checksum</b></td>";
+      return;
+}
+
+function getDropSize($zipfile) {
+
+		 $filesize = "N/A";
+		 $filesizebytes  = filesize($zipfile);
+		 if($filesizebytes > 0) {
+			if($filesizebytes < 1048576)
+				$filesize = round($filesizebytes / 1048576, 2) . " MB";
+			else if ($filesizebytes >= 1048576 && $filesizebytes < 10485760)
+				$filesize = round($filesizebytes / 1048576, 1) . " MB";
+			else
+        		 	$filesize = round($filesizebytes / 1048576, 0) . " MB";
+		 }
+        return($filesize);
+}
+
+function genLinks($servername,$buildlabel,$zipfile) {
+
+     $httplink = "download.php?dropFile=$zipfile";
+     $httplabel = "(http)";
+     $httpline =  "<div align=\"left\"><a href=\"$httplink\">$httplabel</a>";
+     $filesize = getDropSize($zipfile);
+
+     echo "$httpline";
+     echo "&nbsp;&nbsp";
+     echo "<td>$filesize</td>";
+     echo "<td>$zipfile</td>";
+     echo "<td><a href=\"http://download.eclipse.org/equinox/drops/@buildlabel@/checksum/$zipfile.md5\">(md5)</a>";
+     echo " <a href=\"http://download.eclipse.org/equinox/drops/@buildlabel@/checksum/$zipfile.sha1\">(sha1)</a>";
+}
+?>	
+
+<table align="left" BORDER=0 CELLSPACING=5 CELLPADDING=2 WIDTH="100%">
+<tr><td><div class="homeitem3col">
+<h3><a name="Equinox"> Eclipse Equinox</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD> <P>Listed below are the full Equinox zip and the Equinox SDK zip.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($HTTP_SERVER_VARS["SERVER_NAME"]); ?> 
+</tr> %equinox% </table>
+</div></td></tr>
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Framework"> Framework</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD> <P>The Equinox OSGi R4 <a href="http://eclipse.org/equinox/framework">framework</a> implementation includes all optional parts of the R4 spec as well as several additional mechanisms (e.g., x-internal, platform filters, ...) that are generally useful in a standalone package.  See the <A HREF="http://eclipse.org/equinox/quickstart.html">Quick Start Guide</A> for details on how to use this JAR.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($HTTP_SERVER_VARS["SERVER_NAME"]); ?> 
+</tr> %framework% </table>
+</div></td></tr>
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Addon"> Add-on Bundles</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD HEIGHT="48" COLSPAN="2"> <P>The drops listed here are individual <a href="http://eclipse.org/equinox/bundles">bundles</a> or sets of bundles that provide a single standalone service or mechanism.  This includes implementations of many of the OSGi specified services as well as additional mechanisms (e.g., the Eclipse extension registry) of interest to OSGi programmers.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($_SERVER["SERVER_NAME"]); ?> 
+</tr> %extrabundles% </table>
+</div></td></tr>
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Other"> Other Required Bundles</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD HEIGHT="48" COLSPAN="2"> <P>Other required bundles</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($_SERVER["SERVER_NAME"]); ?> 
+</tr> %other% </table>
+</div></td></tr>
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Incubator"> Incubator</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD HEIGHT="48" COLSPAN="2"> <P>The Equinox Incubator is a place for exploring Eclipse and OSGi running in
+different scenarios and environments (e.g., secure, server-side, ...). The downloads supplied below are made available as a convenience and, while some
+are quite complete, all should be considered experimental.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($_SERVER["SERVER_NAME"]); ?> 
+</tr> %incubator% </table>
+</div></td></tr>
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Provisioning">Provisioning</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD HEIGHT="48" COLSPAN="2"> <P>Here are some of the downloads produced by the 
+Provisioning team. For more about provisoning, see <a href="http://wiki.eclipse.org/Category:Provisioning"> provisioning 
+articles on the eclipse.org wiki</a>.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($_SERVER["SERVER_NAME"]); ?> 
+</tr> %provisioning% </table>
+</div></td></tr>
+
+
+<tr><td><div class="homeitem3col">
+<h3><a name="Launchers"> Launchers</a></h3>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" > 
+<TR> <TD HEIGHT="48" COLSPAN="2"> <P>While it is possible to use the Equinox framework as a standalone JAR, it is often convenient to use the executable program launcher.  The platform-specific archives here include precompiled executables as well as some support files such as the equinox launcher and a configuration template.</P></TD></TR></table>
+<table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="99%" bordercolor="#999999" >
+<tr> <td align=RIGHT valign=TOP width="5%"> <div align="left"><b>Status</b></div></td><td width="33%"><b>Platform</b></td><?php column($_SERVER["SERVER_NAME"]); ?> 
+</tr> %launchers% </table>
+</div></td></tr>
+</table>
+</div>
+<p><br /></p>
+
+<div id="footer">
+	<ul id="footernav">
+		<li class="first"><a href="http://www.eclipse.org">Home</a></li>
+		<li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+		<li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+	</ul>
+	<p>Copyright &copy; 2006 The Eclipse Foundation. All Rights
+Reserved</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.pde.ua.ui;version="1.0.100.v20100504
+ ";roots:="."
+Bundle-Version: 1.0.100.v20100504
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.ua.ui.source
+

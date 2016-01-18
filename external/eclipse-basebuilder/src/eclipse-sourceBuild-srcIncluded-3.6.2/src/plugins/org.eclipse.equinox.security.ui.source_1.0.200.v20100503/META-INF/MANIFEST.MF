@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.security.ui;version="1.0.200
+ .v20100503";roots:="."
+Bundle-Version: 1.0.200.v20100503
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.security.ui.source
+

@@ -1,0 +1,149 @@
+<project name="Build specific targets and properties" default="noDefault" >
+
+
+	<property name="postingDirectory" value="${buildDirectory}" />
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- ===================================================================== -->
+
+	<!-- ****** figure out how to build the platform, sdk, examples, ... from one compile"
+see the sdkFeatures, platformFeatures, ... targets in the orginal customTargets  -->
+	<target name="allElements">
+		<ant antfile="${genericTargets}" target="${target}" >
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.equinox.executable" />
+		</ant>
+	</target>
+	<target name="postBuild" />
+	<!-- ===================================================================== -->
+	<!-- Targets to assemble the built elements for particular configurations  -->
+	<!-- ===================================================================== -->
+	<target name="assemble.org.eclipse.equinox.executable.group.group.group">
+		<property name="archiveName" value="org.eclipse.equinox.executable_${buildId}.zip"/>
+		<antcall target="assemble" />
+	</target>
+	<target name="assemble">
+		<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveName}" />
+		<ant antfile="${assembleScriptName}" />
+	</target>
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for cvsRoot, package and mapVersionTag as desired. -->
+	<!-- ===================================================================== -->
+	<target name="checkLocal">
+		<available property="mapsLocal" file="${buildDirectory}/maps/org.eclipse.releng" />
+	</target>
+
+	<target name="getMapFiles" depends="checkLocal" unless="mapsLocal">
+
+		<!-- ***  change the repo info -->
+		<property name="mapCvsRoot" value="${mapsRepo}" />
+		<property name="mapVersionTag" value="HEAD" />
+		<cvs cvsRoot="${mapCvsRoot}"
+		package="org.eclipse.releng"
+		dest="${buildDirectory}/maps"
+		tag="${mapVersionTag}"
+	/>
+		<!--compare the map files project-->
+		<antcall target="compareMapFiles" />
+		<!--tag the map files project-->
+		<antcall target="tagMapFiles" />
+	</target>
+
+	<target name="compareMapFiles" if="compareMaps">
+		<property file="${mapTag.properties}"/>
+		<property name="cvsDiffFile" value="${buildDirectory}/cvsDiff.txt" />
+		<cvs cvsRoot="${mapCvsRoot}" dest="${buildDirectory}/maps" command="diff -w -r ${lastMapTag}" output="${cvsDiffFile}" />
+		<modifiedMaps mapDiffFile="${cvsDiffFile}" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<!-- Stores tag on the filesystem so map files can be compared -->
+		<echo file="${mapTag.properties}">
+		lastMapTag=${buildId}
+	</echo>
+		<cvs dest="${buildDirectory}/maps/org.eclipse.releng" command="tag ${buildId}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup" >
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the fetch -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating build scripts -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before assembling -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after assembling-->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+	</target>
+
+	<target name="prePackage" />
+	<target name="postPackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after everything is built and assembled -->
+	<!-- (e.g., testing, posting, emailing, ...) -->
+	<!-- ===================================================================== -->
+
+	<target name="gatherLogs" if="logsAvailable">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+
+</project>

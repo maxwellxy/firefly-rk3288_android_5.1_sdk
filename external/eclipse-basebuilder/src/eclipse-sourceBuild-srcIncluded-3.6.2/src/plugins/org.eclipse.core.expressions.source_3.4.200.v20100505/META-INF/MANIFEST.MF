@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.expressions;version="3.4.200.v2
+ 0100505";roots:="."
+Bundle-Version: 3.4.200.v20100505
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.expressions.source
+

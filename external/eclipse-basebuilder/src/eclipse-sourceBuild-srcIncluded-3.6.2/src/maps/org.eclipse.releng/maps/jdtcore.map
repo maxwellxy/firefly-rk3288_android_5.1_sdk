@@ -1,0 +1,11 @@
+
+!*********************************** JDT CORE CONTRIBUTION ******************************************* 
+
+plugin@org.eclipse.jdt.core=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.jdt.compiler.tool=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt.core.tests.builder=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.core.tests.compiler=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.core.tests.model=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.core.tests.performance=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.compiler.tool.tests=v_A76_R36x,kmoir@dev.eclipse.org:/cvsroot/eclipse,

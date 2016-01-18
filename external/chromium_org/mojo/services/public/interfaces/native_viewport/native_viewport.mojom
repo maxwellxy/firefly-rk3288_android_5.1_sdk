@@ -1,0 +1,41 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import "mojo/services/gles2/command_buffer.mojom"
+import "mojo/services/public/interfaces/geometry/geometry.mojom"
+import "mojo/services/public/interfaces/input_events/input_events.mojom"
+import "mojo/services/public/interfaces/surfaces/surface_id.mojom"
+
+module mojo {
+
+[Client=NativeViewportClient]
+interface NativeViewport {
+  Create(Size size);
+  Show();
+  Hide();
+  Close();
+  SetBounds(Size size);
+  SubmittedFrame(SurfaceId surface_id);
+};
+
+interface NativeViewportClient {
+  OnCreated(uint64 native_viewport_id);
+  OnBoundsChanged(Size size);
+  OnDestroyed();
+  OnEvent(Event event) => ();
+};
+
+// Connect to this interface before any other connections are made to configure
+// the NativeViewport service.
+interface NativeViewportConfig {
+  // Call UseTestConfig() and block on the reply. This will ensure that the
+  // correct global initialization is done before subsequent connections.
+  UseTestConfig() => ();
+
+  // Call UseHeadlessConfig() and block on the reply. This will ensure that
+  // the native viewport is later created in headless mode.
+  UseHeadlessConfig() => ();
+};
+
+}

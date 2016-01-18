@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %bundleVendor
+Eclipse-SourceBundle: org.eclipse.equinox.useradmin;version="1.1.200.v
+ 20100503";roots:="."
+Bundle-Version: 1.1.200.v20100503
+Bundle-Name: %bundleName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.useradmin.source
+

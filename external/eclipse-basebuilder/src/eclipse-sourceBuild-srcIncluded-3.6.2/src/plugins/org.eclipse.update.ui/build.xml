@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.update.ui" default="build.jars" basedir=".">
+
+	<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="org.eclipse.update.ui"/>
+	<property name="bundleVersion" value="3.2.300.v20100512"/>
+	<property name="p2.publishonerror" value="false"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="compilation.prereq.log" value="${buildDirectory}/prereqErrors.log"/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<condition property="bundleBootClasspath" value="${J2SE-1.4}"	>
+		<isset property="J2SE-1.4"/>
+	</condition>
+	<condition property="bundleJavacSource" value="1.3"	>
+		<isset property="J2SE-1.4"/>
+	</condition>
+	<condition property="bundleJavacTarget" value="1.2"	>
+		<isset property="J2SE-1.4"/>
+	</condition>
+	<condition property="bundleBootClasspath" value="${CDC-1.0/Foundation-1.0}"	>
+		<isset property="CDC-1.0/Foundation-1.0"/>
+	</condition>
+	<condition property="bundleJavacSource" value="1.3"	>
+		<isset property="CDC-1.0/Foundation-1.0"/>
+	</condition>
+	<condition property="bundleJavacTarget" value="1.1"	>
+		<isset property="CDC-1.0/Foundation-1.0"/>
+	</condition>
+	<condition property="bundleBootClasspath" value="${J2SE-1.3}"	>
+		<isset property="J2SE-1.3"/>
+	</condition>
+	<condition property="bundleJavacSource" value="1.3"	>
+		<isset property="J2SE-1.3"/>
+	</condition>
+	<condition property="bundleJavacTarget" value="1.1"	>
+		<isset property="J2SE-1.3"/>
+	</condition>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.update.ui_3.2.300.v20100512"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+		<property name="compilation.problem.marker" value="${build.result.folder}/compilation.problem"/>
+		<condition property="compilation.problem.marker.exists" value="true"		>
+			<and>
+			<available file="${compilation.problem.marker}"/>
+			<isfalse value="${p2.publishonerror}"/>
+			</and>
+		</condition>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.update.ui for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/org.eclipse.update.ui_3.2.300.v20100512.jar" basedir="${temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: org.eclipse.update.ui @dot.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<mkdir dir="${build.result.folder}/@dot"/>
+		<path id="@dot.classpath">
+			<pathelement path="../org.eclipse.osgi/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi_3.6.2.R36x_v20110210/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi_3.6.2.R36x_v20110210/@dot"/>
+			<pathelement path="../org.eclipse.equinox.servletbridge.extensionbundle/@dot"/>
+			<pathelement path="../org.eclipse.equinox.weaving.hook/bin/"/>
+			<pathelement path="../org.eclipse.equinox.weaving.hook/@dot"/>
+			<pathelement path="../org.eclipse.equinox.transforms.hook/bin/"/>
+			<pathelement path="../org.eclipse.equinox.transforms.hook/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime_3.6.0.v20100505/@dot"/>
+			<pathelement path="../org.eclipse.equinox.common/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common_3.6.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common_3.6.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.core.jobs/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs_3.5.1.R36x_v20100824/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs_3.5.1.R36x_v20100824/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry/runtime_registry_compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/runtime_registry_compatibility.jar"/>
+			<pathelement path="../org.eclipse.core.runtime.compatibility.registry/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/@dot"/>
+			<pathelement path="../org.eclipse.core.runtime.compatibility.registry/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/bin/"/>
+			<pathelement path="../org.eclipse.equinox.registry/runtime_registry_compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/runtime_registry_compatibility.jar"/>
+			<pathelement path="../org.eclipse.equinox.registry/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.preferences/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences_3.3.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences_3.3.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.core.contenttype/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.contenttype_3.4.100.v20100505-1235/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.contenttype/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.contenttype_3.4.100.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.runtime.compatibility.auth/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.auth/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517/@dot"/>
+			<pathelement path="../org.eclipse.equinox.app/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app_1.3.1.R36x_v20100803/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app_1.3.1.R36x_v20100803/@dot"/>
+			<pathelement path="../org.eclipse.osgi.services"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services_3.2.100.v20100503/."/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services_3.2.100.v20100503/@dot"/>
+			<pathelement path="../javax.servlet_2.5.0.v200910301333.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui_3.6.2.M20110203-1100/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.cocoa/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.cocoa_1.0.2.M20101124-0800/@dot"/>
+			<pathelement path="../org.eclipse.ui.cocoa/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.carbon/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.carbon_4.0.100.M20101124-0800/@dot"/>
+			<pathelement path="../org.eclipse.ui.carbon/@dot"/>
+			<pathelement path="../org.eclipse.swt/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.solaris.sparc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.ppc64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.win32.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.s390x/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.s390x_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.sparc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.photon.qnx.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.s390/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.s390_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.aix.ppc64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.aix.ppc64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.solaris.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.cocoa.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.cocoa.macosx_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.aix.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.aix.ppc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.cocoa.macosx.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.cocoa.macosx.x86_64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.carbon.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.carbon.macosx_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.ia64_32_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.win32.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86_64_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.linux.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.jface/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.jface_3.6.2.M20110210-1200/@dot"/>
+			<pathelement path="../org.eclipse.core.commands/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.commands_3.6.0.I20100512-1500/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.commands/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.commands_3.6.0.I20100512-1500/@dot"/>
+			<pathelement path="../org.eclipse.ui.workbench/e4-workbench.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench_3.6.2.M20110210-1200/e4-workbench.jar"/>
+			<pathelement path="../org.eclipse.ui.workbench/compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench_3.6.2.M20110210-1200/compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench_3.6.2.M20110210-1200/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility/compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800/compatibility.jar"/>
+			<pathelement path="../org.eclipse.ui.workbench.compatibility/e4-workbench.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800/e4-workbench.jar"/>
+			<pathelement path="../org.eclipse.ui.workbench.compatibility/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800/@dot"/>
+			<pathelement path="../com.ibm.icu_4.2.1.v20100412.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.help/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.help_3.5.0.v20100524/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.expressions/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.expressions_3.4.200.v20100505/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.jface.databinding/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.jface.databinding_1.4.0.I20100601-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.databinding.observable/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.observable_1.3.0.I20100601-0800/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.observable/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.observable_1.3.0.I20100601-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.databinding.property/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.property_1.3.0.I20100601-0800/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.property/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding.property_1.3.0.I20100601-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.databinding/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding_1.3.100.I20100601-0800/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.databinding_1.3.100.I20100601-0800/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.resources/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.resources_3.6.1.R36x_v20110131-1630/@dot"/>
+			<pathelement path="../org.eclipse.core.resources.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.resources.win32.x86_3.5.100.v20100505-1345/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ant.core/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ant.core_3.2.201.v20110203_r362/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.variables/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.variables_3.2.400.v20100505/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.linux.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.linux.ppc_1.0.200.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.linux.x86_64_1.2.0.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.win32.x86_1.1.201.R36x_v20100727-0745/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.linux.x86_1.4.0.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.aix.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.aix.ppc_1.1.0.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.hpux.ia64_32/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.hpux.ia64_32_1.0.100.v20100505/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.win32.x86_64_1.1.201.R36x_v20100727-0745/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.solaris.sparc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.solaris.sparc_1.2.0.v20100505-1235/@dot"/>
+			<pathelement path="../org.eclipse.core.filesystem.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.filesystem.macosx_1.3.0.v20100505/@dot"/>
+			<pathelement path="../org.eclipse.update.core/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.core_3.2.402.R36x_v20100629/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.core/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.core_3.2.402.R36x_v20100629/@dot"/>
+			<pathelement path="../org.eclipse.update.core.linux/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.core.linux_3.2.200.v20100512/@dot"/>
+			<pathelement path="../org.eclipse.update.core.win32/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.core.win32_3.2.200.v20100512/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.configurator/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.update.configurator_3.3.100.v20100512/@dot"/>
+			<pathelement path="../org.eclipse.core.net/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net_1.2.100.I20100511-0800/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net_1.2.100.I20100511-0800/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_64_1.0.100.I20100505-1245/@dot"/>
+			<pathelement path="../org.eclipse.core.net.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_64_1.1.0.I20100505-1245/@dot"/>
+			<pathelement path="../org.eclipse.core.net.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_1.1.100.R36x_v20100825-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.net.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_1.0.100.I20100511-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.net.win32.x86/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.win32.x86/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.win32.x86/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.macosx/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx_1.100.100.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx_1.100.100.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.forms/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.ui.forms_3.5.2.r36_v20100702/@dot"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${build.result.folder}/@dot" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}" errorProperty="compilation.error.occured"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="@dot.classpath" />
+			<src path="src/"			/>
+			<compilerarg value="@${basedir}/javaCompiler...args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"			/>
+			<compilerarg line="-log &apos;${build.result.folder}/@dot${logExtension}&apos;" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"			/>
+		</javac>
+		<antcall target="checkCompilationResults"/>
+		<!-- Copy necessary resources -->
+		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="src.zip" depends="init" unless="src.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<antcall target="zip.src.zip"/>
+	</target>
+	<target name="zip.src.zip">
+		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="copy.src.zip">
+		<copy todir="${source.destination.folder}/" failonerror="true" overwrite="true">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: org.eclipse.update.ui.">
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+		<available property="@dot" file="${build.result.folder}/@dot"/>
+		<antcall target="@dot"/>
+	</target>
+
+	<target name="checkCompilationResults" if="compilation.error.occured">
+		<echo file="${compilation.problem.marker}" message="org.eclipse.update.ui_3.2.300.v20100512${line.separator}compilation.error.occured=${compilation.error.occured}"/>
+		<eclipse.logCompileError bundle="org.eclipse.update.ui_3.2.300.v20100512" log="${compilation.prereq.log}">
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.linux.x86_1.1.100.R36x_v20100825-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui.carbon/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui.carbon_4.0.100.M20101124-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security.macosx_1.100.100.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.hpux.ia64_32/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.hpux.ia64_32_1.0.100.v20100505/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui.cocoa/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui.cocoa_1.0.2.M20101124-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui.workbench.compatibility/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net_1.2.100.I20100511-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.aix.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.aix.ppc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.resources.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.resources.win32.x86_3.5.100.v20100505-1345/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.win32.win32.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.win32.win32.x86_64_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.runtime.compatibility.registry/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.jface.databinding/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.jface.databinding_1.4.0.I20100601-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.preferences/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.preferences_3.3.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.macosx_1.3.0.v20100505/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.aix.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.aix.ppc_1.1.0.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.jface/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.jface_3.6.2.M20110210-1200/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui.workbench/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui.workbench_3.6.2.M20110210-1200/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.update.core/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.update.core_3.2.402.R36x_v20100629/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.win32.x86_1.1.201.R36x_v20100727-0745/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.resources/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.resources_3.6.1.R36x_v20110131-1630/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.registry/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.registry_3.5.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.win32.x86_1.0.100.I20100511-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.linux.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.linux.x86_64_1.2.0.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.hpux.ia64_32/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.hpux.ia64_32_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.contenttype/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.contenttype_3.4.100.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.databinding/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.databinding_1.3.100.I20100601-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.databinding.observable/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.databinding.observable_1.3.0.I20100601-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.photon.qnx.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.solaris.sparc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.solaris.sparc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.win32.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.win32.x86_64_1.0.100.I20100505-1245/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.win32.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.win32.x86_64_1.1.201.R36x_v20100727-0745/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.solaris.sparc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.solaris.sparc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.linux.x86_1.4.0.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.cocoa.macosx.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.cocoa.macosx.x86_64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.solaris.sparc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.solaris.sparc_1.2.0.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.filesystem.linux.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.filesystem.linux.ppc_1.0.200.v20100505-1235/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.linux.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.linux.x86_64_1.1.0.I20100505-1245/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.cocoa.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.cocoa.macosx_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.runtime.compatibility.auth/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.weaving.hook/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.weaving.hook_1.0.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.expressions/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.expressions_3.4.200.v20100505/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.s390/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.s390_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.runtime/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.runtime_3.6.0.v20100505/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui_3.6.2.M20110203-1100/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ui.forms/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ui.forms_3.5.2.r36_v20100702/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.update.core.win32/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.update.core.win32_3.2.200.v20100512/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.ppc64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.ppc64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.ant.core/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.ant.core_3.2.201.v20110203_r362/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.carbon.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.carbon.macosx_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.servletbridge.extensionbundle/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.servletbridge.extensionbundle_1.2.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.solaris.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.solaris.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.aix.ppc64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.aix.ppc64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.update.configurator/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.update.configurator_3.3.100.v20100512/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.ppc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.linux.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.osgi.services/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.osgi.services_3.2.100.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.transforms.hook/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.transforms.hook_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.app/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.app_1.3.1.R36x_v20100803/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.osgi/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.osgi_3.6.2.R36x_v20110210/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.update.core.linux/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.update.core.linux_3.2.200.v20100512/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.s390x/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.s390x_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.jobs/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.jobs_3.5.1.R36x_v20100824/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.win32.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.win32.win32.x86_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.commands/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.commands_3.6.0.I20100512-1500/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.variables/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.variables_3.2.400.v20100505/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.common/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.common_3.6.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.help/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.help_3.5.0.v20100524/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.databinding.property/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.databinding.property_1.3.0.I20100601-0800/compilation.problem"/>
+		</eclipse.logCompileError>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="src.zip" file="${build.result.folder}/src.zip"/>
+		<antcall target="src.zip"/>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts" unless="compilation.problem.marker.exists">
+		<mkdir dir="${build.result.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+		<copy todir="${build.result.folder}" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="META-INF/MANIFEST.MF"/>
+				<include name="plugin.xml"/>
+				<include name="fragment.xml"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${build.result.folder}" version="3.2.300.v20100512"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${build.result.folder}"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="${build.result.folder}/@dot"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+		<eclipse.gatherBundle 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${build.result.folder}"
+		   unpack="false"
+		   baseDirectory="${basedir}"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}/@dot">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="plugin.properties"/>
+				<include name="icons/"/>
+				<include name="plugin.xml"/>
+				<include name="about.html"/>
+				<include name="META-INF/"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" version="3.2.300.v20100512"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="${build.result.folder}/@dot"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" failonerror="false" overwrite="false"/>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+		</antcall>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<antcall target="copy.src.zip">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+		<copy todir="${source.destination.folder}" failonerror="false" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="about.html"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.update.ui_3.2.300.v20100512" failonerror="false" overwrite="false">
+			<fileset dir="${build.result.folder}">
+				<include name="@dot${logExtension}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.update.ui of all the zips, jars and logs created.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<delete file="${build.result.folder}/src.zip"/>
+		<delete file="${plugin.destination}/org.eclipse.update.ui_3.2.300.v20100512.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.update.ui_3.2.300.v20100512.zip"/>
+		<delete dir="${temp.folder}"/>
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/plugins/org.eclipse.update.ui" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.update.ui.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.update.ui_3.2.300.v20100512.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="apitools.generation" if="generateAPIDescription">
+		<apitooling.apigeneration  projectName="${projectName}" project="${projectLocation}" binary="${binary.folders}" target="${target.folder}" extramanifests="${extraManifests}"		/>
+	</target>
+
+</project>

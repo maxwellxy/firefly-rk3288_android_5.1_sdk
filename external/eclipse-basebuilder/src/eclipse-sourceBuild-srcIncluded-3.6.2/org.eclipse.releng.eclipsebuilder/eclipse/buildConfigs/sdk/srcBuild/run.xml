@@ -1,0 +1,113 @@
+<project name="provisioning build" default="build">
+
+		 <target name="init">
+		 		 <property name="p2.root" value="${buildDirectory}/${buildId}/p2temp" />
+		 		 <mkdir dir="${p2.root}" />
+		 		 <property name="p2.output.base" value="${p2.root}/equinox.p2.build" />
+		 		 <mkdir dir="${p2.output.base}" />
+
+		 		 <property name="p2.sdk.install" value="${p2.output.base}/sdk.install" />
+		 		 <mkdir dir="${p2.sdk.install}" />
+
+		 		 <property file="build.properties" />
+		 		 <property name="p2.flavor" value="tooling" />		
+		 		 <condition property="archive.format" value="tar.gz">
+		 		 		 <or>
+		 		 		 		 <equals arg1="${installOs}" arg2="linux" />
+		 		 		 		 <equals arg1="${installOs}" arg2="macosx" />
+		 		 		 </or>
+		 		 </condition>
+		 		 <property name="archive.format" value="zip" />
+		 </target>
+
+		 <target name="build" depends="init">
+		 		 <antcall target="provision.sdk" />
+		 		 <antcall target="zip.install" />
+		 </target>
+
+		 <target name="provision.sdk">
+		 		 <antcall target="run.director">
+		 		 		 <param name="p2.director.installIU" value="org.eclipse.sdk.ide" />
+		 		 		 <param name="p2.director.version" value="3.6.1.${buildId}" />
+		 		 		 <param name="p2.director.profile" value="SDKProfile" />
+		 		 		 <param name="p2.director.install.path" value="${p2.sdk.install}/eclipse" />
+		 		 		 <param name="p2.director.extraArgs" value="-profileProperties org.eclipse.update.install.features=true" />
+		 		 		 <param name="p2.os" value="${installOs}" />
+		 		 		 <param name="p2.ws" value="${installWs}" />
+		 		 		 <param name="p2.arch" value="${installArch}" />
+		 		 		 <param name="p2.repo" value="${buildRepo}" />
+		 		 </antcall>
+		 </target>
+
+		 <target name="run.director">
+		 		 <delete dir="${base.builder}/configuration/.settings" includeemptydirs="true" failonerror="false" />
+		 		 <exec executable="${base.builder}/eclipse" failonerror="false" dir="${base.builder}" timeout="900000">
+		 		 		 <arg line="-vm ${java15-home}/bin/java" />
+		 		 		 <arg line="-application org.eclipse.equinox.p2.director.app.application" />
+		 		 		 <arg line="-nosplash" />
+		 		 		 <arg line="--launcher.suppressErrors" />
+		 		 		 <arg line="-consoleLog" />
+		 		 		 <arg line="-flavor ${p2.flavor}" />
+		 		 		 <arg line="-installIU ${p2.director.installIU}" />
+		 		 		 <arg line="-version ${p2.director.version}" />
+		 		 		 <arg line="-p2.os ${p2.os}" />
+		 		 		 <arg line="-p2.ws ${p2.ws}" />
+		 		 		 <arg line="-p2.arch ${p2.arch}" />
+		 		 		 <arg line="-roaming" />
+		 		 		 <arg line="-profile ${p2.director.profile}" />
+		 		 		 <arg line="${p2.director.extraArgs}" />
+		 		 		 <arg line="-metadataRepository file:${p2.repo}" />
+		 		 		 <arg line="-artifactRepository file:${p2.repo}" />
+		 		 		 <arg line="-metadataRepositoryName ${p2.repo.name}" />
+		 		 		 <arg line="-artifactRepositoryName ${p2.repo.name}" />
+		 		 		 <arg line="-destination ${p2.director.install.path}" />
+		 		 		 <arg line="-bundlepool ${p2.director.install.path}" />
+		 		 		 <arg line="-vmargs" />
+		 		 		 <arg line="-Declipse.p2.data.area=${p2.director.install.path}/p2" />
+		 		 		 <arg line="-Declipse.p2.MD5Check=false" />
+		 		 		 <arg line="-Declipse.p2.profile=@none" />
+		 		 </exec>
+		 </target>
+
+		 <target name="zip.install">
+		 		 <antcall target="p2.${archive.format}">
+                    <param name="base.dir" value="${p2.sdk.install}"/>
+		 		     <param name="base.filename" value="${postingDirectory}/${buildLabel}/eclipse-SDK-${buildId}-${installOs}.${installWs}.${installArch}.tar" />
+                </antcall>
+		 		 <antcall target="generateChecksums">
+		 		 		 <param name="archiveName" value="eclipse-SDK-${buildId}-${installOs}.${installWs}.${installArch}.${archive.format}" />
+		 		 </antcall>
+		 </target>
+
+		 <target name="generateChecksums">
+		 		 <mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
+		 		 <property name="archiveFullPath" value="${postingDirectory}/${buildLabel}/${archiveName}" />
+		 		 <checksum file="${archiveFullPath}" property="md5" />
+		 		 <checksum file="${archiveFullPath}" algorithm="SHA" property="sha" />
+		 		 <parallel>
+		 		 		 <echo message="${md5} *${archiveName}" file="${postingDirectory}/${buildLabel}/checksum/${archiveName}.md5" />
+		 		 		 <echo message="${sha} *${archiveName}" file="${postingDirectory}/${buildLabel}/checksum/${archiveName}.sha1" />
+		 		 </parallel>
+		 </target>
+
+
+		 <target name="p2.tar.gz">
+		 		 <echo message="Building tar ${base.filename} from ${base.dir}/*" />
+		 		 <exec dir="${base.dir}" executable="sh">
+		 		 		 <arg line='-c "tar -cvf ${base.filename} *"' />
+		 		 </exec>
+		 		 <gzip zipfile="${base.filename}.gz" src="${base.filename}" />
+		 		 <delete file="${base.filename}" />
+		 </target>
+
+		 <target name="p2.zip">
+		 		 <echo message="Building zip ${base.filename} from ${base.dir}/*" />
+		 		 <exec dir="${p2.sdk.install}" executable="zip">
+		 		 		 <arg line="-q ${postingDirectory}/${buildLabel}/eclipse-SDK-${buildId}-${installOs}.${installWs}.${installArch}.zip -r ." />
+		 		 </exec>
+		 </target>
+
+
+
+</project>
+

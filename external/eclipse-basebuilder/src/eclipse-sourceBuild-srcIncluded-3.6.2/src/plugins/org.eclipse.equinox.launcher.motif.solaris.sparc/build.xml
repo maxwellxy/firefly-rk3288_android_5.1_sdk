@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.equinox.launcher.motif.solaris.sparc" default="build.jars" basedir=".">
+
+	<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="org.eclipse.equinox.launcher.motif.solaris.sparc"/>
+	<property name="bundleVersion" value="1.1.2.R36x_v20101019_1345"/>
+	<property name="p2.publishonerror" value="false"/>
+
+	<available property="customBuildCallbacks" file="./customBuildCallbacks.xml" value="customBuildCallbacks.xml"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="compilation.prereq.log" value="${buildDirectory}/prereqErrors.log"/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+		<property name="compilation.problem.marker" value="${build.result.folder}/compilation.problem"/>
+		<condition property="compilation.problem.marker.exists" value="true"		>
+			<and>
+			<available file="${compilation.problem.marker}"/>
+			<isfalse value="${p2.publishonerror}"/>
+			</and>
+		</condition>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.equinox.launcher.motif.solaris.sparc for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345.jar" basedir="${temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: org.eclipse.equinox.launcher.motif.solaris.sparc.">
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+		<subant antfile="${customBuildCallbacks}" target="pre.build.jars" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+		</subant>
+		<subant antfile="${customBuildCallbacks}" target="post.build.jars" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+		</subant>
+	</target>
+
+	<target name="checkCompilationResults" if="compilation.error.occured">
+		<echo file="${compilation.problem.marker}" message="org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345${line.separator}compilation.error.occured=${compilation.error.occured}"/>
+		<eclipse.logCompileError bundle="org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" log="${compilation.prereq.log}">
+		</eclipse.logCompileError>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<subant antfile="${customBuildCallbacks}" target="pre.build.sources" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+		</subant>
+		<subant antfile="${customBuildCallbacks}" target="post.build.sources" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+		</subant>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts" unless="compilation.problem.marker.exists">
+		<mkdir dir="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		<subant antfile="${customBuildCallbacks}" target="pre.gather.bin.parts" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="target.folder" value="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+		<copy todir="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="META-INF/"/>
+				<include name="eclipse_*.so"/>
+				<include name="launcher.motif.solaris.sparc.properties"/>
+				<include name="about.html"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" attributes="Eclipse-SourceReferences|scm:cvs:pserver:dev.eclipse.org:/cvsroot/rt:org.eclipse.equinox/framework/bundles/org.eclipse.equinox.launcher/fragments/org.eclipse.equinox.launcher.motif.solaris.sparc;tag=R36x_v20101019_1345" version="1.1.2.R36x_v20101019_1345"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+			<param name="extraManifests" value="${basedir}/../org.eclipse.equinox.launcher/META-INF/MANIFEST.MF"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="/builds/M201102101200/src/plugins/org.eclipse.equinox.launcher.motif.solaris.sparc"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+		<subant antfile="${customBuildCallbacks}" target="post.gather.bin.parts" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="target.folder" value="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+		<eclipse.gatherBundle 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${build.result.folder}"
+		   targetFolder="${build.result.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		<subant antfile="${customBuildCallbacks}" target="pre.gather.bin.parts" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+		<copy todir="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="META-INF/"/>
+				<include name="eclipse_*.so"/>
+				<include name="launcher.motif.solaris.sparc.properties"/>
+				<include name="about.html"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345" attributes="Eclipse-SourceReferences|scm:cvs:pserver:dev.eclipse.org:/cvsroot/rt:org.eclipse.equinox/framework/bundles/org.eclipse.equinox.launcher/fragments/org.eclipse.equinox.launcher.motif.solaris.sparc;tag=R36x_v20101019_1345" version="1.1.2.R36x_v20101019_1345"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+			<param name="extraManifests" value="${basedir}/../org.eclipse.equinox.launcher/META-INF/MANIFEST.MF"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="/builds/M201102101200/src/plugins/org.eclipse.equinox.launcher.motif.solaris.sparc"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+		<subant antfile="${customBuildCallbacks}" target="post.gather.bin.parts" failonerror="false" buildpath=".">
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<subant antfile="${customBuildCallbacks}" target="pre.gather.sources" failonerror="false" buildpath=".">
+			<property name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</antcall>
+		<subant antfile="${customBuildCallbacks}" target="post.gather.sources" failonerror="false" buildpath=".">
+			<property name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<subant antfile="${customBuildCallbacks}" target="pre.gather.sources" failonerror="false" buildpath=".">
+			<property name="target.folder" value="${destination.temp.folder}"/>
+		</subant>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<subant antfile="${customBuildCallbacks}" target="post.gather.sources" failonerror="false" buildpath=".">
+			<property name="target.folder" value="${destination.temp.folder}"/>
+		</subant>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<subant antfile="${customBuildCallbacks}" target="pre.gather.logs" failonerror="false" buildpath=".">
+			<property name="destination.temp.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+		<subant antfile="${customBuildCallbacks}" target="post.gather.logs" failonerror="false" buildpath=".">
+			<property name="destination.temp.folder" value="${destination.temp.folder}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345"/>
+		</subant>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.equinox.launcher.motif.solaris.sparc of all the zips, jars and logs created.">
+		<subant antfile="${customBuildCallbacks}" target="pre.clean" failonerror="false" buildpath=".">
+			<property name="plugin.destination" value="${plugin.destination}"/>
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="temp.folder" value="${temp.folder}"/>
+		</subant>
+		<delete file="${plugin.destination}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345.zip"/>
+		<delete dir="${temp.folder}"/>
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+		<subant antfile="${customBuildCallbacks}" target="post.clean" failonerror="false" buildpath=".">
+			<property name="plugin.destination" value="${plugin.destination}"/>
+			<property name="build.result.folder" value="${build.result.folder}"/>
+			<property name="temp.folder" value="${temp.folder}"/>
+		</subant>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/plugins/org.eclipse.equinox.launcher.motif.solaris.sparc" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.equinox.launcher.motif.solaris.sparc.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.equinox.launcher.motif.solaris.sparc_1.1.2.R36x_v20101019_1345.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="apitools.generation" if="generateAPIDescription">
+		<apitooling.apigeneration  projectName="${projectName}" project="${projectLocation}" binary="${binary.folders}" target="${target.folder}" extramanifests="${extraManifests}"		/>
+	</target>
+
+</project>

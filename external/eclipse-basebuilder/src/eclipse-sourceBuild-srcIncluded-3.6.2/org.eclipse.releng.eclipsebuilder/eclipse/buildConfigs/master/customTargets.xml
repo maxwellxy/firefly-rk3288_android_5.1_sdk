@@ -1,0 +1,287 @@
+<project name="Build specific targets and properties" default="noDefault">
+
+	<property name="postingDirectory" value="${buildDirectory}" />
+	<property name="archiveName" value="eclipse-master-${buildId}.zip" />
+	<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveName}" />
+	<property name="mapsRoot" value="${buildDirectory}/maps/org.eclipse.releng/maps" />
+
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- Add on <ant> task for each top level element being built. -->
+	<!-- ===================================================================== -->
+	<available property="allElementsFile" file="${builder}/allElements.xml" value="${builder}/allElements.xml" />
+	<property name="allElementsFile" location="${eclipse.pdebuild.templates}/headless-build/allElements.xml" />
+
+	<import file="${allElementsFile}" />
+	<target name="allElements">
+		<antcall target="allElementsDelegator" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- ===================================================================== -->
+	<target name="getBaseComponents" depends="checkLocalBase" unless="skipBase">
+		<!--	<get src="${eclipseBaseURL}" dest="${buildDirectory}/../temp-base.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-base.zip" /> -->
+	</target>
+
+	<target name="checkLocalBase">
+		<available file="${base}" property="skipBase" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for mapsCheckoutTag as desired. -->
+	<!-- ===================================================================== -->
+
+	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
+		<property name="mapsCheckoutTag" value="${mapVersionTag}" />
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+	</target>
+
+	<target name="checkLocalMaps">
+		<available property="skipMaps" file="${buildDirectory}/maps" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<cvs dest="${buildDirectory}/maps/${mapsRoot}" command="tag ${mapsTagTag}" />
+	</target>
+
+	<target name="compareMapFiles" if="compareMaps">
+		<property file="${mapTag.properties}" />
+		<property name="cvsDiffFile" value="${buildDirectory}/cvsDiff.txt" />
+		<cvs cvsRoot="${mapCvsRoot}" dest="${buildDirectory}/maps" command="diff -w -r ${lastMapTag}" output="${cvsDiffFile}" />
+		<modifiedMaps mapDiffFile="${cvsDiffFile}" />
+	</target>
+
+
+	<!-- ===================================================================== -->
+
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<target name="gatherLogs">
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/*.log.zip" />
+			</fileset>
+		</unzip>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.platform/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.sdk/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/master-equinox/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/master-jetty/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/master-ecf/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.help/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.pde/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.equinox.sdk/feature.temp.folder" />
+		</copy>
+		<copy todir="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/org.eclipse.sdk.examples/feature.temp.folder" />
+		</copy>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch">
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${localmirror}" token="download.eclipse.org" />
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${cvsuser}" token=":pserver:anonymous" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+		<replace file="${buildDirectory}/sourceReferences.properties" token=":extssh" value=":pserver"  />	
+		<ant antfile="${genericTargets}" target="fetchElement">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.equinox.executable" />
+		</ant>
+		<zip zipfile="${buildDirectory}/plugins/org.eclipse.platform/launchersrc.zip" basedir="${buildDirectory}/features/org.eclipse.equinox.executable" includes="library/" />
+		<mkdir dir="${buildDirectory}/features/org.eclipse.platform/launchertmp" />
+		<mkdir dir="${buildDirectory}/launchertmp" />
+
+		<!--copy linux motif about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.motif.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.motif.x86" />
+		<mkdir dir="${linux.motif.rootfiles}" />
+		<copy tofile="${linux.motif.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.motif.linux.x86/about.html" />
+		<copy todir="${linux.motif.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.motif.linux.x86" includes="about_files/**" />
+		</copy>
+
+		<!--copy linux gtk x86 about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.gtk.x86.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.gtk.x86" />
+		<mkdir dir="${linux.gtk.x86.rootfiles}" />
+		<copy tofile="${linux.gtk.x86.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86/about.html" />
+
+		<copy todir="${linux.gtk.x86.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86" includes="about_files/**" />
+		</copy>
+
+		<!--copy linux gtk x86_64 about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.gtk.x86_64.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.gtk.x86_64" />
+		<mkdir dir="${linux.gtk.x86_64.rootfiles}" />
+		<copy tofile="${linux.gtk.x86_64.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86_64/about.html" />
+
+		<copy todir="${linux.gtk.x86_64.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86_64" includes="about_files/**" />
+		</copy>
+
+		<!--copy linux gtk ppc about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.gtk.ppc.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.gtk.ppc" />
+		<mkdir dir="${linux.gtk.ppc.rootfiles}" />
+		<copy tofile="${linux.gtk.ppc.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.ppc/about.html" />
+
+		<copy todir="${linux.gtk.ppc.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.ppc" includes="about_files/**" />
+		</copy>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the repositories are being processed -->
+	<!-- ===================================================================== -->
+	<target name="preProcessRepos">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the repositories have been processed -->
+	<!-- ===================================================================== -->
+	<target name="postProcessRepos">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+		<tstamp>
+			<format property="preprocess.time" pattern="MM/dd/yyyy HH:mm:ss" />
+		</tstamp>
+		<property name="masterTime" value="${buildlogs}/mastertime.txt" />
+		<echo message="preProcess master feature ${preprocess.time} ${line.separator}" file="${masterTime}" append="true" />
+		<replace dir="${buildDirectory}/plugins" value="${buildId}" token="@build@">
+			<include name="**/about.mappings" />
+		</replace>
+		<replace dir="${buildDirectory}/features/org.eclipse.platform" value="${buildId}" token="@build@">
+			<include name="**/config.ini" />
+		</replace>
+		<replace dir="${buildDirectory}/features/org.eclipse.sdk" value="${buildId}" token="@build@">
+			<include name="**/config.ini" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+		<tstamp>
+			<format property="postprocess.time" pattern="MM/dd/yyyy HH:mm:ss" />
+		</tstamp>
+		<property name="masterTime" value="${buildlogs}/mastertime.txt" />
+		<echo message="postProcess master feature ${postprocess.time} ${line.separator}" file="${masterTime}" append="true" />
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running package. -->
+	<!-- ===================================================================== -->
+	<target name="prePackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running package. -->
+	<!-- ===================================================================== -->
+	<target name="postPackage">
+		<exec executable="zip" dir="${buildDirectory}/${buildLabel}">
+			<arg line="-d ${archiveName} win32** wce** linux** solaris** aix** hpux** macosx** qnx**" />
+		</exec>
+		<exec dir="${buildDirectory}/buildRepo" executable="zip">
+			<arg line="-r ${archiveFullPath} ." />
+		</exec>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the build is done. -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to test the build results -->
+	<!-- ===================================================================== -->
+	<target name="test">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to publish the build results -->
+	<!-- ===================================================================== -->
+	<target name="publish">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+</project>

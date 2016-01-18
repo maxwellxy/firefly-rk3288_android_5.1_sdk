@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui.navigator.resources;version="3.4.
+ 202.M20101124-0800";roots:="."
+Bundle-Version: 3.4.202.M20101124-0800
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.navigator.resources.source
+

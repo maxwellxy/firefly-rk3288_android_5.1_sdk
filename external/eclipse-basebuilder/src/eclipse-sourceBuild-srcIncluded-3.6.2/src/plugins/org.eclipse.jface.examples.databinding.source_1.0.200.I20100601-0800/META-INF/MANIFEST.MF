@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jface.examples.databinding;version="
+ 1.0.200.I20100601-0800";roots:="."
+Bundle-Version: 1.0.200.I20100601-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jface.examples.databinding.source
+

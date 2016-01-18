@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.motif.aix.ppc;version="3.6.2.v36
+ 59b"
+Bundle-Version: 3.6.2.v3659b
+Eclipse-PlatformFilter: (& (osgi.ws=motif) (osgi.os=aix) (osgi.arch=pp
+ c))
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.motif.aix.ppc.source
+

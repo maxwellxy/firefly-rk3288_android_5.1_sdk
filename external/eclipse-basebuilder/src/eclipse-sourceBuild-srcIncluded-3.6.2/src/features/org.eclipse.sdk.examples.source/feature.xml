@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.eclipse.sdk.examples.source" version="3.3.1.r362_v20101014" label="%featureName" provider-name="%providerName" image="eclipse_update_120.jpg"    >
+	<description >
+		%description
+	</description>
+	<copyright >
+		%copyright
+	</copyright>
+	<license url="%licenseURL">
+		%license
+	</license>
+	<url>
+		<update url="http://download.eclipse.org/eclipse/updates/3.4" label="%updateSiteName"/>
+		<discovery url="http://download.eclipse.org/eclipse/updates/3.4" label="%updateSiteName"/>
+	</url>
+	<plugin id="org.eclipse.compare.examples.source" version="3.1.200.I20100505-1245"     unpack="false"/>
+	<plugin id="org.eclipse.compare.examples.xml.source" version="3.3.200.I20100505-1245"     unpack="false"/>
+	<plugin id="org.eclipse.debug.examples.core.source" version="1.2.0.v20100505"     unpack="false"/>
+	<plugin id="org.eclipse.debug.examples.ui.source" version="1.2.0.v20100526"     unpack="false"/>
+	<plugin id="org.eclipse.jface.examples.databinding.source" version="1.0.200.I20100601-0800"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.source" version="3.4.0.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.browser.source" version="3.1.100.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.browser.demos.source" version="3.1.200.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.controls.source" version="3.1.100.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.launcher.source" version="3.1.100.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.layouts.source" version="3.1.100.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.paint.source" version="3.1.100.v3659b"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.javaeditor.source" version="3.1.100.v20100520-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.multipageeditor.source" version="3.2.200.I20100509-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.propertysheet.source" version="3.2.100.I20100509-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.readmetool.source" version="3.3.100.I20100509-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.contributions.source" version="3.3.100.I20100509-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.undo.source" version="3.2.200.I20100509-0800"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.views.properties.tabbed.article.source" version="3.2.1.I20100517-1500"     unpack="false"/>
+	<plugin id="org.eclipse.ui.examples.fieldassist.source" version="1.1.2.I20100601-0800"     unpack="false"/>
+	<plugin id="org.eclipse.team.examples.filesystem.source" version="3.4.100.I20100526-0800"     unpack="false"/>
+	<plugin id="org.eclipse.swt.examples.ole.win32.source" version="3.1.100.v3659b"   ws="win32"  unpack="false"/>
+	<plugin id="org.eclipse.sdk.examples.source" version="3.1.300.v20100527"     unpack="false"/>
+</feature>

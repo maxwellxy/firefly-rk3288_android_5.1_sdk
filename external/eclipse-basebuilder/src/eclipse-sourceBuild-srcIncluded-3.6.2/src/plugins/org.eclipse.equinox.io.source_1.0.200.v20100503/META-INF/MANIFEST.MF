@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %bundleVendor
+Eclipse-SourceBundle: org.eclipse.equinox.io;version="1.0.200.v2010050
+ 3";roots:="."
+Bundle-Version: 1.0.200.v20100503
+Bundle-Name: %bundleName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.io.source
+

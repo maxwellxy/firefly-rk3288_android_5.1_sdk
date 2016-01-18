@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui.browser;version="3.3.1.r36_201012
+ 16";roots:="."
+Bundle-Version: 3.3.1.r36_20101216
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.browser.source
+

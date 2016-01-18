@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.swt.win32.wce_ppc.arm" default="build.jars" basedir=".">
+
+	<property name="swt.ws" value="win32" />
+	<property name="swt.os" value="wce_ppc" />
+	<property name="swt.arch" value="arm" />
+	
+	<!-- These properties are used by eclipse when exporting as Deployable plugin and fragments -->
+	<property name="version.suffix" value="3.6.2.v3659c" />
+
+	<import file="../org.eclipse.swt/buildFragment.xml"/>
+
+	<target name="swtdownload" depends="init">
+		<ant inheritAll="false" antfile="build_custom.xml" target="swtdownload">
+			<!-- pass on all variables set by the Eclipse build -->
+			<property name="buildid" value="${buildid}" />
+			<property name="destination" value="${destination}" />
+		</ant>
+	</target>
+
+</project>

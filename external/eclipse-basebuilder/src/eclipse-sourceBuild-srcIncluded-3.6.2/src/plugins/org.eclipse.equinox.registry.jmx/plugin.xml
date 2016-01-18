@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.equinox.jmx.server.contribution">
+		<contribution
+				class="org.eclipse.equinox.internal.registry.jmx.ExtensionRegistryContributionProvider"
+				isroot="false">
+			<extendsClass class="org.eclipse.core.runtime.IExtensionRegistry"/>
+		</contribution>
+		<contribution
+				class="org.eclipse.equinox.internal.registry.jmx.ExtensionPointContributionProvider"
+				isroot="true">
+			<extendsClass class="org.eclipse.core.runtime.IExtensionPoint"/>
+		</contribution>
+		<contribution
+				class="org.eclipse.equinox.internal.registry.jmx.ExtensionContributionProvider"
+				isroot="false">
+			<extendsClass class="org.eclipse.core.runtime.IExtension"/>
+	</contribution>
+	</extension>
+
+</plugin>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox.jmx.client.feature"
+      label="Resource Monitoring Client Feature (Incubation)"
+      version="1.0.0.qualifier"
+      provider-name="Eclipse.org">
+
+   <description url="http://www.eclipse.org/equinox/incubator/monitoring/index.php">
+      Client-side infrastructure for managing OSGi-based systems using
+JMX.
+   </description>
+
+   <license url="http://www.eclipse.org/org/documents/epl-v10.php">
+      Eclipse Public License v1.0.
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.equinox.jmx.common.feature" version="1.0.0"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.equinox.jmx.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.jmx.client.rmi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.jmx.client.xmlrpc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

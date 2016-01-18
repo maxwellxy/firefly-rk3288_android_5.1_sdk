@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ltk.ui.refactoring;version="3.5.0.v2
+ 0100526-0800";roots:="."
+Bundle-Version: 3.5.0.v20100526-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ltk.ui.refactoring.source
+

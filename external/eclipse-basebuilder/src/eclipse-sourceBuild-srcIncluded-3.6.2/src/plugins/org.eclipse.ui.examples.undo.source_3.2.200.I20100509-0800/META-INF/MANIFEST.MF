@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui.examples.undo;version="3.2.200.I2
+ 0100509-0800";roots:="."
+Bundle-Version: 3.2.200.I20100509-0800
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.undo.source
+

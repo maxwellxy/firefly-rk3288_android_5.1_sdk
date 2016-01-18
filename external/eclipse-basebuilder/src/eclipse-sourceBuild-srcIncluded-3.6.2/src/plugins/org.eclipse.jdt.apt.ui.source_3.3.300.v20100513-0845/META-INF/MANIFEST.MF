@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.apt.ui;version="3.3.300.v2010051
+ 3-0845";roots:="."
+Bundle-Version: 3.3.300.v20100513-0845
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.apt.ui.source
+

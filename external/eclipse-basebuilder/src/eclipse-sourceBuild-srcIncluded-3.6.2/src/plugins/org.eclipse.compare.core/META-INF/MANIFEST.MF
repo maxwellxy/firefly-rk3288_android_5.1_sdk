@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.compare.core
+Bundle-Version: 3.5.101.qualifier
+Bundle-Activator: org.eclipse.compare.internal.core.ComparePlugin
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)"
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.compare.internal.core;x-internal:=true,
+ org.eclipse.compare.internal.core.patch;x-internal:=true,
+ org.eclipse.compare.patch,
+ org.eclipse.compare.rangedifferencer
+Import-Package: com.ibm.icu.text;version="3.6.1",
+ com.ibm.icu.util;version="3.6.1"
+Bundle-Localization: plugin

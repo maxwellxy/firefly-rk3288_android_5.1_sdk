@@ -1,0 +1,205 @@
+<project default="main">
+
+	<!--
+		Steps
+		
+	1
+	2
+	3
+	4
+	
+	
+	 	Ant properties available at runtime: 
+	
+	 - eclipse.pdebuild.scripts: the org.eclipse.eclipse.pdebuild.scripts folder
+	 - eclipse.pdebuild.home: the root folder of pde build
+	 - eclipse.pdebuild.templates: the  templates folder
+
+	-->
+
+	<!--build monitoring information:  e-mail, smtp server, build label-->
+	<property file="monitor.properties" />
+
+	<!--location of PDE Build configuration files for builder and packager-->
+	<property name="eclipse.build.configs" value="${basedir}/eclipse/buildConfigs" />
+	<property name="basedir" value="/home/myuserid/srcbuild2/org.eclipse.releng.eclipsebuilder" />
+	<property name="base.builder" value="${basedir}/../eclipse" />
+
+	<!--default buildDirectory-->
+	<property name="buildDirectory" value="${basedir}/../src" />
+
+	<property name="postingDirectory" value="${buildDirectory}/result" />
+	<mkdir dir="${postingDirectory}" />
+
+	<property file="${buildDirectory}/label.properties" />
+	<loadproperties srcFile="${buildDirectory}/label.properties" />
+	<mkdir dir="${postingDirectory}/${buildLabel}" />
+
+	<!--location for buildlogs-->
+	<property name="buildlogs" value="${postingDirectory}/${buildLabel}/buildlogs" />
+	<mkdir dir="${buildlogs}" />
+
+	<property name="transformedRepoLocation" value="${buildDirectory}" />
+
+	<!--default location for build output, parent to ${buildLabel}-->
+	<property name="postingDirectory" value="${buildDirectory}" />
+	<!--p2 repo name-->
+	<property name="p2.repo.name" value="&quot;Eclipse Project Test Site&quot;" />
+
+	<property name="updateSite" value="${buildDirectory}/updateSite" />
+	<mkdir dir="${updateSite}" />
+	<property name="buildRepo" value="${updateSite}/${buildId}" />	
+
+	<target name="main" depends="init">
+		<antcall target="buildEclipseSourceDrops" /> 
+		<antcall target="buildMasterFeature" />
+		<antcall target="packageEclipseDistributables" />
+		<ant antfile="run.xml" />
+	</target>
+
+	<target name="init">
+		<ant antfile="build.xml" target="init" />
+		<property name="updateproperties" value="true" />
+		<condition property="fetchTag" value="HEAD">
+			<equals arg1="${buildType}" arg2="N" />
+		</condition>
+		<condition property="forceContextQualifier" value="${buildId}">
+			<equals arg1="${buildType}" arg2="N" />
+		</condition>
+		<!--generic compiler args-->
+		<property name="javacSource" value="1.3" />
+		<property name="javacTarget" value="1.2" />
+		<property name="javacDebugInfo" value="true" />
+		<property name="javacFailOnError" value="false" />
+		<property name="javacVerbose" value="false" />
+		<property name="logExtension" value=".xml" />
+		<!--this property required as of Eclipse 3.0 stream builds > 20031126 -->
+		<property name="buildingOSGi" value="true" />
+		<!--zip args-->
+		<property name="zipargs" value="-y -qq" />
+		<!--unzip args-->
+		<property name="unzipArgs" value="-qq" />
+		<property name="repo" value="${buildDirectory}/repo" />
+		<property name="reposource" value="${buildDirectory}/reposource" />
+		<condition property="fetchjetty" value="true">
+			<equals arg1="${buildType}" arg2="N" />
+		</condition>
+		<property name="buildDirectoryAbsoluteTemp" value="${buildDirectory}/absolutetemp.txt" />
+		<echo message="${reposource}" file="${buildDirectoryAbsoluteTemp}" />
+		<replaceregexp file="${buildDirectoryAbsoluteTemp}" match="org.eclipse.releng.eclipsebuilder/../src/" replace="src/" />
+		<loadfile property="buildDirectoryAbsolute" srcFile="${buildDirectoryAbsoluteTemp}" failonerror="false" />
+		<delete file="${buildDirectoryAbsoluteTemp}" />
+		<!--		<taskdef name="eclipse.idReplacer" classname="org.eclipse.pde.internal.build.tasks.IdReplaceTask" classpath="${base.builder}/org.eclipse.pde.build_3.5.0.v20090527-1800/lib/pdebuild-ant.jar" />
+		<taskdef name="eclipse.brand" classname="org.eclipse.pde.internal.build.tasks.BrandTask" classpath="${base.builder}/org.eclipse.pde.build_3.5.0.v20090527-1800/lib/pdebuild-ant.jar;${buildDirectory}/plugins/org.eclipse.pde.build_3.5.0.v20090527-1800/pdebuild.jar" />
+		<taskdef name="eclipse.versionReplacer" classname="org.eclipse.pde.internal.build.tasks.GenericVersionReplacer" classpath="${base.builder}/org.eclipse.pde.build_3.5.0.v20090527-1800/lib/pdebuild-ant.jar;${buildDirectory}/plugins/org.eclipse.pde.build_3.5.0.v20090527-1800/pdebuild.jar" /> -->
+	</target>
+
+	<target name="buildECFMasterFeature">
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="preBuild">
+			<property name="builder" value="${eclipse.build.configs}/master-ecf" />
+		</ant>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="fetch">
+			<property name="builder" value="${eclipse.build.configs}/master-ecf" />
+		</ant>
+	</target>
+
+	<target name="buildMasterFeature">
+		<ant antfile="build.xml" dir="${basedir}">
+			<property name="component" value="${eclipse.build.configs}/master" />
+		</ant>
+	</target>
+
+	<target name="buildEclipseSourceDrops" unless="skipFetch">	
+		<!--examples are required to pull sample doc into SDK doc plug-ins-->
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="preBuild">
+			<property name="builder" value="${eclipse.build.configs}/sdk.examples" />
+		</ant>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="fetch">
+			<property name="builder" value="${eclipse.build.configs}/sdk.examples" />
+		</ant>
+		<antcall target="buildECFMasterFeature" />
+		<!--fetch source and generate scripts for eclipse SDK-->
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="preBuild">
+			<property name="builder" value="${eclipse.build.configs}/sdk" />
+		</ant>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="fetch">
+			<property name="builder" value="${eclipse.build.configs}/sdk" />
+		</ant>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="generate">
+			<property name="builder" value="${eclipse.build.configs}/sdk" />
+		</ant>
+		
+		<replace file="${eclipse.build.configs}/sdk/srcBuild/build" token="@build@" value="${buildId}" />
+		<condition property="builderTag" value="v${buildId}">
+			<or>
+				<equals arg1="${buildType}" arg2="I" />
+				<equals arg1="${buildType}" arg2="M" />
+			</or>
+		</condition>
+		<property name="builderTag" value="HEAD" />
+		<condition property="mapVersionTag" value="${buildId}">
+			<or>
+				<equals arg1="${buildType}" arg2="I" />
+				<equals arg1="${buildType}" arg2="M" />
+			</or>
+		</condition>
+		<property name="mapVersionTag" value="HEAD" />
+		<replace file="${eclipse.build.configs}/sdk/srcBuild/build.properties" token="@mapVersionTag@" value="${mapVersionTag}" />
+	</target>
+
+	<target name="packageEclipseDistributables">
+		<replace token="@qualifier@" file="${eclipse.build.configs}/sdk/builder/sdk.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${eclipse.build.configs}/platform/platform.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${eclipse.build.configs}/platform.sdk/platform.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${buildDirectory}/plugins/org.eclipse.equinox.p2.ui.admin.rcp/rcp.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${eclipse.build.configs}/rcp/rcp.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${eclipse.build.configs}/rcp.sdk/rcp.product" value="${buildId}" />
+		<replace token="@qualifier@" file="${eclipse.build.configs}/rcp.config/feature.xml" value="${buildId}" />	
+		<delete dir="${reposource}" />
+		<mkdir dir="${reposource}" />
+		<exec executable="unzip" dir=".">
+			<arg line="${buildDirectory}/${buildLabel}/eclipse-master-${buildId}.zip -x */features/master/* */features/master-ecf* */features/master-jetty* -d ${reposource}" />
+		</exec>
+		<property name="tempexec" value="${buildDirectory}/tempexec" />
+		<delete dir="${tempexec}" />
+		<mkdir dir="${tempexec}" />	
+		<copy todir="${tempexec}">
+			<fileset dir="${reposource}">
+				<include name="features/org.eclipse.equinox.executable_*.jar" />
+			</fileset>
+		</copy>
+		<exec executable="unzip" dir="${tempexec}">
+			<arg line="features/*.jar -d ${tempexec}" />
+		</exec>
+
+		<subant antfile="build.xml" target="publish.bin.parts" buildpath="${tempexec}/build.xml">
+			<property name="p2.gathering" value="true" />
+			<property name="p2.build.repo" value="file:/${buildDirectoryAbsolute}" />
+		</subant>
+
+		<ant target="main" antfile="buildConfiguration.xml" dir="${eclipse.build.configs}/rcp.config" />
+
+		<p2.publish.product flavor="tooling" repository="file:${reposource}" productFile="${eclipse.build.configs}/sdk/builder/sdk.product" compress="true">
+			<config os="${installOs}" ws="${installWs}" arch="${installArch}" />
+			<advice kind="featureVersions" file="${buildDirectory}/finalFeaturesVersions.properties" />
+			<advice kind="pluginVersions" file="${buildDirectory}/finalPluginsVersions.properties" />
+		</p2.publish.product>
+
+		<mkdir dir="${buildRepo}" />
+		<p2.metadata.mirror source="file:${reposource}" writeMode="append" destinationName="${p2.repo.name}" destination="file:${buildRepo}" />
+		<p2.artifact.mirror source="file:${reposource}" destinationName="${p2.repo.name}" destination="file:${buildRepo}" />
+		<copy todir="${buildRepo}">
+			<fileset file="${eclipse.build.configs}/../../extras/sdkinstaller.properties" />
+		</copy>
+
+		<!--try create composite repository-->
+		<p2.composite.artifact.repository.create location="file://${updateSite}" name="${p2.repo.name}" compressed="true" failOnExists="false" />
+		<p2.composite.metadata.repository.create location="file://${updateSite}" name="${p2.repo.name}" compressed="true" failOnExists="false" />
+
+		<!--add childRepo to composite repo-->
+		<p2.composite.artifact.repository.add location="file://${updateSite}" child="${buildId}" />
+		<p2.composite.metadata.repository.add location="file://${updateSite}" child="${buildId}" />
+	</target>
+
+
+</project>

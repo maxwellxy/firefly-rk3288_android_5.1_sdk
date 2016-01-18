@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.p2.director.app;version="1.0
+ .201.R36x_v20100823";roots:=".,ant_tasks/director-antsrc"
+Bundle-Version: 1.0.201.R36x_v20100823
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.p2.director.app.source
+

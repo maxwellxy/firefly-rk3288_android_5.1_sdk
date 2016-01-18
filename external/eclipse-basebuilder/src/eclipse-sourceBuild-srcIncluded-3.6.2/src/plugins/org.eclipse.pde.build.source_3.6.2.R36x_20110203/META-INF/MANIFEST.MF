@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.pde.build;version="3.6.2.R36x_201102
+ 03";roots:="pdebuildsrc,lib/pdebuild-antsrc"
+Bundle-Version: 3.6.2.R36x_20110203
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.build.source
+

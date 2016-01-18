@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file defines tasks for building customized versions of swt.jar  -->
+<!-- Example: build a custom swt.jar using emulated accessibility and DND -->
+<!--            without debug information                                 -->
+<!-- 1. In the Eclipse Navigator, right-click on this file and select     -->
+<!--    'Run Ant'                                                         -->
+<!-- 2. Uncheck 'build.jars' (this task is selected by default)           -->
+<!-- 3. Select 'clean'                                                    -->
+<!-- 4. Select 'Property - Exclude Accessibility and DND'                 -->
+<!-- 5. Select 'Property - Exclude Debug Information                      -->
+<!-- 6. Select 'build.jars'. This task will create the swt.jar using the  -->
+<!--            set of properties previously defined                      -->
+<!-- 7. (Optional) Select 'build.sources'. This task will create the      -->
+<!--            swtsrc.zip file containing the corresponding source files -->
+<!-- 8. Click 'Finish'. This outputs the files swt.jar and swtsrc.zip to  -->
+<!--            the folder <project>/ws/win32                             -->
+<!-- Note.  If no 'Property' tasks are selected, the task 'build.jars'    -->
+<!--            will create the default swt.jar as it is shipped with     -->
+<!--            Eclipse.                                                  -->
+
+<project name="org.eclipse.swt.win32.wce_ppc.arm" default="build.jars" basedir=".">
+
+	<target name="init" depends="properties">
+		<property name="ws" value="win32"/>
+		<property name="os" value="wce_ppc"/>
+		<property name="arch" value="arm"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="destination" value="${basedir}"/>
+		<property name="plugindir" value="../org.eclipse.swt"/>
+		<property name="bootclasspath" value=""/>
+		<property name="javacVerbose" value="true"/>
+		<property name="compilerArg" value=""/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	</target>
+
+	<target name="Property - Use J2ME">
+		<property name="JAVA PROFILE" value="j2me"/>
+	</target>
+	<target name="Property - Exclude Accessibility and DND">
+		<property name="OS EMULATION" value="emulated"/>
+		<property name="EXCLUDE OLE" value="true"/>
+	</target>	
+	<target name="Property - Exclude Custom Widgets">
+		<property name="EXCLUDE CUSTOM" value="true"/>
+	</target>
+	<target name="Property - Exclude Layouts">
+		<property name="EXCLUDE LAYOUTS" value="true"/>
+	</target>
+	<target name="Property - Exclude Image Decoders">
+		<property name="EXCLUDE IMAGE" value="true"/>
+	</target>
+	<target name="Property - Exclude Debug Information">
+		<property name="DEBUG" value="off"/>
+	</target>
+		
+	<!-- Build swt.jar according to flags properties  -->
+	<target name="ws/win32/swt.jar" depends="init" unless="ws/win32/swt.jar">
+
+		<delete dir="${temp.folder}/ws/win32/swt.jar.bin"/>
+		<mkdir dir="${temp.folder}/ws/win32/swt.jar.bin"/>
+			
+		<!-- Copy desired subset of source files -->
+		<antcall target="copy.subset"/>
+		
+		<!-- Set default value for DEBUG - if already defined, this line is ignored -->
+		<property name="DEBUG" value="on"/>
+
+		<!-- Build class files -->        
+	    <javac destdir="${temp.folder}/ws/win32/swt.jar.bin" srcdir="${temp.folder}/ws/win32/swt.jar.bin" verbose="${javacVerbose}" debug="${DEBUG}" failonerror="no" bootclasspath="${bootclasspath}">
+	         <compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+	         <compilerarg line="-log '${temp.folder}/@dot.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	    </javac>
+		
+		<!-- Create resulting jar file into result folder -->
+		<mkdir dir="${build.result.folder}/ws/win32/"/>
+		<jar jarfile="${build.result.folder}/ws/win32/swt.jar" basedir="${temp.folder}/ws/win32/swt.jar.bin" excludes="**/*.java"/>
+		
+		<delete dir="${temp.folder}"/>
+	</target>
+	
+	<target name="build.jars" depends="init">
+		<available property="ws/win32/swt.jar" file="${build.result.folder}/ws/win32/swt.jar"/>
+		<antcall target="ws/win32/swt.jar"/>
+	</target>
+
+	<!-- Zip source files -->
+	<target name="ws/win32/swtsrc.zip" depends="init" unless="ws/win32/swtsrc.zip">
+	
+		<delete dir="${temp.folder}/ws/win32/swt.jar.bin"/>
+		<mkdir dir="${temp.folder}/ws/win32/swt.jar.bin"/>
+		
+		<!-- Copy desired subset of source files -->
+		<antcall target="copy.subset"/>
+			
+		<!-- Create resulting source zip file into result folder -->			
+		<mkdir dir="${build.result.folder}/ws/win32"/>
+		<zip zipfile="${build.result.folder}/ws/win32/swtsrc.zip">
+			<fileset dir="${temp.folder}/ws/win32/swt.jar.bin" includes="**/*.java" excludes=""/>
+		</zip>
+		
+		<delete dir="${temp.folder}/ws/win32/swt.jar.bin"/>
+	</target>
+
+	<!-- Copy a subset of SWT from the plugin's directory to the temp folder -->
+	<target name="copy.subset" depends="init">
+		<property name="destdir" value="${temp.folder}/ws/win32/swt.jar.bin"/>
+
+		<!-- Set properties characterizing default build. Properties already defined won't be affected. -->
+		<property name="JAVA PROFILE" value="j2se"/>
+		<property name="OS EMULATION" value="win32"/>
+		
+		<!-- Copy any required resource file in source folders -->
+        <property name="includes" value="**/*"/>
+        <property name="excludes" value="**/*.html,**/library/"/>
+		<copy todir="${temp.folder}/ws/win32/swt.jar.bin">
+
+			<fileset dir="${plugindir}/Eclipse SWT/common/" includes="${includes}" excludes="${excludes}">
+				<!-- remove layouts if required -->
+				<exclude name="org/eclipse/swt/layout/*" if="EXCLUDE LAYOUTS"/>
+				<!-- remove image decoders if required -->
+				<exclude name="org/eclipse/swt/internal/image/GIF*" if="EXCLUDE IMAGE"/>	
+				<exclude name="org/eclipse/swt/internal/image/JPEG*" if="EXCLUDE IMAGE"/>
+				<exclude name="org/eclipse/swt/internal/image/LZW*" if="EXCLUDE IMAGE"/>
+				<exclude name="org/eclipse/swt/internal/image/Png*" if="EXCLUDE IMAGE"/>
+				<exclude name="org/eclipse/swt/internal/image/PNG*" if="EXCLUDE IMAGE"/>
+				<exclude name="org/eclipse/swt/internal/image/Win*" if="EXCLUDE IMAGE"/>
+			</fileset>
+
+			<fileset dir="${plugindir}/Eclipse SWT/win32/" includes="${includes}" excludes="${excludes}"/>
+													
+			<fileset dir="${plugindir}/Eclipse SWT PI/common_${JAVA PROFILE}/" includes="${includes}" excludes="${excludes}"/>
+
+			<fileset dir="${plugindir}/Eclipse SWT PI/common/" includes="${includes}" excludes="${excludes}"/>
+			<fileset dir="${plugindir}/Eclipse SWT PI/win32/" includes="${includes}" excludes="${excludes}">
+				<!-- remove internal ole binding when not using OLE -->
+				<exclude name="org/eclipse/swt/internal/ole/win32/*" if="EXCLUDE OLE"/>
+			</fileset>
+
+			<fileset dir="${plugindir}/Eclipse SWT/common_${JAVA PROFILE}/" includes="${includes}" excludes="${excludes}"/>
+			
+			<fileset dir="${plugindir}/Eclipse SWT Accessibility/${OS EMULATION}/" includes="${includes}" excludes="${excludes}"/>
+
+			<fileset dir="${plugindir}/Eclipse SWT Accessibility/common/" includes="${includes}" excludes="${excludes}"/>
+
+			<fileset dir="${plugindir}/Eclipse SWT Drag and Drop/${OS EMULATION}/" includes="${includes}" excludes="${excludes}"/>
+
+			<fileset dir="${plugindir}/Eclipse SWT Drag and Drop/common/" includes="${includes}" excludes="${excludes}"/>
+
+			<fileset dir="${plugindir}/Eclipse SWT OLE Win32/win32/" includes="${includes}" excludes="${excludes}">
+				<!-- remove all if using emulated drag and drop -->
+				<exclude name="**/*" if="EXCLUDE OLE"/>
+			</fileset>
+
+			<fileset dir="${plugindir}/Eclipse SWT Custom Widgets/common/" includes="${includes}" excludes="${excludes}">
+				<!-- exclude custom widgets if required -->
+				<exclude name="org/eclipse/swt/custom/*" if="EXCLUDE CUSTOM"/>
+			</fileset>
+			
+			<fileset dir="${plugindir}/Eclipse SWT Printing/win32/" includes="${includes}" excludes="${excludes}"/>
+			<fileset dir="${plugindir}/Eclipse SWT Printing/common/" includes="${includes}" excludes="${excludes}"/>
+			<fileset dir="${plugindir}/Eclipse SWT Program/win32/" includes="${includes}" excludes="${excludes}"/>
+			<fileset dir="${plugindir}/Eclipse SWT Program/common/" includes="${includes}" excludes="${excludes}"/>
+		</copy>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="ws/win32/swtsrc.zip" file="${build.result.folder}/ws/win32/swtsrc.zip"/>
+		<antcall target="ws/win32/swtsrc.zip"/>
+	</target>
+
+	<target name="clean" depends="init">
+		<delete file="${build.result.folder}/ws/win32/swt.jar"/>
+		<delete file="${build.result.folder}/ws/win32/swtsrc.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="swtdownload.wince" depends="init">
+		<antcall target="clean"/>
+		<property name="OS EMULATION" value="emulated"/>
+		<property name="EXCLUDE OLE" value="true"/>
+		<property name="DEBUG" value="off"/>
+		<property name="EXCLUDE CUSTOM" value="true"/>
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}/swtdownload"/>
+		<property name="includetranslationfiles" value="true"/>
+		<antcall target="build.jars"/>
+		<copy file="${build.result.folder}/ws/${ws}/swt.jar" todir="${temp.folder}/swtdownload"/>
+		<antcall target="build.sources"/>
+		<copy file="${build.result.folder}/ws/${ws}/swtsrc.zip" todir="${temp.folder}/swtdownload"/>
+		<copy file="${plugindir}/build/.project" todir="${temp.folder}/swtdownload"/>
+		<copy file="${plugindir}/build/.classpath" todir="${temp.folder}/swtdownload"/>
+		<copy todir="${temp.folder}/swtdownload">
+			<fileset dir="${basedir}" includes="about.html,about_files/"/>
+			<fileset dir="${basedir}" includes="swt*.dll,libswt*.so,libswt*.sl,libswt*.a,libswt*.jnilib,libXm.so.2"/>
+		</copy>
+		<chmod dir="${temp.folder}/swtdownload" perm="755" includes="**/lib*"/>
+		<zip zipfile="${destination}/swt-${buildid}-${ws}-${os}-${arch}-${variant}.zip" basedir="${temp.folder}/swtdownload" filesonly="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="swtdownload.wince.1" depends="init">
+		<property name="variant" value="j2se"/>
+		<antcall target="swtdownload.wince"/>
+	</target>
+
+	<target name="swtdownload.wince.2" depends="init">
+		<property name="JAVA PROFILE" value="j2me"/>
+		<property name="variant" value="j2me"/>
+		<antcall target="swtdownload.wince"/>
+	</target>
+			
+	<target name="swtdownload" depends="init">
+		<antcall target="clean"/>
+		<antcall inheritAll="false" target="swtdownload.wince.1"/>
+		<antcall target="clean"/>
+		<antcall inheritAll="false" target="swtdownload.wince.2"/>
+	</target>
+	
+</project>

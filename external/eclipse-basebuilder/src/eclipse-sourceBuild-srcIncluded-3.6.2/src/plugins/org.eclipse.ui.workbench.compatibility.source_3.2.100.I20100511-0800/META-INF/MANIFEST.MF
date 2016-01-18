@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.workbench.compatibility;version="
+ 3.2.100.I20100511-0800";roots:="compatibilitysrc"
+Bundle-Version: 3.2.100.I20100511-0800
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment-compatibility
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.workbench.compatibility.source
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!-- =================================================================================== -->
+<!-- SSH2 Plug-in Manifest 					                                             -->
+<!-- =================================================================================== -->
+<plugin>
+
+<!-- =================================================================================== -->
+<!-- Runtime Libraries                                                                   -->
+<!-- =================================================================================== -->
+
+<!-- =================================================================================== -->
+<!-- Prerequisite Plug-ins                                                               -->
+<!-- =================================================================================== -->
+
+<!-- =================================================================================== -->
+<!-- Extension Point: CVS connection method                                              -->
+<!-- =================================================================================== -->
+<extension id="ssh2" point="org.eclipse.team.cvs.core.connectionmethods">
+	<adapter>
+		<run class="org.eclipse.team.internal.ccvs.ssh2.CVSSSH2Method">
+			<parameter name="trace" value="false"/>
+		</run>
+	</adapter>
+</extension>
+
+<extension id="pserverssh2" point="org.eclipse.team.cvs.core.connectionmethods">
+	<adapter>
+		<run class="org.eclipse.team.internal.ccvs.ssh2.PServerSSH2Method">
+			<parameter name="trace" value="false"/>
+		</run>
+	</adapter>
+</extension>
+
+</plugin>

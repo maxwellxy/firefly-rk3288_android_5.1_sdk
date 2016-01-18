@@ -1,0 +1,12 @@
+!***************  Test Framework CONTRIBUTION  ******************************************************** 
+feature@org.eclipse.test=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.test-feature
+
+plugin@org.eclipse.test=v20100118,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.ant.optional.junit=v20080717,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.test.performance=v20100122,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.test.performance.win32=v20070530,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.test.performance.data=v20050415,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.test.dispatcher=HEAD,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/plugins/org.eclipse.test.dispatcher

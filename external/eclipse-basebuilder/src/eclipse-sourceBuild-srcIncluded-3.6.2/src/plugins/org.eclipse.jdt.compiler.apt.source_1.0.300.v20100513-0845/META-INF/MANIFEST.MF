@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.compiler.apt;version="1.0.300.v2
+ 0100513-0845";roots:="."
+Bundle-Version: 1.0.300.v20100513-0845
+Bundle-Name: %fragmentName
+Bundle-Localization: compiler_apt_fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.compiler.apt.source
+

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.presentations.r21;version="3.2.20
+ 0.I20100517-1500";roots:="."
+Bundle-Version: 3.2.200.I20100517-1500
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.presentations.r21.source
+

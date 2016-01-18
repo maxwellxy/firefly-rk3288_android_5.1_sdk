@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.examples.paint;version="3.1.100.
+ v3659b";roots:="paintsrc"
+Bundle-Version: 3.1.100.v3659b
+Bundle-Name: %plugin.SWTPaintExample.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.examples.paint.source
+

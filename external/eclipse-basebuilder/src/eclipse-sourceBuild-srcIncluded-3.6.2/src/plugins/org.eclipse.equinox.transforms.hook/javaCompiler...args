@@ -1,0 +1,3 @@
+#ADAPTER#ACCESS#org.eclipse.equinox.servletbridge.extensionbundle/@dot[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.weaving.hook/bin/[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.weaving.hook/@dot[?**/*]

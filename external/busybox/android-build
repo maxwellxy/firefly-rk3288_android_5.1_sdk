@@ -1,0 +1,71 @@
+#!/bin/bash
+# Build Busybox against Android's bionic
+# Originally by Dan Fandrich
+#
+# Configure with "make android_defconfig"
+#
+# This file has been tested on Android Froyo (the lack of ttyname_r in
+# the android libc must be patched around) and Gingerbread.
+
+# Point this to the Android root directory; it's used in the defconfig CFLAGS
+. ../../build/envsetup.sh
+
+#export A="$HOME/android"
+export A=$(gettop)
+
+echo $A
+
+# Android product being built
+P=$(get_build_var TARGET_PRODUCT)
+echo $P
+
+# Toolchain version in use by this version of Android
+GCCVER=$(get_build_var TARGET_GCC_VERSION)
+
+# Old toolchain path before kitkat
+#export PATH="$A/prebuilt/linux-x86/toolchain/arm-eabi-$GCCVER/bin:$PATH"
+# Kitkat's toolchain path for static build
+#export PATH="$A/prebuilts/gcc/linux-x86/arm/arm-eabi-$GCCVER/bin:$PATH"
+# Kitkat's toolchain path for dynamic build
+export PATH="$A/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-$GCCVER/bin:$PATH"
+echo $PATH
+
+ANDROID_EXTRA_FLAGS=$(get_build_var TARGET_GLOBAL_CFLAGS)
+# Use absolute PATH for -I and -include option
+ANDROID_EXTRA_FLAGS=`echo $ANDROID_EXTRA_FLAGS | awk '{for (i=1;i<NF;i++) {printf " "$i; if ($i == "-I" || $i == "-include") {i++;printf " '$A'/"$i;}}}'`
+# Append to busybox original CFLAGS for android
+ANDROID_EXTRA_FLAGS="-I$A/system/core/include -I$A/bionic/libc/arch-arm/include -I$A/bionic/libc/include -I$A/bionic/libc/kernel/common -I$A/bionic/libc/kernel/arch-arm -I$A/bionic/libm/include -I$A/bionic/libm/include/arch/arm -D__ANDROID__ -DSK_RELEASE -nostdlib -march=armv7-a -mthumb -Wno-error=format-security $ANDROID_EXTRA_FLAGS"
+# To avoid build error with -Werror=format-security
+ANDROID_EXTRA_FLAGS=`echo $ANDROID_EXTRA_FLAGS | sed -e 's/-Werror=format-security//g'`
+echo ANDROID_EXTRA_FLAGS=$ANDROID_EXTRA_FLAGS
+
+sed -i "s|^CONFIG_EXTRA_CFLAGS=.*|CONFIG_EXTRA_CFLAGS=\"$ANDROID_EXTRA_FLAGS\"|g" configs/android_defconfig
+cat configs/android_defconfig | grep -v CONFIG_PKILL > configs/android_defconfig.new
+mv configs/android_defconfig.new configs/android_defconfig
+cat configs/android_defconfig | grep -v TOUCH > configs/android_defconfig.new
+mv configs/android_defconfig.new configs/android_defconfig
+cat configs/android_defconfig | grep -v CONFIG_CROSS_COMPILER_PREFIX > configs/android_defconfig.new
+mv configs/android_defconfig.new configs/android_defconfig
+cat configs/android_defconfig | grep -v STATIC > configs/android_defconfig.new
+mv configs/android_defconfig.new configs/android_defconfig
+echo 'CONFIG_PKILL=y' >> configs/android_defconfig
+echo '# CONFIG_TOUCH is not set' >> configs/android_defconfig
+echo '# CONFIG_FEATURE_TOUCH_NODEREF is not set' >> configs/android_defconfig
+echo 'CONFIG_STATIC=y' >> configs/android_defconfig
+echo 'CONFIG_CROSS_COMPILER_PREFIX="arm-linux-androideabi-"' >> configs/android_defconfig
+
+make android_defconfig
+
+# Set the linker flags; compiler flags are in the defconfig file
+if grep "^CONFIG_STATIC=y" .config >/dev/null ; then
+	# Static linking
+	LDFLAGS="-static -Xlinker -z -Xlinker muldefs -nostdlib $A/out/target/product/$P/obj/lib/crtbegin_static.o $A/out/target/product/$P/obj/lib/crtend_android.o -L$A/out/target/product/$P/obj/lib -L$A/out/target/product/$P/obj/STATIC_LIBRARIES/libm_intermediates -L$A/out/target/product/$P/obj/STATIC_LIBRARIES/libc_intermediates"
+	LDLIBS="m c gcc"
+else
+	# Dynamic linking
+	LDFLAGS="-Xlinker -z -Xlinker muldefs -nostdlib -Bdynamic -Xlinker -T$A/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-$GCCVER/arm-linux-androideabi/lib/ldscripts/armelf_linux_eabi.x -Xlinker -dynamic-linker -Xlinker /system/bin/linker -Xlinker -z -Xlinker nocopyreloc -Xlinker --no-undefined $A/out/target/product/$P/obj/lib/crtbegin_dynamic.o $A/out/target/product/$P/obj/lib/crtend_android.o -L$A/out/target/product/$P/obj/lib"
+	LDLIBS="dl m c gcc"
+fi
+
+make V=1 EXTRA_LDFLAGS="$LDFLAGS" LDLIBS="$LDLIBS" "$@" -j32
+cp busybox $A/out/target/product/$P/system/bin/busybox

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.resources;version="3.6.1.R36x_v
+ 20110131-1630";roots:="ant_tasks/resources-antsrc,."
+Bundle-Version: 3.6.1.R36x_v20110131-1630
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.resources.source
+

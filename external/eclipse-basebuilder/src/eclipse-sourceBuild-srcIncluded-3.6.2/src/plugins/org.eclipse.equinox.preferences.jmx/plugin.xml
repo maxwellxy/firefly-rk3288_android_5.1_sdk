@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.equinox.jmx.server.contribution">
+		<contribution
+        class="org.eclipse.equinox.internal.preferences.jmx.PreferenceContributionProvider"
+        isroot="true">
+     <extendsClass class="org.osgi.service.prefs.Preferences"/>
+  </contribution>
+		<contribution
+        class="org.eclipse.equinox.internal.preferences.jmx.KVPContributionProvider"
+        isroot="false">
+     <extendsClass class="org.eclipse.equinox.internal.preferences.jmx.KVP"/>
+  </contribution>
+	</extension>
+</plugin>

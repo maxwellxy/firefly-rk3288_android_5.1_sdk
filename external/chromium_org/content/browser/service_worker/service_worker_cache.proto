@@ -1,0 +1,30 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto2";
+
+option optimize_for = LITE_RUNTIME;
+
+package content;
+
+message ServiceWorkerCacheStorageIndex {
+  message Cache {
+    required string name = 1;
+    optional int32 DEPRECATED_size = 2;
+    optional int64 size = 3;
+  }
+  repeated Cache cache = 1;
+}
+
+message ServiceWorkerRequestResponseHeaders {
+  message HeaderMap {
+    required string name = 1;
+    required string value = 2;
+  }
+  required string method = 1;
+  required int32 status_code = 2;
+  required string status_text = 3;
+  repeated HeaderMap request_headers = 4;
+  repeated HeaderMap response_headers = 5;
+}

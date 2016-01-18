@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %provider-name
+Eclipse-SourceBundle: org.eclipse.ui.forms;version="3.5.2.r36_v2010070
+ 2";roots:="."
+Bundle-Version: 3.5.2.r36_v20100702
+Bundle-Name: %name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.forms.source
+

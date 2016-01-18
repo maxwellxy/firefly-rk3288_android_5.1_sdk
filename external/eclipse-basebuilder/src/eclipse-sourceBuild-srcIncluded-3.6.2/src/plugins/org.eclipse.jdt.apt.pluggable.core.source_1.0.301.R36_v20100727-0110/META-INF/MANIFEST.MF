@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.apt.pluggable.core;version="1.0.
+ 301.R36_v20100727-0110";roots:="."
+Bundle-Version: 1.0.301.R36_v20100727-0110
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.apt.pluggable.core.source
+

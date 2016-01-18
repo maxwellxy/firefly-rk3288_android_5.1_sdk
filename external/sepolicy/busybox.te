@@ -1,0 +1,82 @@
+# busybox console (used in busybox init.rc for /sbin/busybox)
+
+# Declare the domain unconditionally so we can always reference it
+# in neverallow rules.
+type busybox, domain;
+
+# But the allow rules are only included in the busybox policy.
+# Otherwise busybox is only allowed the domain rules.
+recovery_only(`
+  allow busybox self:capability { chown dac_override fowner fsetid setfcap setuid setgid sys_admin sys_tty_config };
+
+  # Set security contexts on files that are not known to the loaded policy.
+  allow busybox self:capability2 mac_admin;
+
+  # Run helpers from / or /system without changing domain.
+  allow busybox rootfs:file execute_no_trans;
+
+  # Mount filesystems.
+  allow busybox rootfs:dir mounton;
+  allow busybox fs_type:filesystem ~relabelto;
+  allow busybox unlabeled:filesystem ~relabelto;
+  allow busybox contextmount_type:filesystem relabelto;
+
+  # Create and relabel files and directories under /system.
+  allow busybox exec_type:{ file lnk_file } { create_file_perms relabelfrom relabelto };
+
+  # We may be asked to set an SELinux label for a type not known to the
+  # currently loaded policy. Allow it.
+  allow busybox unlabeled:{ file lnk_file } { create_file_perms relabelfrom relabelto };
+  allow busybox unlabeled:dir { create_dir_perms relabelfrom relabelto };
+
+  # 0eb17d944704b3eb140bb9dded299d3be3aed77e in build/ added SELinux
+  # support to OTAs. However, that code has a bug. When an update occurs,
+  # some directories are inappropriately labeled as exec_type. This is
+  # only transient, and subsequent steps in the OTA script correct this
+  # mistake.
+  # Allow this behavior for now until we can fix the underlying bug.
+  # b/15575013
+  allow busybox exec_type:dir { create_dir_perms relabelfrom relabelto };
+  auditallow busybox exec_type:dir { create_dir_perms relabelfrom relabelto };
+
+  # Write to /proc/sys/vm/drop_caches
+  # TODO: create more specific label?
+  allow busybox proc:file w_file_perms;
+
+  # Write to /sys/class/android_usb/android0/enable.
+  # TODO: create more specific label?
+  allow busybox sysfs:file w_file_perms;
+
+  # Access /dev/android_adb or /dev/usb-ffs/adb/ep0
+  allow busybox adb_device:chr_file rw_file_perms;
+  allow busybox functionfs:dir search;
+  allow busybox functionfs:file rw_file_perms;
+
+  # Create /tmp/busybox.log and execute /tmp/update_binary.
+  allow busybox tmpfs:file { create_file_perms x_file_perms };
+  allow busybox tmpfs:dir create_dir_perms;
+
+  # Manage files on /cache
+  allow busybox cache_file:dir create_dir_perms;
+  allow busybox cache_file:file create_file_perms;
+
+  # Reboot the device
+  allow busybox powerctl_prop:property_service set;
+  unix_socket_connect(busybox, property, init)
+
+  # Use setfscreatecon() to label files for OTA updates.
+  allow busybox self:process setfscreate;
+
+  # Allow busybox to create a fuse filesystem, and read files from it.
+  allow busybox fuse_device:chr_file rw_file_perms;
+  allow busybox fuse:dir r_dir_perms;
+  allow busybox fuse:file r_file_perms;
+
+  wakelock_use(busybox)
+
+  # This line seems suspect, as it should not really need to
+  # set scheduling parameters for a kernel domain task.
+  allow busybox kernel:process setsched;
+
+  allow busybox serial_device:chr_file rw_file_perms;
+')

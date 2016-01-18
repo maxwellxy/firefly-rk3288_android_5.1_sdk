@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+         name="%security"
+         class="org.eclipse.equinox.internal.security.ui.preferences.SecurityCategoryPage"
+         id="org.eclipse.equinox.security.ui.category"
+         category="org.eclipse.ui.preferencePages.Workbench">
+      </page>
+   </extension>
+
+
+<!--
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+         name="%certificates"
+         class="org.eclipse.equinox.internal.security.ui.preferences.CertificatesPage"
+         id="org.eclipse.equinox.security.ui.certificates"
+         category="org.eclipse.equinox.security.ui.category">
+      </page>
+   </extension>
+-->
+
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+         name="%storage"
+         class="org.eclipse.equinox.internal.security.ui.storage.StoragePreferencePage"
+         id="org.eclipse.equinox.security.ui.storage"
+         category="org.eclipse.equinox.security.ui.category">
+         <keywordReference
+               id="org.eclipse.equinox.security.ui.keywordPassword">
+         </keywordReference>
+         <keywordReference
+               id="org.eclipse.equinox.security.ui.keywordUsername">
+         </keywordReference>
+         <keywordReference
+               id="org.eclipse.equinox.security.ui.keywordLogin">
+         </keywordReference>
+      </page>
+   </extension>
+
+   
+<!--   
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.ui.Basic"
+            class="org.eclipse.equinox.internal.security.ui.wizard.CertificateImportWizard"
+            icon="icons/full/obj16/signed_yes_tbl.gif"
+            id="org.eclipse.equinox.security.ui.importWizards.ImportWizard"
+            name="%certificateFile">
+         <description>
+            %certificateFileDescription
+         </description>
+         <selection class="org.eclipse.core.resources.IResource" /> 
+      </wizard>
+   </extension>
+-->   
+   <!-- The default UI password provider -->
+   <extension
+         id="DefaultPasswordProvider"
+         name="%uiPasswordProviderName"
+         point="org.eclipse.equinox.security.secureStorage">
+      <provider
+            class="org.eclipse.equinox.internal.security.ui.storage.DefaultPasswordProvider"
+            description="%providerDescription"
+            priority="2">
+      </provider>
+   </extension>
+   
+   <!-- Dependency injection to couple UI and core modules -->
+   <extension
+         point="org.eclipse.equinox.security.internalUI">
+      <provider
+            class="org.eclipse.equinox.internal.security.ui.storage.UICallbackProvider">
+      </provider>
+   </extension>
+   <extension
+         id="security"
+         point="org.eclipse.ui.systemSummarySections">
+      <section
+            class="org.eclipse.equinox.internal.security.ui.SecurityConfigurationSection"
+            id="securityConfigurationSection"
+            sectionTitle="%systemSummaryTitle">
+      </section>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.eclipse.equinox.security.ui.keywordPassword"
+            label="%keywordPassword">
+      </keyword>
+      <keyword
+            id="org.eclipse.equinox.security.ui.keywordUsername"
+            label="%keywordUsername">
+      </keyword>
+      <keyword
+            id="org.eclipse.equinox.security.ui.keywordLogin"
+            label="%keywordLogin">
+      </keyword>
+   </extension>
+    
+</plugin>

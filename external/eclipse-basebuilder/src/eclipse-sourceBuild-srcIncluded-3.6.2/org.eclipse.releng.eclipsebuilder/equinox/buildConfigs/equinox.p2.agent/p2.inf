@@ -1,0 +1,9 @@
+requires.1.namespace=org.eclipse.equinox.p2.iu
+requires.1.name=org.eclipse.rcp.configuration.feature.group
+requires.1.range=[1.0.0.@qualifier@,1.0.0.@qualifier@]
+requires.1.greedy=true
+instructions.configure=\
+  addRepository(type:0,location:http${#58}//download.eclipse.org/eclipse/updates/3.6,name:The Eclipse Project Updates);\
+  addRepository(type:1,location:http${#58}//download.eclipse.org/eclipse/updates/3.6,name:The Eclipse Project Updates);\
+  addRepository(type:0,location:http${#58}//download.eclipse.org/releases/helios,name:Helios);\
+  addRepository(type:1,location:http${#58}//download.eclipse.org/releases/helios,name:Helios);

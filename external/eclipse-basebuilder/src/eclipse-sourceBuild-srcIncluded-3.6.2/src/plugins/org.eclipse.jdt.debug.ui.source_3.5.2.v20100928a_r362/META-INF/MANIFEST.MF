@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.debug.ui;version="3.5.2.v2010092
+ 8a_r362";roots:="snippetsupportsrc,."
+Bundle-Version: 3.5.2.v20100928a_r362
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.debug.ui.source
+

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.launching.macosx;version="3.2.10
+ 0.v20100505";roots:="."
+Bundle-Version: 3.2.100.v20100505
+Eclipse-PlatformFilter: (osgi.os=macosx)
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.launching.macosx.source
+

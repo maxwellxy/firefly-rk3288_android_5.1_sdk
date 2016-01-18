@@ -1,0 +1,9 @@
+!***************  DOC CONTRIBUTION  ******************************************************** 
+
+plugin@org.eclipse.platform.doc.user=r362_v20101117-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.platform.doc.isv=r362_v20110111,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt.doc.user=r361_v20100721-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.doc.isv=r362_v20101117-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.pde.doc.user=v20101118_r362,kmoir@dev.eclipse.org:/cvsroot/eclipse,,pde/doc/org.eclipse.pde.doc.user

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.win32;version="3.2.200.I20100509-
+ 0800";roots:="."
+Bundle-Version: 3.2.200.I20100509-0800
+Eclipse-PlatformFilter: (osgi.ws=win32)
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment-win32
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.win32.source
+

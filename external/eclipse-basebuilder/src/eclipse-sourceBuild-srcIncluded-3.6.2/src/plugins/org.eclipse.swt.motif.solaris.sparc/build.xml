@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.swt.motif.solaris.sparc" default="build.jars" basedir=".">
+
+	<property name="swt.ws" value="motif" />
+	<property name="swt.os" value="solaris" />
+	<property name="swt.arch" value="sparc" />
+	
+	<!-- These properties are used by eclipse when exporting as Deployable plugin and fragments -->
+	<property name="version.suffix" value="3.6.2.v3659b" />
+
+	<import file="../org.eclipse.swt/buildFragment.xml"/>
+</project>

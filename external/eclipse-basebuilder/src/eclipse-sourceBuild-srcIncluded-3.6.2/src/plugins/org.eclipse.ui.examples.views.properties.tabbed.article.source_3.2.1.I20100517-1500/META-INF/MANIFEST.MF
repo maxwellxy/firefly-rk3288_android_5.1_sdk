@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui.examples.views.properties.tabbed.
+ article;version="3.2.1.I20100517-1500";roots:="."
+Bundle-Version: 3.2.1.I20100517-1500
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.views.properties.tabbed.a
+ rticle.source
+

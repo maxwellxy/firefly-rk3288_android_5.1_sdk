@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.team.core;version="3.5.101.R36x_v201
+ 10203-1036";roots:="."
+Bundle-Version: 3.5.101.R36x_v20110203-1036
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.team.core.source
+

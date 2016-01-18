@@ -1,0 +1,436 @@
+<project name="Build specific targets and properties" default="noDefault">
+
+
+	<property name="postingDirectory" value="${buildDirectory}" />
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- ===================================================================== -->
+
+	<!-- ****** figure out how to build the platform, sdk, examples, ... from one compile"
+see the sdkFeatures, platformFeatures, ... targets in the orginal customTargets  -->
+	<target name="allElements">
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.sdk" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Targets to assemble the built elements for particular configurations  -->
+	<!-- ===================================================================== -->
+
+	<!-- this section is unfinished************** -->
+	<target name="assemble.org.eclipse.sdk.win32.win32.x86">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-win32.zip" />
+		<antcall target="assemble" />
+		<!--skip until PDF gen issues resolved.-->
+		<!--ant antfile="${builderDirectory}/tools/build.xml">
+		</ant-->
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.win32.win32.x86_64">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-win32-x86_64.zip" />
+		<antcall target="assemble" />
+	</target>
+	
+	<target name="assemble.org.eclipse.sdk.linux.motif.x86">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-linux-motif.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<!-- <target name="assemble.org.eclipse.sdk.macosx.carbon.ppc">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-macosx-carbon.tar.gz" />
+		<antcall target="assemble" />
+	</target> -->
+
+	<target name="assemble.org.eclipse.sdk.macosx.carbon.x86">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-macosx-carbon.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.macosx.cocoa.x86">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-macosx-cocoa.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.macosx.cocoa.x86_64">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-macosx-cocoa-x86_64.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.linux.gtk.x86">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-linux-gtk.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.linux.gtk.x86_64">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-linux-gtk-x86_64.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.linux.gtk.ppc">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-linux-gtk-ppc.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.linux.gtk.ppc64">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-linux-gtk-ppc64.tar.gz" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.hpux.motif.ia64_32">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-hpux-motif-ia64_32.zip" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.solaris.gtk.sparc">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-solaris-gtk.zip" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.qnx.photon.x86">
+		<!--do not assemble this drop for now-->
+		<!--ant antfile="${assembleScriptName}">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-qnx-photon.zip"/>
+	</ant-->
+	</target>
+
+	<target name="assemble.org.eclipse.sdk.solaris.motif.sparc" />
+	<target name="assemble.org.eclipse.sdk.gtk.solaris.x86" />
+	<target name="assemble.org.eclipse.sdk.aix.motif.ppc">
+		<property name="archiveName" value="eclipse-SDK-${buildId}-aix-motif.zip" />
+		<antcall target="assemble" />
+	</target>
+
+	<target name="assemble">
+		<mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
+		<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveName}" />
+		<ant antfile="${assembleScriptName}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for cvsRoot, package and mapVersionTag as desired. -->
+	<!-- ===================================================================== -->
+	<target name="checkLocal">
+		<available property="mapsLocal" file="${buildDirectory}/maps/org.eclipse.releng" />
+	</target>
+
+	<target name="getMapFiles" depends="checkLocal" unless="mapsLocal">
+
+		<!-- ***  change the repo info -->
+		<property name="mapCvsRoot" value="${mapsRepo}" />
+		<property name="mapVersionTag" value="HEAD" />
+		<cvs cvsRoot="${mapCvsRoot}" package="org.eclipse.releng" dest="${buildDirectory}/maps" tag="${mapVersionTag}" />
+		<!--compare the map files project-->
+		<antcall target="compareMapFiles" />
+		<!--tag the map files project-->
+		<antcall target="tagMapFiles" />
+		<antcall target="getPrebuiltElements" />
+	</target>
+
+	<target name="compareMapFiles" if="compareMaps">
+		<property file="${mapTag.properties}" />
+		<property name="cvsDiffFile" value="${buildDirectory}/cvsDiff.txt" />
+		<cvs cvsRoot="${mapCvsRoot}" dest="${buildDirectory}/maps" command="diff -w -r ${lastMapTag}" output="${cvsDiffFile}" />
+		<modifiedMaps mapDiffFile="${cvsDiffFile}" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<!-- Stores tag on the filesystem so map files can be compared -->
+		<echo file="${mapTag.properties}">
+		lastMapTag=${buildId}
+	</echo>
+		<cvs dest="${buildDirectory}/maps/org.eclipse.releng" command="tag ${buildId}" />
+	</target>
+
+	<target name="getPrebuiltElements">
+	</target>
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+	</target>
+
+
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+		<!--fetch projects required to build swt gtk64-->
+		<property name="featureOnly" value="false" />
+		<property name="featureAndPlugins" value="true" />
+		<property name="featuresRecursively" value="false" />
+		<ant antfile="genericTargets.xml" dir="${eclipse.pdebuild.scripts}" target="fetchElement">
+			<property name="type" value="fragment" />
+			<property name="id" value="org.eclipse.swt.gtk.linux.x86_64" />
+		</ant>
+		<ant antfile="genericTargets.xml" dir="${eclipse.pdebuild.scripts}" target="fetchElement">
+			<property name="type" value="fragment" />
+			<property name="id" value="org.eclipse.swt.win32.win32.x86" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+
+	<target name="preFetch">
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${localmirror}" token="download.eclipse.org" />
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${cvsuser}" token=":pserver:anonymous" />
+	</target>
+
+	<target name="updateproperties" unless="updateproperties">
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.platform/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.sdk/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.cvs/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.help.base/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.jdt/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.rcp/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<concat destfile="${buildDirectory}/plugins/org.eclipse.pde/build.properties" append="true">qualifier=v${timestamp}</concat>
+		<property name="updateproperties" value="true" />
+	</target>
+
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the fetch -->
+	<!-- ===================================================================== -->
+	<target name="postFetch" unless="skipFetch">
+		<replace file="${buildDirectory}/sourceReferences.properties" token=":extssh" value=":pserver"  />
+		<antcall target="updateproperties" />
+		<ant antfile="${genericTargets}" target="fetchElement">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.equinox.executable" />
+		</ant>
+		<zip zipfile="${buildDirectory}/plugins/org.eclipse.platform/launchersrc.zip" basedir="${buildDirectory}/features/org.eclipse.equinox.executable" includes="library/" />
+
+		<!--copy linux motif about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.motif.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.motif.x86" />
+		<mkdir dir="${linux.motif.rootfiles}" />
+		<copy tofile="${linux.motif.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.motif.linux.x86/about.html" />
+		<copy todir="${linux.motif.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.motif.linux.x86" />
+		</copy>
+
+		<!--copy linux gtk x86 about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.gtk.x86.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.gtk.x86" />
+		<mkdir dir="${linux.gtk.x86.rootfiles}" />
+		<copy tofile="${linux.gtk.x86.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86/about.html" />
+
+		<!--copy linux gtk x86_64 about_files to in temp location where it will be copied into root of eclipse at assembly time-->
+		<property name="linux.gtk.x86_64.rootfiles" value="${buildDirectory}/features/org.eclipse.platform/about_files/linux.gtk.x86_64" />
+		<mkdir dir="${linux.gtk.x86_64.rootfiles}" />
+		<copy tofile="${linux.gtk.x86_64.rootfiles}/about.html" file="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86_64/about.html" />
+
+		<copy todir="${linux.gtk.x86_64.rootfiles}">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.swt.gtk.linux.x86_64" includes="
+				about_files/mpl-v11.txt" />
+		</copy>
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating build scripts -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+		<antcall target="buildSourceDrops" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before assembling -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after assembling-->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+		<!--copy javadoc logs to posting directory-->
+		<copy file="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/doc.bin.log" tofile="${postingDirectory}/${buildLabel}/compilelogs/platform.doc.isv.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/doc.bin.log" tofile="${postingDirectory}/${buildLabel}/compilelogs/jdt.doc.isv.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.pde.doc.user/doc.bin.log" tofile="${postingDirectory}/${buildLabel}/compilelogs/pde.doc.user.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/jdtapt.doc.bin.log" tofile="${postingDirectory}/${buildLabel}/compilelogs/jdt.apt.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/platformconvert.txt" tofile="${postingDirectory}/${buildLabel}/compilelogs/platform.doc.isv.schema.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/jdtconvert.txt" tofile="${postingDirectory}/${buildLabel}/compilelogs/jdt.doc.isv.schema.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.pde.doc.user/pdeconvert.txt" tofile="${postingDirectory}/${buildLabel}/compilelogs/pde.doc.user.schema.txt" failonerror="false" />
+	</target>
+
+	<target name="prePackage" />
+	<target name="postPackage">
+		<mkdir dir="${buildDirectory}/${buildLabel}/checksum" />
+		<exec executable="sh" dir="${buildDirectory}/${buildLabel}">
+			<arg line="${eclipse.build.configs}/../../extras/produceChecksum" />
+		</exec>
+		<move todir="${postingDirectory}/${buildLabel}">
+			<fileset dir="${buildDirectory}/${buildLabel}" />
+		</move>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+		<replace dir="${buildDirectory}/plugins" value="${buildId}" token="@build@">
+			<include name="**/about.mappings" />
+		</replace>
+		<replace dir="${buildDirectory}/features/org.eclipse.platform" value="${buildId}" token="@build@">
+			<include name="**/config.ini" />
+		</replace>
+		<replace dir="${buildDirectory}/features/org.eclipse.sdk" value="${buildId}" token="@build@">
+			<include name="**/config.ini" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+		<condition property="logsAvailable">
+			<istrue value="${javacVerbose}" />
+		</condition>
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after everything is built and assembled -->
+	<!-- (e.g., testing, posting, emailing, ...) -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Helper targets -->
+	<!-- ===================================================================== -->
+	<target name="gatherLogs" if="logsAvailable">
+
+		<mkdir dir="${postingDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+		<unzip dest="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true">
+			<fileset dir="${buildDirectory}/features/org.eclipse.sdk">
+				<include name="*.log.zip" />
+			</fileset>
+		</unzip>
+	</target>
+
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Targets called before extracting binary distributables.               -->
+	<!-- ===================================================================== -->
+	<target name="buildSourceDrops" if="buildSourceDrops">
+		<mkdir dir="${postingDirectory}/${buildLabel}" />
+		<mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
+		<property name="tempDir" value="${basedir}/temp" />
+		<mkdir dir="${tempDir}/buildScripts" />
+		<mkdir dir="${tempDir}/buildScripts/src" />
+		<copy file="${buildDirectory}/label.properties" todir="${tempDir}/src/buildScripts" />
+
+		<copy todir="${tempDir}/buildScripts" flatten="true" overwrite="true">
+			<fileset dir="${eclipse.build.configs}/sdk/srcBuild" excludes="incl,fetch/**,buildFromSource.xml,run.xml" />
+		</copy>
+
+		<!--  set correct permissions on linux script -->
+		<chmod file="${tempDir}/buildScripts/build" perm="755" />
+
+		<!--copy example doc -->
+		<ant antfile="buildDoc.xml" target="examplesDocCopy" dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" />
+
+		<copy todir="${tempDir}/buildScripts/src">
+			<fileset dir="${buildDirectory}" excludes="features/*example*/**,plugins/*example*/**" includes="features/*/build.xml,features/*.source*/**,plugins/*/build.xml,plugins/*/javaCompiler.*.args,plugins/*.source*/**,fetch_*.xml,assemble*.xml,plugins/org.eclipse.swt.tools/**,plugins/*doc*/**,label.properties" />
+		</copy>
+
+		<!--ensure linux drops are created as .tar.gz files -->
+		<replace dir="${tempDir}/buildScripts" includes="assemble*" excludes="*win32*,*hpux*,*solaris*,*aix*" token=".zip" value=".tar.gz" />
+
+		<!--copy current version of eclipsebuilder to include in source build-->
+		<copy todir="${tempDir}/buildScripts">
+			<fileset dir="${buildDirectory}/.." includes="org.eclipse.releng.eclipsebuilder/**" />
+		</copy>
+
+		<!-- create drop containing the fetch scripts, no source -->
+		<exec dir="${tempDir}" executable="zip">
+			<arg line="-q ${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcFetch-${buildId}.zip -r ." />
+		</exec>
+
+		<!--generate md5 & sha1-->
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcFetch-${buildId}.zip" property="md5" />
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcFetch-${buildId}.zip" algorithm="SHA" property="sha" />
+		<echo message="${md5} *eclipse-sourceBuild-srcFetch-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-sourceBuild-srcFetch-${buildId}.zip.md5" />
+		<echo message="${sha} *$eclipse-sourceBuild-srcFetch-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-sourceBuild-srcFetch-${buildId}.zip.sha1" />
+
+		<!--  create zip with all source for an Eclipse SDK + maps  -->
+		<copy todir="${tempDir}/buildScripts/src">
+			<fileset dir="${buildDirectory}" includes="features/,plugins/,maps/**" />
+		</copy>
+		<!-- <fileset dir="${buildDirectory}" includes="features/,plugins/,maps/**" excludes="features/*example*/**,plugins/*example*/**" /> -->
+		<copy todir="${tempDir}/buildScripts" flatten="true" overwrite="true">
+			<fileset dir="${eclipse.build.configs}/sdk/srcBuild" excludes="fetch/**,incl,buildFromSource.xml,build.properties,run.xml" />
+		</copy>
+		<!--replace hard-coded location of Orbit bundles in generated packaging scripts to avoid bug 182331, 178869 -->
+		<replaceregexp match="/builds/(I\d*|N\d*|M\d*)/src" replace="${buildDirectory}" byline="true">
+			<fileset dir="${tempDir}/buildScripts" includes="package*" />
+		</replaceregexp>
+
+		<!-- fetch scripts are not required when source already included in zip file -->
+		<delete>
+			<fileset dir="${tempDir}/buildScripts/src" includes="fetch*.xml" />
+			<!-- delete some jars that are not needed to build Eclipse -->
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/collx.jar" />
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/ee.foundation.jar" />
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/ee.minimum.jar" />
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/exceptions.jar" />
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/xmlParserAPIs.jar" />
+			<fileset file="${tempDir}/buildScripts/src/plugins/org.eclipse.osgi/osgi/osgi-r3-jdk131-notsigned.jar" />
+		</delete>
+
+		<!--  set correct permissions on linux script -->
+		<chmod file="${tempDir}/buildScripts/build" perm="755" />
+		<exec dir="${tempDir}/buildScripts" executable="zip">
+			<arg line="-q ${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcIncluded-${buildId}.zip -r ." />
+		</exec>
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcIncluded-${buildId}.zip" property="md5.2" />
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-sourceBuild-srcIncluded-${buildId}.zip" algorithm="SHA" property="sha.2" />
+		<echo message="${md5.2} *eclipse-sourceBuild-srcIncluded-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-sourceBuild-srcIncluded-${buildId}.zip.md5" />
+		<echo message="${sha.2} *eclipse-sourceBuild-srcIncluded-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-sourceBuild-srcIncluded-${buildId}.zip.sha1" />
+
+		<copy file="${eclipse.build.configs}/sdk/srcBuild/incl/instructions.html" tofile="${postingDirectory}/${buildLabel}/srcIncludedBuildInstructions.html" />
+		<copy file="${eclipse.build.configs}/sdk/srcBuild/fetch/instructions.html" tofile="${postingDirectory}/${buildLabel}/srcFetchBuildInstructions.html" />
+
+		<delete dir="${tempDir}/" />
+	</target>
+
+	<target name="getSdkExamplesPlugins">
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="preBuild">
+			<property name="builder" value="${eclipse.build.configs}/sdk.examples" />
+		</ant>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}" target="fetch">
+			<property name="builder" value="${eclipse.build.configs}/sdk.examples" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+
+</project>

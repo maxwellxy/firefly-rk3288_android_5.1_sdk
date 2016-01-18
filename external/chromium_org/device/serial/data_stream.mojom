@@ -1,0 +1,46 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+module device.serial {
+
+[Client=DataSourceClient]
+interface DataSource {
+  // Initializes this DataSource with a data pipe handle to use for data
+  // transmission.
+  Init(handle<data_pipe_producer> producer_handle);
+
+  // Resumes sending data after it has been stopped due to an error.
+  Resume();
+};
+
+interface DataSourceClient {
+  // Invoked to report |error| from the DataSource, at |error_location| bytes
+  // into the data stream. No further bytes beyond |error_location| will be
+  // transmitted from the DataSource until Resume() is called.
+  OnError(uint32 error_location, int32 error);
+};
+
+[Client=DataSinkClient]
+interface DataSink {
+  // Initializes this DataSink with a data pipe handle to use for data
+  // transmission.
+  Init(handle<data_pipe_consumer> consumer_handle);
+
+  // Requests the cancellation of any data that has been written to the pipe,
+  // but has not yet been sent to the sink.
+  Cancel(int32 error);
+};
+
+interface DataSinkClient {
+  // Reports that the sink has successfully received |bytes_sent| bytes of data.
+  ReportBytesSent(uint32 bytes_sent);
+
+  // Reports that the sink has received |bytes_sent| bytes of data (possibly 0)
+  // and encountered an error: |error|. The client should respond with
+  // |bytes_to_flush|, the number of bytes enqueued in the data pipe but not yet
+  // acked so the correct number of bytes can be flushed from the pipe.
+  ReportBytesSentAndError(uint32 bytes_sent, int32 error) => (uint32 bytes_to_flush);
+};
+
+}

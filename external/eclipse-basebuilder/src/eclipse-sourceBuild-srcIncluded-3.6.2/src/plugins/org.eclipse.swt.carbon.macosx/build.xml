@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.swt.carbon.macosx" default="build.jars" basedir=".">
+
+	<property name="swt.ws" value="carbon" />
+	<property name="swt.os" value="macosx" />
+	
+	<!-- These properties are used by eclipse when exporting as Deployable plugin and fragments -->
+	<property name="version.suffix" value="3.6.2.v3659b" />
+	
+	<import file="../org.eclipse.swt/buildFragment.xml"/>
+</project>

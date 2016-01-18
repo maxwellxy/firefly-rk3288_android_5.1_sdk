@@ -1,0 +1,41 @@
+
+LOCAL_PATH:= $(call my-dir)
+commands_recovery_local_path := $(LOCAL_PATH)
+
+include $(CLEAR_VARS)
+LOCAL_C_INCLUDES += bionic external/stlport/stlport 
+LOCAL_SRC_FILES:=  \
+		pre_test.cpp\
+		ui.c		\
+		screen_ui.cpp	\
+		rtc_test.c	\
+		screen_test.cpp	\
+		themes.c	\
+		data.cpp	\
+		ddftw.c		\
+		extra-functions.c \
+		default_recovery_ui.c \
+		camera_test.c	
+	#      fb_test.c    \
+		  bt_test.c \
+		  touch_test.c \
+		  wlan_test.c \
+		  sdcard_test.c \
+		   backlight_test.c\
+		   screen_test.c \
+			key_test.c \
+			audio_test.c \
+			camera_test.c \
+			moto_test.c \
+	               ../../bootable/recovery/ui.c
+LOCAL_MODULE := pcba_core
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH:=$(TARGET_ROOT_OUT_SBIN)
+LOCAL_STATIC_LIBRARIES += libminuitwrp libpixelflinger_static libpng libcutils libz libgui
+LOCAL_STATIC_LIBRARIES += libstdc++ libc libstlport_static
+include $(BUILD_EXECUTABLE)
+include $(commands_recovery_local_path)/gui/Android.mk
+include $(commands_recovery_local_path)/minuitwrp/Android.mk
+
+

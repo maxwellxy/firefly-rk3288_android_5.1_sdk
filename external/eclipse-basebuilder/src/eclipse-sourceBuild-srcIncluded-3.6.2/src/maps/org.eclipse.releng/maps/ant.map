@@ -1,0 +1,13 @@
+!***************  ANT CONTRIBUTION  ******************************************************** 
+
+#plugin@org.apache.ant=v20070416,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ant.core=v20110203_r362,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ant.launching=v20101020_r362,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.ant.ui=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.ui.externaltools=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.core.externaltools=v20100831_r361,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.ant.tests.core=v20091214,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ant.tests.ui=v20100602-1000,kmoir@dev.eclipse.org:/cvsroot/eclipse,

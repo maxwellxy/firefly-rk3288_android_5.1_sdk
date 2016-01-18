@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resource Monitoring Preferences Extensions (Incubation)
+Bundle-SymbolicName: org.eclipse.equinox.preferences.jmx;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Eclipse.org
+Eclipse-LazyStart: true
+Bundle-Localization: plugin
+Bundle-Activator: org.eclipse.equinox.internal.preferences.jmx.Activator
+Import-Package: javax.management,
+ javax.management.remote,
+ org.eclipse.core.runtime; common=split,
+ org.eclipse.core.runtime.preferences,
+ org.eclipse.equinox.jmx.common,
+ org.eclipse.equinox.jmx.server,
+ org.eclipse.osgi.util,
+ org.osgi.framework,
+ org.osgi.service.log,
+ org.osgi.service.prefs,
+ org.osgi.util.tracker
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ CDC-1.0/Foundation-1.0,
+ J2SE-1.3
+

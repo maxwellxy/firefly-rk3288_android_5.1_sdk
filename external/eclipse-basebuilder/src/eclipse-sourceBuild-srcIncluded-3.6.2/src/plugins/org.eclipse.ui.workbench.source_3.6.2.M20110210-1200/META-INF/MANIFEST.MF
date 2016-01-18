@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.workbench;version="3.6.2.M2011021
+ 0-1200";roots:="."
+Bundle-Version: 3.6.2.M20110210-1200
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.workbench.source
+

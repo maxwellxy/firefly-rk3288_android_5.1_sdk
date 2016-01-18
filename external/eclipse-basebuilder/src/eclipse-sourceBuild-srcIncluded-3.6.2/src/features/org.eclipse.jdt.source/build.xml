@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.jdt.source" default="build.update.jar" basedir=".">
+
+	<target name="init">
+		<property name="feature.temp.folder" value="${basedir}/feature.temp.folder"/>
+		<property name="feature.destination" value="${basedir}"/>
+		<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+	</target>
+
+	<target name="all.plugins" depends="init">
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ant.launching.source_1.0.1.v20101020_r362" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.launching.ui.macosx.source_1.0.100.v20100505" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="carbon"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.launching.macosx.source_3.2.100.v20100505" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="carbon"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.ui.source_3.6.2.r362_v20110203" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.launching.source_3.5.200.v20110105_r362" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.junit4.runtime.source_1.1.100.v20100526-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.junit.runtime.source_3.4.200.v20100526-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.junit.core.source_3.6.1.r361_v20100825-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.junit.source_3.6.1.r361_v20100825-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.debug.source_3.6.1.v20100715_r361" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.debug.ui.source_3.5.2.v20100928a_r362" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.core.manipulation.source_1.3.0.v20100520-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.core.source_3.6.2.v_A76_R36x" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.compiler.tool.source_1.0.100.v_A76_R36x" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.compiler.apt.source_1.0.300.v20100513-0845" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.apt.pluggable.core.source_1.0.301.R36_v20100727-0110" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.apt.ui.source_3.3.300.v20100513-0845" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.apt.core.source_3.3.402.R36_v20110120-1000" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ant.ui.source_3.5.0.v20100427" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.source_3.6.1.v201102101200" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jdt.doc.isv" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+	</target>
+	<target name="all.features" depends="init">
+	</target>
+	<target name="update.feature" depends="init">
+	</target>
+
+	<target name="all.children" depends="init,all.features,all.plugins,update.feature">
+	</target>
+
+	<target name="children" if="include.children">
+		<antcall target="all.children"/>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the feature: org.eclipse.jdt.source.">
+		<antcall target="all.children">
+			<param name="target" value="build.jars"/>
+		</antcall>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.sources"/>
+		</antcall>
+	</target>
+
+	<target name="build.zips" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.zips"/>
+		</antcall>
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the feature jar of: org.eclipse.jdt.source for an update site.">
+		<antcall target="all.children">
+			<param name="target" value="build.update.jar"/>
+		</antcall>
+		<property name="feature.base" value="${feature.temp.folder}"/>
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+		<antcall target="gather.bin.parts" inheritAll="false">
+			<param name="os" value="*"/>
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="updateJar.omitRootfiles" value="true"/>
+			<param name="ws" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="nl" value="*"/>
+		</antcall>
+		<jar destfile="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.jar" basedir="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts">
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+		<copy todir="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="feature.properties"/>
+				<include name="eclipse_update_120.jpg"/>
+				<include name="license.html"/>
+				<include name="epl-v10.html"/>
+				<include name="feature.xml"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F/feature.xml"  selfVersion="3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" featureIds="" pluginIds=""/>
+		<eclipse.gatherFeature 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${feature.temp.folder}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"
+		   baseDirectory="${basedir}"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="feature.base">
+		<mkdir dir="${feature.base}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+		<antcall target="children">
+			<param name="target" value="gather.bin.parts"/>
+			<param name="destination.temp.folder" value="${feature.base}/plugins"/>
+		</antcall>
+		<copy todir="${feature.base}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="feature.properties"/>
+				<include name="eclipse_update_120.jpg"/>
+				<include name="license.html"/>
+				<include name="epl-v10.html"/>
+				<include name="feature.xml"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.base}/features/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F/feature.xml"  selfVersion="3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" featureIds="" pluginIds=""/>
+		<antcall target="rootFiles">
+			<param name="rootTarget" value="rootFiles${os}_${ws}_${arch}"/>
+		</antcall>
+	</target>
+	<target name="rootFiles" unless="updateJar.omitRootfiles">
+		<antcall target="${rootTarget}"/>
+	</target>
+
+	<target name="rootFileswin32_win32_x86">
+	</target>
+	<target name="rootFileswin32_win32_x86_64">
+	</target>
+	<target name="rootFilesmacosx_carbon_x86">
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86">
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86_64">
+	</target>
+	<target name="rootFileslinux_gtk_x86">
+	</target>
+	<target name="rootFileslinux_gtk_ppc">
+	</target>
+	<target name="rootFileslinux_gtk_ppc64">
+	</target>
+	<target name="rootFileslinux_gtk_x86_64">
+	</target>
+	<target name="rootFileslinux_gtk_s390x">
+	</target>
+	<target name="rootFileslinux_gtk_s390">
+	</target>
+	<target name="rootFileslinux_motif_x86">
+	</target>
+	<target name="rootFilessolaris_gtk_sparc">
+	</target>
+	<target name="rootFilessolaris_gtk_x86">
+	</target>
+	<target name="rootFilessolaris_motif_sparc">
+	</target>
+	<target name="rootFilesaix_motif_ppc">
+	</target>
+	<target name="rootFilesaix_gtk_ppc64">
+	</target>
+	<target name="rootFileshpux_motif_ia64_32">
+	</target>
+	<target name="rootFilesqnx_photon_x86">
+	</target>
+	<target name="rootFilesgroup_group_group">
+		<antcall target="rootFileswin32_win32_x86"/>
+		<antcall target="rootFileswin32_win32_x86_64"/>
+		<antcall target="rootFilesmacosx_carbon_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86_64"/>
+		<antcall target="rootFileslinux_gtk_x86"/>
+		<antcall target="rootFileslinux_gtk_ppc"/>
+		<antcall target="rootFileslinux_gtk_ppc64"/>
+		<antcall target="rootFileslinux_gtk_x86_64"/>
+		<antcall target="rootFileslinux_gtk_s390x"/>
+		<antcall target="rootFileslinux_gtk_s390"/>
+		<antcall target="rootFileslinux_motif_x86"/>
+		<antcall target="rootFilessolaris_gtk_sparc"/>
+		<antcall target="rootFilessolaris_gtk_x86"/>
+		<antcall target="rootFilessolaris_motif_sparc"/>
+		<antcall target="rootFilesaix_motif_ppc"/>
+		<antcall target="rootFilesaix_gtk_ppc64"/>
+		<antcall target="rootFileshpux_motif_ia64_32"/>
+		<antcall target="rootFilesqnx_photon_x86"/>
+	</target>
+
+	<target name="zip.distribution" depends="init" description="Create a zip containing all the plug-ins and features for the feature: org.eclipse.jdt.source.">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="gather.bin.parts">
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="os" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="ws" value="*"/>
+			<param name="nl" value="*"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.sources" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F/src"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.src.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.logs" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+			<param name="include.children" value="true"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.log.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the feature: org.eclipse.jdt.source of all the zips, jars and logs created.">
+		<delete file="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.jar"/>
+		<delete file="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.bin.dist.zip"/>
+		<delete file="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.log.zip"/>
+		<delete file="${feature.destination}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F.src.zip"/>
+		<delete dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="clean"/>
+		</antcall>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/features/org.eclipse.jdt.source/" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+		<antcall target="all.children">
+			<param name="target" value="refresh"/>
+		</antcall>
+	</target>
+	<target name="gather.sources">
+		<antcall target="children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F/src"/>
+		</antcall>
+	</target>
+
+	<target name="gather.logs" depends="init">
+		<mkdir dir="${feature.temp.folder}/plugins"/>
+		<property name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		</antcall>
+	</target>
+
+</project>

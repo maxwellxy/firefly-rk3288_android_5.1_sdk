@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.debug;version="3.6.1.v20100715_r
+ 361";roots:="jdisrc,jdimodelsrc"
+Bundle-Version: 3.6.1.v20100715_r361
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.debug.source
+

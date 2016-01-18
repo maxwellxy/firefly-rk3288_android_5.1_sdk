@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ant.core;version="3.2.201.v20110203_
+ r362";roots:="lib/antsupportlibsrc,."
+Bundle-Version: 3.2.201.v20110203_r362
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ant.core.source
+

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.runtime.compatibility.registry;
+ version="3.3.0.v20100520";roots:="runtime_registry_compatibilitysrc"
+Bundle-Version: 3.3.0.v20100520
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.runtime.compatibility.registry.s
+ ource
+

@@ -1,0 +1,3 @@
+feature@org.eclipse.rcp=r362_v20101104,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/org.eclipse.rcp
+feature@org.eclipse.rcp.sdk=v20080507,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/org.eclipse.rcp.sdk
+plugin@org.eclipse.rcp=v20100527-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/plugins/org.eclipse.rcp

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.carbon;version="4.0.100.M20101124
+ -0800";roots:="."
+Bundle-Version: 4.0.100.M20101124-0800
+Eclipse-PlatformFilter: (osgi.ws=carbon)
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment-carbon
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.carbon.source
+

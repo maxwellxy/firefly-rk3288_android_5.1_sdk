@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resource Monitoring OSGi Extensions (Incubation)
+Bundle-SymbolicName: org.eclipse.osgi.jmx;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.osgi.jmx.internal.Activator
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
+Bundle-Vendor: Eclipse.org
+Import-Package: javax.management,
+ org.eclipse.core.runtime; common=split,
+ org.eclipse.equinox.jmx.common,
+ org.eclipse.equinox.jmx.common.util,
+ org.eclipse.equinox.jmx.server,
+ org.eclipse.osgi.service.pluginconversion,
+ org.eclipse.osgi.service.resolver,
+ org.eclipse.osgi.util,
+ org.osgi.framework,
+ org.osgi.service.packageadmin,
+ org.osgi.util.tracker
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ CDC-1.0/Foundation-1.0,
+ J2SE-1.3

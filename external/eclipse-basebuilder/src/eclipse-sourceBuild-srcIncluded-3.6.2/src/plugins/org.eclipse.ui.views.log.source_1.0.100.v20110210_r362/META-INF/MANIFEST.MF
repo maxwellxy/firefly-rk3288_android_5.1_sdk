@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %provider-name
+Eclipse-SourceBundle: org.eclipse.ui.views.log;version="1.0.100.v20110
+ 210_r362";roots:="."
+Bundle-Version: 1.0.100.v20110210_r362
+Bundle-Name: %name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.views.log.source
+

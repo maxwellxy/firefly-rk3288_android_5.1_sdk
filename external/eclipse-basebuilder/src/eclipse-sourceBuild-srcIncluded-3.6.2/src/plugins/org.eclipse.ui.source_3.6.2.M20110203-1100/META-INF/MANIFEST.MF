@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui;version="3.6.2.M20110203-1100";ro
+ ots:="."
+Bundle-Version: 3.6.2.M20110203-1100
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.source
+

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.junit.core;version="3.6.1.r361_v
+ 20100825-0800";roots:="."
+Bundle-Version: 3.6.1.r361_v20100825-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.junit.core.source
+

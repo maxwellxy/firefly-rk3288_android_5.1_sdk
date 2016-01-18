@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.rcp.source" default="build.update.jar" basedir=".">
+
+	<target name="init">
+		<property name="feature.temp.folder" value="${basedir}/feature.temp.folder"/>
+		<property name="feature.destination" value="${basedir}"/>
+		<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+	</target>
+
+	<target name="all.plugins" depends="init">
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.launcher.source_1.1.1.R36x_v20101122_1400" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.registry.source_3.5.0.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.preferences.source_3.3.0.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.util.source_1.0.200.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.ds.source_1.2.1.R36x_v20100803" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.common.source_3.6.0.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.app.source_1.3.1.R36x_v20100803" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.contenttype.source_3.4.100.v20100505-1235" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.rcp.source_3.6.0.v201102101200" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.photon.qnx.x86.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="photon"/>
+			<property name="os" value="qnx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.motif.solaris.sparc.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="sparc"/>
+			<property name="ws" value="motif"/>
+			<property name="os" value="solaris"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.motif.linux.x86.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="motif"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.motif.hpux.ia64_32.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="ia64_32"/>
+			<property name="ws" value="motif"/>
+			<property name="os" value="hpux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.aix.ppc64.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="ppc64"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="aix"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.motif.aix.ppc.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="ppc"/>
+			<property name="ws" value="motif"/>
+			<property name="os" value="aix"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.cocoa.macosx.x86_64.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86_64"/>
+			<property name="ws" value="cocoa"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.cocoa.macosx.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="cocoa"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.carbon.macosx.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="carbon"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.x86_64.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86_64"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.ppc64.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="ppc64"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.ppc.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="ppc"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.solaris.x86.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="solaris"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.solaris.sparc.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="sparc"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="solaris"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.s390.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="s390"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.s390x.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="s390x"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.gtk.linux.x86.source_3.6.2.v3659b" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="gtk"/>
+			<property name="os" value="linux"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.win32.win32.x86_64.source_3.6.2.v3659c" target="${target}">
+			<property name="arch" value="x86_64"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.swt.win32.win32.x86.source_3.6.2.v3659c" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.equinox.simpleconfigurator.source_1.0.200.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.update.configurator.source_3.3.100.v20100512" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ui.cocoa.source_1.0.2.M20101124-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="cocoa"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ui.carbon.source_4.0.100.M20101124-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="carbon"/>
+			<property name="os" value="macosx"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ui.workbench.source_3.6.2.M20110210-1200" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.ui.source_3.6.2.M20110203-1100" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jface.databinding.source_1.4.0.I20100601-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.jface.source_3.6.2.M20110210-1200" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.help.source_3.5.0.v20100524" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.osgi.services.source_3.2.100.v20100503" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.osgi.source_3.6.2.R36x_v20110210" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.runtime.compatibility.auth.source_3.2.200.v20100517" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.runtime.source_3.6.0.v20100505" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.expressions.source_3.4.200.v20100505" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.jobs.source_3.5.1.R36x_v20100824" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.databinding.beans.source_1.2.100.I20100601-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.databinding.property.source_1.3.0.I20100601-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.databinding.observable.source_1.3.0.I20100601-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.databinding.source_1.3.100.I20100601-0800" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+		<ant antfile="build.xml" dir="../../plugins/org.eclipse.core.commands.source_3.6.0.I20100512-1500" target="${target}">
+			<property name="arch" value="x86"/>
+			<property name="ws" value="win32"/>
+			<property name="os" value="win32"/>
+		</ant>
+	</target>
+	<target name="all.features" depends="init">
+	</target>
+	<target name="update.feature" depends="init">
+	</target>
+
+	<target name="all.children" depends="init,all.features,all.plugins,update.feature">
+	</target>
+
+	<target name="children" if="include.children">
+		<antcall target="all.children"/>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the feature: org.eclipse.rcp.source.">
+		<antcall target="all.children">
+			<param name="target" value="build.jars"/>
+		</antcall>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.sources"/>
+		</antcall>
+	</target>
+
+	<target name="build.zips" depends="init">
+		<antcall target="all.children">
+			<param name="target" value="build.zips"/>
+		</antcall>
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the feature jar of: org.eclipse.rcp.source for an update site.">
+		<antcall target="all.children">
+			<param name="target" value="build.update.jar"/>
+		</antcall>
+		<property name="feature.base" value="${feature.temp.folder}"/>
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+		<antcall target="gather.bin.parts" inheritAll="false">
+			<param name="os" value="*"/>
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="updateJar.omitRootfiles" value="true"/>
+			<param name="ws" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="nl" value="*"/>
+		</antcall>
+		<jar destfile="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.jar" basedir="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts">
+		<mkdir dir="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+		<copy todir="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="epl-v10.html"/>
+				<include name="eclipse_update_120.jpg"/>
+				<include name="feature.xml"/>
+				<include name="feature.properties"/>
+				<include name="license.html"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY/feature.xml"  selfVersion="3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" featureIds="" pluginIds=""/>
+		<eclipse.gatherFeature 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${feature.temp.folder}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"
+		   baseDirectory="${basedir}"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="feature.base">
+		<mkdir dir="${feature.base}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+		<antcall target="children">
+			<param name="target" value="gather.bin.parts"/>
+			<param name="destination.temp.folder" value="${feature.base}/plugins"/>
+		</antcall>
+		<copy todir="${feature.base}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="epl-v10.html"/>
+				<include name="eclipse_update_120.jpg"/>
+				<include name="feature.xml"/>
+				<include name="feature.properties"/>
+				<include name="license.html"/>
+			</fileset>
+		</copy>
+		<eclipse.idReplacer featureFilePath="${feature.base}/features/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY/feature.xml"  selfVersion="3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" featureIds="" pluginIds=""/>
+		<antcall target="rootFiles">
+			<param name="rootTarget" value="rootFiles${os}_${ws}_${arch}"/>
+		</antcall>
+	</target>
+	<target name="rootFiles" unless="updateJar.omitRootfiles">
+		<antcall target="${rootTarget}"/>
+	</target>
+
+	<target name="rootFileswin32_win32_x86">
+	</target>
+	<target name="rootFileswin32_win32_x86_64">
+	</target>
+	<target name="rootFilesmacosx_carbon_x86">
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86">
+	</target>
+	<target name="rootFilesmacosx_cocoa_x86_64">
+	</target>
+	<target name="rootFileslinux_gtk_x86">
+	</target>
+	<target name="rootFileslinux_gtk_ppc">
+	</target>
+	<target name="rootFileslinux_gtk_ppc64">
+	</target>
+	<target name="rootFileslinux_gtk_x86_64">
+	</target>
+	<target name="rootFileslinux_gtk_s390x">
+	</target>
+	<target name="rootFileslinux_gtk_s390">
+	</target>
+	<target name="rootFileslinux_motif_x86">
+	</target>
+	<target name="rootFilessolaris_gtk_sparc">
+	</target>
+	<target name="rootFilessolaris_gtk_x86">
+	</target>
+	<target name="rootFilessolaris_motif_sparc">
+	</target>
+	<target name="rootFilesaix_motif_ppc">
+	</target>
+	<target name="rootFilesaix_gtk_ppc64">
+	</target>
+	<target name="rootFileshpux_motif_ia64_32">
+	</target>
+	<target name="rootFilesqnx_photon_x86">
+	</target>
+	<target name="rootFilesgroup_group_group">
+		<antcall target="rootFileswin32_win32_x86"/>
+		<antcall target="rootFileswin32_win32_x86_64"/>
+		<antcall target="rootFilesmacosx_carbon_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86"/>
+		<antcall target="rootFilesmacosx_cocoa_x86_64"/>
+		<antcall target="rootFileslinux_gtk_x86"/>
+		<antcall target="rootFileslinux_gtk_ppc"/>
+		<antcall target="rootFileslinux_gtk_ppc64"/>
+		<antcall target="rootFileslinux_gtk_x86_64"/>
+		<antcall target="rootFileslinux_gtk_s390x"/>
+		<antcall target="rootFileslinux_gtk_s390"/>
+		<antcall target="rootFileslinux_motif_x86"/>
+		<antcall target="rootFilessolaris_gtk_sparc"/>
+		<antcall target="rootFilessolaris_gtk_x86"/>
+		<antcall target="rootFilessolaris_motif_sparc"/>
+		<antcall target="rootFilesaix_motif_ppc"/>
+		<antcall target="rootFilesaix_gtk_ppc64"/>
+		<antcall target="rootFileshpux_motif_ia64_32"/>
+		<antcall target="rootFilesqnx_photon_x86"/>
+	</target>
+
+	<target name="zip.distribution" depends="init" description="Create a zip containing all the plug-ins and features for the feature: org.eclipse.rcp.source.">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="gather.bin.parts">
+			<param name="feature.base" value="${feature.temp.folder}"/>
+			<param name="os" value="*"/>
+			<param name="arch" value="*"/>
+			<param name="ws" value="*"/>
+			<param name="nl" value="*"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.sources" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY/src"/>
+			<param name="include.children" value="true"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.src.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="zip.logs" depends="init">
+		<delete dir="${feature.temp.folder}"/>
+		<mkdir dir="${feature.temp.folder}"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+			<param name="include.children" value="true"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+		</antcall>
+		<zip destfile="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.log.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${feature.temp.folder}"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the feature: org.eclipse.rcp.source of all the zips, jars and logs created.">
+		<delete file="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.jar"/>
+		<delete file="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.bin.dist.zip"/>
+		<delete file="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.log.zip"/>
+		<delete file="${feature.destination}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY.src.zip"/>
+		<delete dir="${feature.temp.folder}"/>
+		<antcall target="all.children">
+			<param name="target" value="clean"/>
+		</antcall>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/features/org.eclipse.rcp.source/" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+		<antcall target="all.children">
+			<param name="target" value="refresh"/>
+		</antcall>
+	</target>
+	<target name="gather.sources">
+		<antcall target="children">
+			<param name="target" value="gather.sources"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY/src"/>
+		</antcall>
+	</target>
+
+	<target name="gather.logs" depends="init">
+		<mkdir dir="${feature.temp.folder}/plugins"/>
+		<property name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		<condition property="logExtension.param" value="logExtension" else="logExtension.param"		>
+			<isset property="logExtension"/>
+		</condition>
+		<antcall target="all.children" inheritAll="false">
+			<param name="target" value="gather.logs"/>
+			<param name="${logExtension.param}" value="${logExtension}"/>
+			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins"/>
+		</antcall>
+	</target>
+
+</project>

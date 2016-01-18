@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.pde;version="3.6.1.v20100625_r361"
+Bundle-Version: 3.6.1.v20100625_r361
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.source
+

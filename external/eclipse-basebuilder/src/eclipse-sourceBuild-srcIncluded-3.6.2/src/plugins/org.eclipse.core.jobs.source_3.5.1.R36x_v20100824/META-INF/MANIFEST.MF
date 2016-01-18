@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.jobs;version="3.5.1.R36x_v20100
+ 824";roots:="."
+Bundle-Version: 3.5.1.R36x_v20100824
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.jobs.source
+

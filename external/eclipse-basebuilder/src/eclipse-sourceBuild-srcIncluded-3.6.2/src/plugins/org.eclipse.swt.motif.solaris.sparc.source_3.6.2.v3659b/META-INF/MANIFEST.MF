@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.motif.solaris.sparc;version="3.6
+ .2.v3659b"
+Bundle-Version: 3.6.2.v3659b
+Eclipse-PlatformFilter: (& (osgi.ws=motif) (osgi.os=solaris) (osgi.arc
+ h=sparc))
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.motif.solaris.sparc.source
+

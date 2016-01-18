@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension-point id="contribution" name="Contribution" schema="schema/contribution.exsd"/>
+	<extension-point id="provider" name="provider" schema="schema/provider.exsd"/>
+	<extension point="org.eclipse.ui.startup">
+		<startup class="org.eclipse.equinox.jmx.internal.server.UIStarter"/>
+	</extension>
+	<extension
+			id="application"
+			point="org.eclipse.core.runtime.applications">
+		<application>
+			<run class="org.eclipse.equinox.jmx.internal.server.Application"/>
+		</application>
+	</extension>
+	<extension
+			id="product"
+			point="org.eclipse.core.runtime.products">
+		<product
+			application="org.eclipse.equinox.jmx.server.application"
+			name="JMX Server">
+		</product>
+	</extension>
+</plugin>

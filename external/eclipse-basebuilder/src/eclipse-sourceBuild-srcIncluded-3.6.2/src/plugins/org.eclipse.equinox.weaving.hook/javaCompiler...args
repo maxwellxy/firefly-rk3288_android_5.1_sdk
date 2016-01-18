@@ -1,0 +1,8 @@
+-warn:-raw,-unchecked
+#ADAPTER#ACCESS#org.eclipse.equinox.servletbridge.extensionbundle/@dot[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.servletbridge.extensionbundle_1.2.0.v20100503/@dot[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.transforms.hook/bin/[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.transforms.hook_1.0.200.v20100503/bin/[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.transforms.hook/@dot[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.transforms.hook_1.0.200.v20100503/@dot[?**/*]
+#ADAPTER#ACCESS#org.eclipse.equinox.transforms.hook/@dot[?**/*]

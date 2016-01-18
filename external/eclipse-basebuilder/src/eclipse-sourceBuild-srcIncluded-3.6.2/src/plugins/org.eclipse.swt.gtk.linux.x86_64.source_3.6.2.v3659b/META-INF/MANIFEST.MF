@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.gtk.linux.x86_64;version="3.6.2.
+ v3659b"
+Bundle-Version: 3.6.2.v3659b
+Eclipse-PlatformFilter: (& (osgi.ws=gtk) (osgi.os=linux) (osgi.arch=x8
+ 6_64))
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.gtk.linux.x86_64.source
+

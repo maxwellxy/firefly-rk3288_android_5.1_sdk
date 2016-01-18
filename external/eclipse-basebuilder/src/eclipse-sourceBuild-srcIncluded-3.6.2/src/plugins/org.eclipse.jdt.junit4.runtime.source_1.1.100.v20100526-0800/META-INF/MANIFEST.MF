@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.junit4.runtime;version="1.1.100.
+ v20100526-0800";roots:="."
+Bundle-Version: 1.1.100.v20100526-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.junit4.runtime.source
+

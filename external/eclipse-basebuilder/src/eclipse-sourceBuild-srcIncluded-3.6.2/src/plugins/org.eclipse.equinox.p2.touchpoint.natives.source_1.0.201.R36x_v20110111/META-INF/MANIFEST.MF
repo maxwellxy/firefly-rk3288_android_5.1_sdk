@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.p2.touchpoint.natives;versio
+ n="1.0.201.R36x_v20110111";roots:="."
+Bundle-Version: 1.0.201.R36x_v20110111
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.p2.touchpoint.natives.source
+

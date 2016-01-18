@@ -1,0 +1,6 @@
+type ctsrunner_app, domain;
+app_domain(ctsrunner_app)
+#typeattribute ctsrunner_app ctsrunner_appdomain;
+
+#allow ctsrunner_app property_socket:sock_file write;
+allow ctsrunner_app init:unix_stream_socket connectto;

@@ -1,0 +1,10 @@
+
+!***************  JDT APT CONTRIBUTION *******************************************
+
+plugin@org.eclipse.jdt.apt.core=R36_v20110120-1000,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.apt.ui=v20100513-0845,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.apt.tests=R36x_v20100707-0100,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.jdt.compiler.apt=v20100513-0845,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.compiler.apt.tests=v20100513-0845,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.apt.pluggable.core=R36_v20100727-0110,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.apt.pluggable.tests=v20100513-0845,kmoir@dev.eclipse.org:/cvsroot/eclipse,

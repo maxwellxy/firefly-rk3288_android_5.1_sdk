@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.compiler.tool;version="1.0.100.v
+ _A76_R36x";roots:="."
+Bundle-Version: 1.0.100.v_A76_R36x
+Bundle-Name: %fragmentName
+Bundle-Localization: compiler_tool_fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.compiler.tool.source
+

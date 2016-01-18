@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.p2.publisher;version="1.1.2.
+ v20100824-2220";roots:="ant_tasks/publisher-antsrc,."
+Bundle-Version: 1.1.2.v20100824-2220
+Bundle-Name: %bundleName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.p2.publisher.source
+

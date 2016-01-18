@@ -1,0 +1,16 @@
+!***************  TEXT CONTRIBUTION  ******************************************************** 
+
+plugin@org.eclipse.text=v20100601-1300,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jface.text=r361_v20100825-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.workbench.texteditor=r361_v20100714-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.editors=r361_v20100825-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.core.filebuffers=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.ui.examples.javaeditor=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.text.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jface.text.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.core.filebuffers.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.workbench.texteditor.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ui.editors.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.text.tests=v20100526-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.update.configurator;version="3.3.100
+ .v20100512";roots:="."
+Bundle-Version: 3.3.100.v20100512
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.update.configurator.source
+

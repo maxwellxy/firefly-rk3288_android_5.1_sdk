@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.workbench.texteditor;version="3.6
+ .1.r361_v20100714-0800";roots:="."
+Bundle-Version: 3.6.1.r361_v20100714-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.workbench.texteditor.source
+

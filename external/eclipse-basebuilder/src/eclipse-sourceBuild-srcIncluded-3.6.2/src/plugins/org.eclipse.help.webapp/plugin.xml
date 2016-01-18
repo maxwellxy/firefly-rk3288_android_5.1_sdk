@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><!--
+    Copyright (c) 2005, 2010 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+         IBM Corporation - initial API and implementation
+ -->
+
+<plugin>
+   <extension-point id="contentFilter" name="Content Filter" schema="schema/contentFilter.exsd"/>
+   <extension-point id="view" name="View" schema="schema/view.exsd"/>
+   <extension-point id="frame" name="Webapp Frame" schema="schema/frame.exsd"/> 
+   <extension-point id="toolbarButton" name="Toolbar Button" schema="schema/toolbarButton.exsd"/>
+  <extension
+         point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext
+            id="help">
+         <resource-mapping
+               path="/">
+         </resource-mapping>
+      </httpcontext>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/"
+            base-name="/"
+            httpcontextId="help">
+      </resource>
+      <serviceSelector
+            filter="(other.info=org.eclipse.help)">
+      </serviceSelector>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/control"
+            class="org.eclipse.help.internal.webapp.servlet.ControlServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/content"
+            class="org.eclipse.help.internal.webapp.servlet.ContentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/topic"
+            class="org.eclipse.help.internal.webapp.servlet.ContentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/nftopic"
+            class="org.eclipse.help.internal.webapp.servlet.ContentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/ntopic"
+            class="org.eclipse.help.internal.webapp.servlet.ContentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/rtopic"
+            class="org.eclipse.help.internal.webapp.servlet.ContentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/nav"
+            class="org.eclipse.help.internal.webapp.servlet.NavServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/livehelp"
+            class="org.eclipse.help.internal.webapp.servlet.LiveHelpServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/toc"
+            class="org.eclipse.help.internal.webapp.servlet.TocServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/advanced/tocfragment"
+            class="org.eclipse.help.internal.webapp.servlet.TocFragmentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/index"
+            class="org.eclipse.help.internal.webapp.servlet.IndexServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/advanced/indexfragment"
+            class="org.eclipse.help.internal.webapp.servlet.IndexFragmentServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/search"
+            class="org.eclipse.help.internal.webapp.servlet.SearchServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/context"
+            class="org.eclipse.help.internal.webapp.servlet.ContextServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/extension"
+            class="org.eclipse.help.internal.webapp.servlet.ExtensionServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/about.html"
+            class="org.eclipse.help.internal.webapp.servlet.AboutServlet"
+            httpcontextId="help">
+      </servlet>
+      <servlet
+            alias="/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/"
+            httpcontextId="help">
+      </servlet>
+      <serviceSelector
+            filter="(other.info=org.eclipse.help)">
+      </serviceSelector>
+   </extension>
+   <extension
+         id="org.eclipse.help.webapp.remoteStatusProducer"
+         name="Remote Status Producer"
+         point="org.eclipse.help.contentProducer">
+      <contentProducer
+            producer="org.eclipse.help.internal.webapp.StatusProducer">
+      </contentProducer>
+   </extension>
+</plugin>

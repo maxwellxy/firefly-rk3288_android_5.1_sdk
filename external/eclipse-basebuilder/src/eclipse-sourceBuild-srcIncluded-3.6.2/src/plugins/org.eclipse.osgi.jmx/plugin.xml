@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.equinox.jmx.server.contribution">
+      <contribution
+            class="org.eclipse.osgi.jmx.internal.BundleContributionProvider"
+            isroot="true">
+         <extendsClass class="org.osgi.framework.ServiceReference"/>
+      </contribution>
+      <contribution
+            class="org.eclipse.osgi.jmx.internal.ServiceContributionProvider"
+            isroot="true">
+         <extendsClass class="org.osgi.framework.Bundle"/>
+      </contribution>
+      <contribution
+            class="org.eclipse.osgi.jmx.internal.BundleRequiresProvider"
+            isroot="false">
+         <extendsClass class="org.osgi.framework.Bundle"/>
+      </contribution>
+      <contribution
+            class="org.eclipse.osgi.jmx.internal.BundlePackagesProvider"
+            isroot="false">
+         <extendsClass class="org.osgi.framework.Bundle"/>
+      </contribution>
+   </extension>
+
+</plugin>

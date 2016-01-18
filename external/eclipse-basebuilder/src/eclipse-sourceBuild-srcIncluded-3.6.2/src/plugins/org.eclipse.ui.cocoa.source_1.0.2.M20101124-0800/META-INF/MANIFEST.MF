@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ui.cocoa;version="1.0.2.M20101124-08
+ 00";roots:="."
+Bundle-Version: 1.0.2.M20101124-0800
+Eclipse-PlatformFilter: (osgi.ws=cocoa)
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment-cocoa
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.cocoa.source
+

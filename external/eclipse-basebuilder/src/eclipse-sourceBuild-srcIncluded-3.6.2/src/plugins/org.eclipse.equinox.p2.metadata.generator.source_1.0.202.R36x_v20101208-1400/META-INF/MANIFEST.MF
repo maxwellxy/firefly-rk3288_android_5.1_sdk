@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.p2.metadata.generator;versio
+ n="1.0.202.R36x_v20101208-1400";roots:="ant_tasks/generator-antsrc,."
+Bundle-Version: 1.0.202.R36x_v20101208-1400
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.p2.metadata.generator.source
+

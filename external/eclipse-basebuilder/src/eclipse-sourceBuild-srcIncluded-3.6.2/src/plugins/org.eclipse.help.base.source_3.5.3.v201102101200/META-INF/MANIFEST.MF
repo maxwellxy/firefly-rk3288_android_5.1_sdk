@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.help.base;version="3.5.3.v2011021012
+ 00";roots:="ant_tasks/helpbase-antsrc,."
+Bundle-Version: 3.5.3.v201102101200
+Bundle-Name: %help_base_plugin_name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.help.base.source
+

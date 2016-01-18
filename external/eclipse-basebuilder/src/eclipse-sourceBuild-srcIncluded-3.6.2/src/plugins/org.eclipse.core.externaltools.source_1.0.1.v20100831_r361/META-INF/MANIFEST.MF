@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.externaltools;version="1.0.1.v2
+ 0100831_r361";roots:="."
+Bundle-Version: 1.0.1.v20100831_r361
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.externaltools.source
+

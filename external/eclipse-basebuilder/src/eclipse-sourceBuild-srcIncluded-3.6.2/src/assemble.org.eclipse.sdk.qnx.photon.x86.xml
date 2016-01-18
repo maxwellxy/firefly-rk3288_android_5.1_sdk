@@ -1,0 +1,2100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Assemble org.eclipse.sdk" default="main">
+	<property name="archiveName" value="org.eclipse.sdk-${buildId}-qnx.photon.x86.zip"/>
+	<property name="os" value="qnx"/>
+	<property name="ws" value="photon"/>
+	<property name="arch" value="x86"/>
+	<property name="jarProcessor.sign" value="false"/>
+	<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
+	<property name="eclipse.base" value="${assemblyTempDir}/${collectingFolder}"/>
+	<property name="eclipse.plugins" value="${eclipse.base}/plugins"/>
+	<property name="eclipse.features" value="${eclipse.base}/features"/>
+	<property name="archiveFullPath" value="${basedir}/${buildLabel}/${archiveName}"/>
+	<property name="equinoxLauncherJar" value="/builds/M201102101200/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher_1.1.0.v20100507.jar"/>
+	<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+	<property name="genericTargets" value="${eclipse.pdebuild.scripts}//genericTargets.xml"/>
+	<available property="customAssembly" file="${builder}/customAssembly.xml" value="${builder}/customAssembly.xml"/>
+	<property name="p2.product.qualifier" value="201102101232"/>
+	<property name="tarargs" value=""/>
+
+	<macrodef name="customGather">
+		<attribute name="dir" />
+		<attribute name="propertyName" />
+		<attribute name="propertyValue" />
+		<attribute name="subFolder" />
+		<attribute name="projectName" />
+		<sequential>
+			<ant antfile="build.xml" dir="@{dir}" target="gather.bin.parts">
+				<property name="@{propertyName}" value="@{propertyValue}"/>
+			</ant>
+			<antcall target="customAssembly">
+				<param name="target.folder" value="@{propertyValue}@{subFolder}"/>
+				<param name="projectLocation" value="${basedir}/@{dir}"/>
+				<param name="@{propertyName}" value="@{propertyValue}"/>
+				<param name="customTarget" value="gather.bin.parts"/>
+				<param name="projectName" value="@{projectName}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+
+	<!-- Beginning of the jarUp task -->
+	<target name="jarUp" description="Create a jar from the given location.">
+		<available property="${source}/${elementName}_exists" file="${source}/${elementName}"/>
+		<available property="jaringManifest" file="${source}/${elementName}/META-INF/MANIFEST.MF"/>
+		<condition property="jaringTask" value="jarIng" else="jarIng_NoManifest"		>
+			<isset property="jaringManifest"/>
+		</condition>
+		<antcall target="${jaringTask}">
+			<param name="source" value="${source}"/>
+			<param name="elementName" value="${elementName}"/>
+		</antcall>
+	</target>
+
+	<target name="jarIng" if="${source}/${elementName}_exists">
+		<jar destfile="${source}/${elementName}.jar" basedir="${source}/${elementName}" manifest="${source}/${elementName}/META-INF/MANIFEST.MF" filesetmanifest="skip"/>
+		<delete dir="${source}/${elementName}"/>
+	</target>
+
+	<target name="jarIng_NoManifest" if="${source}/${elementName}_exists">
+		<jar destfile="${source}/${elementName}.jar" basedir="${source}/${elementName}" filesetmanifest="merge"/>
+		<delete dir="${source}/${elementName}"/>
+	</target>
+	<!-- End of the jarUp task -->
+
+	<!-- Beginning of the jar signing  target -->
+	<target name="jarSigning" description="Sign a jar.">
+		<antcall target="customAssembly">
+			<param name="customTarget" value="pre.jarSigning"/>
+		</antcall>
+		<eclipse.jarProcessor sign="${jarProcessor.sign}" pack="${jarProcessor.pack200}" unsign="${jarProcessor.unsign}" jar="${source}/${elementName}.jar" alias="${sign.alias}" keystore="${sign.keystore}" storepass="${sign.storepass}" keypass="${sign.keypass}"/>
+	</target>
+	<!-- End of the jarUp task -->
+
+	<target name="main">
+		<condition property="pluginArchivePrefix" value="plugins">
+			<equals arg1="${archivePrefix}"  arg2="" trim="true"/>
+		</condition>
+		<property name="pluginArchivePrefix" value="${archivePrefix}/plugins"/>
+
+		<condition property="featureArchivePrefix" value="features">
+			<equals arg1="${archivePrefix}"  arg2="" trim="true"/>
+		</condition>
+		<property name="featureArchivePrefix" value="${archivePrefix}/features"/>
+
+		<dirname property="archiveParentFolder" file="${archiveFullPath}"/>
+		<mkdir dir="${archiveParentFolder}"/>
+		<mkdir dir="${assemblyTempDir}"/>
+		<mkdir dir="${buildLabel}"/>
+
+		<antcall target="gather.bin.parts"/>
+		<antcall target="customAssembly">
+			<param name="customTarget" value="post.gather.bin.parts"/>
+		</antcall>
+
+		<antcall target="jar.processing"/>
+
+		<eclipse.brand root="${eclipse.base}/qnx.photon.x86/${collectingFolder}" icons="${launcherIcons}" name="${launcherName}" os="${os}"		/>
+		<antcall target="generate.p2.metadata"/>
+
+		<antcall target="assemble.archive"/>
+		<antcall target="cleanup.assembly"/>
+	</target>
+
+	<target name="gather.bin.parts">
+		<customGather dir="plugins/org.eclipse.core.commands" projectName="org.eclipse.core.commands_3.6.0.I20100512-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding" projectName="org.eclipse.core.databinding_1.3.100.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.observable" projectName="org.eclipse.core.databinding.observable_1.3.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.property" projectName="org.eclipse.core.databinding.property_1.3.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.beans" projectName="org.eclipse.core.databinding.beans_1.2.100.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.jobs" projectName="org.eclipse.core.jobs_3.5.1.R36x_v20100824" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.expressions" projectName="org.eclipse.core.expressions_3.4.200.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime" projectName="org.eclipse.core.runtime_3.6.0.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility.auth" projectName="org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi" projectName="org.eclipse.osgi_3.6.2.R36x_v20110210" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi.services" projectName="org.eclipse.osgi.services_3.2.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help" projectName="org.eclipse.help_3.5.0.v20100524" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.swt" projectName="org.eclipse.swt_3.6.2.v3659c" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface" projectName="org.eclipse.jface_3.6.2.M20110210-1200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface.databinding" projectName="org.eclipse.jface.databinding_1.4.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui" projectName="org.eclipse.ui_3.6.2.M20110203-1100" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench" projectName="org.eclipse.ui.workbench_3.6.2.M20110210-1200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.configurator" projectName="org.eclipse.update.configurator_3.3.100.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.simpleconfigurator" projectName="org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.swt.photon.qnx.x86" projectName="org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.rcp" projectName="org.eclipse.rcp_3.6.0.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.contenttype" projectName="org.eclipse.core.contenttype_3.4.100.v20100505-1235" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.app" projectName="org.eclipse.equinox.app_1.3.1.R36x_v20100803" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.common" projectName="org.eclipse.equinox.common_3.6.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.ds" projectName="org.eclipse.equinox.ds_1.2.1.R36x_v20100803" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.util" projectName="org.eclipse.equinox.util_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.preferences" projectName="org.eclipse.equinox.preferences_3.3.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.registry" projectName="org.eclipse.equinox.registry_3.5.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.launcher" projectName="org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.director" projectName="org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.core" projectName="org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.engine" projectName="org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.jarprocessor" projectName="org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata" projectName="org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata.repository" projectName="org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.artifact.repository" projectName="org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.touchpoint.eclipse" projectName="org.eclipse.equinox.p2.touchpoint.eclipse_2.0.3.R36x_v20101202" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.touchpoint.natives" projectName="org.eclipse.equinox.p2.touchpoint.natives_1.0.201.R36x_v20110111" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.frameworkadmin" projectName="org.eclipse.equinox.frameworkadmin_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.frameworkadmin.equinox" projectName="org.eclipse.equinox.frameworkadmin.equinox_1.0.200.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.console" projectName="org.eclipse.equinox.p2.console_1.0.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.simpleconfigurator.manipulator" projectName="org.eclipse.equinox.simpleconfigurator.manipulator_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui" projectName="org.eclipse.equinox.p2.ui_2.0.0.v20100518" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui.sdk" projectName="org.eclipse.equinox.p2.ui.sdk_1.0.100.v20100513" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui.sdk.scheduler" projectName="org.eclipse.equinox.p2.ui.sdk.scheduler_1.0.0.v20100507-1815" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.updatechecker" projectName="org.eclipse.equinox.p2.updatechecker_1.1.101.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.garbagecollector" projectName="org.eclipse.equinox.p2.garbagecollector_1.0.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.directorywatcher" projectName="org.eclipse.equinox.p2.directorywatcher_1.0.203.R36x_v20101220" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.reconciler.dropins" projectName="org.eclipse.equinox.p2.reconciler.dropins_1.1.2.R36x_v20110114" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata.generator" projectName="org.eclipse.equinox.p2.metadata.generator_1.0.202.R36x_v20101208-1400" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.updatesite" projectName="org.eclipse.equinox.p2.updatesite_1.0.201.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.security" projectName="org.eclipse.equinox.security_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.security.ui" projectName="org.eclipse.equinox.security.ui_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.extensionlocation" projectName="org.eclipse.equinox.p2.extensionlocation_1.2.0.v20100518" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.director.app" projectName="org.eclipse.equinox.p2.director.app_1.0.201.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.publisher" projectName="org.eclipse.equinox.p2.publisher_1.1.2.v20100824-2220" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.repository.tools" projectName="org.eclipse.equinox.p2.repository.tools_2.0.1.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.repository" projectName="org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.operations" projectName="org.eclipse.equinox.p2.operations_2.0.0.v20100510" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ql" projectName="org.eclipse.equinox.p2.ql_2.0.0.v20100503a" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.jetty_2.0.0" projectName="org.eclipse.equinox.http.jetty_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.registry" projectName="org.eclipse.equinox.http.registry_1.1.1.R36x_v20101103" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.servlet" projectName="org.eclipse.equinox.http.servlet_1.1.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.jsp.jasper" projectName="org.eclipse.equinox.jsp.jasper_1.0.201.R36x_v20101103" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.jsp.jasper.registry" projectName="org.eclipse.equinox.jsp.jasper.registry_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.base" projectName="org.eclipse.help.base_3.5.3.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.ui" projectName="org.eclipse.help.ui_3.5.3.r36_20101116" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.webapp" projectName="org.eclipse.help.webapp_3.5.3.r36_20101130" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.core" projectName="org.eclipse.ant.core_3.2.201.v20110203_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.compare.core" projectName="org.eclipse.compare.core_3.5.101.R36x_v20100929-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.compare" projectName="org.eclipse.compare_3.5.101.R36x_v20100929-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.boot" projectName="org.eclipse.core.boot_3.1.200.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.filebuffers" projectName="org.eclipse.core.filebuffers_3.5.100.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.filesystem" projectName="org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.net" projectName="org.eclipse.core.net_1.2.100.I20100511-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.resources" projectName="org.eclipse.core.resources_3.6.1.R36x_v20110131-1630" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility" projectName="org.eclipse.core.runtime.compatibility_3.2.100.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility.registry" projectName="org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi.util" projectName="org.eclipse.osgi.util_3.2.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.debug.core" projectName="org.eclipse.debug.core_3.6.0.v20100519" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.debug.ui" projectName="org.eclipse.debug.ui_3.6.3.v20101201_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.event" projectName="org.eclipse.equinox.event_1.2.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.appserver" projectName="org.eclipse.help.appserver_3.1.400.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ltk.core.refactoring" projectName="org.eclipse.ltk.core.refactoring_3.5.101.r362_v20101117-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ltk.ui.refactoring" projectName="org.eclipse.ltk.ui.refactoring_3.5.0.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.platform" projectName="org.eclipse.platform_3.6.2.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.platform.doc.user" projectName="org.eclipse.platform.doc.user_3.6.2.r362_v20101117-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.search" projectName="org.eclipse.search_3.6.0.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.core" projectName="org.eclipse.team.core_3.5.101.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.ui" projectName="org.eclipse.team.ui_3.5.102.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.text" projectName="org.eclipse.text_3.5.0.v20100601-1300" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface.text" projectName="org.eclipse.jface.text_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jsch.core" projectName="org.eclipse.jsch.core_1.1.200.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jsch.ui" projectName="org.eclipse.jsch.ui_1.1.300.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.console" projectName="org.eclipse.ui.console_3.5.0.v20100526" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.presentations.r21" projectName="org.eclipse.ui.presentations.r21_3.2.200.I20100517-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.intro" projectName="org.eclipse.ui.intro_3.4.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.intro.universal" projectName="org.eclipse.ui.intro.universal_3.2.402.r36_v20100702" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.cheatsheets" projectName="org.eclipse.ui.cheatsheets_3.4.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.browser" projectName="org.eclipse.ui.browser_3.3.1.r36_20101216" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.navigator" projectName="org.eclipse.ui.navigator_3.5.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.navigator.resources" projectName="org.eclipse.ui.navigator.resources_3.4.202.M20101124-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.net" projectName="org.eclipse.ui.net_1.2.100.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench.texteditor" projectName="org.eclipse.ui.workbench.texteditor_3.6.1.r361_v20100714-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views" projectName="org.eclipse.ui.views_3.5.1.M20110202-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.editors" projectName="org.eclipse.ui.editors_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.externaltools" projectName="org.eclipse.ui.externaltools_3.2.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.ide" projectName="org.eclipse.ui.ide_3.6.2.M20101201-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.ide.application" projectName="org.eclipse.ui.ide.application_1.0.201.M20100707-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.core" projectName="org.eclipse.update.core_3.2.402.R36x_v20100629" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.scheduler" projectName="org.eclipse.update.scheduler_3.2.300.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.ui" projectName="org.eclipse.update.ui_3.2.300.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench.compatibility" projectName="org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.variables" projectName="org.eclipse.core.variables_3.2.400.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.forms" projectName="org.eclipse.ui.forms_3.5.2.r36_v20100702" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views.properties.tabbed" projectName="org.eclipse.ui.views.properties.tabbed_3.5.100.I20100509-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.externaltools" projectName="org.eclipse.core.externaltools_1.0.1.v20100831_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.commands.source_3.6.0.I20100512-1500" projectName="org.eclipse.core.commands.source_3.6.0.I20100512-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.source_1.3.100.I20100601-0800" projectName="org.eclipse.core.databinding.source_1.3.100.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.observable.source_1.3.0.I20100601-0800" projectName="org.eclipse.core.databinding.observable.source_1.3.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.property.source_1.3.0.I20100601-0800" projectName="org.eclipse.core.databinding.property.source_1.3.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.databinding.beans.source_1.2.100.I20100601-0800" projectName="org.eclipse.core.databinding.beans.source_1.2.100.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.jobs.source_3.5.1.R36x_v20100824" projectName="org.eclipse.core.jobs.source_3.5.1.R36x_v20100824" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.expressions.source_3.4.200.v20100505" projectName="org.eclipse.core.expressions.source_3.4.200.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.source_3.6.0.v20100505" projectName="org.eclipse.core.runtime.source_3.6.0.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility.auth.source_3.2.200.v20100517" projectName="org.eclipse.core.runtime.compatibility.auth.source_3.2.200.v20100517" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi.source_3.6.2.R36x_v20110210" projectName="org.eclipse.osgi.source_3.6.2.R36x_v20110210" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi.services.source_3.2.100.v20100503" projectName="org.eclipse.osgi.services.source_3.2.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.source_3.5.0.v20100524" projectName="org.eclipse.help.source_3.5.0.v20100524" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface.source_3.6.2.M20110210-1200" projectName="org.eclipse.jface.source_3.6.2.M20110210-1200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface.databinding.source_1.4.0.I20100601-0800" projectName="org.eclipse.jface.databinding.source_1.4.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.source_3.6.2.M20110203-1100" projectName="org.eclipse.ui.source_3.6.2.M20110203-1100" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench.source_3.6.2.M20110210-1200" projectName="org.eclipse.ui.workbench.source_3.6.2.M20110210-1200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.configurator.source_3.3.100.v20100512" projectName="org.eclipse.update.configurator.source_3.3.100.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.simpleconfigurator.source_1.0.200.v20100503" projectName="org.eclipse.equinox.simpleconfigurator.source_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.swt.photon.qnx.x86.source_3.6.2.v3659b" projectName="org.eclipse.swt.photon.qnx.x86.source_3.6.2.v3659b" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.rcp.source_3.6.0.v201102101200" projectName="org.eclipse.rcp.source_3.6.0.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.contenttype.source_3.4.100.v20100505-1235" projectName="org.eclipse.core.contenttype.source_3.4.100.v20100505-1235" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.app.source_1.3.1.R36x_v20100803" projectName="org.eclipse.equinox.app.source_1.3.1.R36x_v20100803" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.common.source_3.6.0.v20100503" projectName="org.eclipse.equinox.common.source_3.6.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.ds.source_1.2.1.R36x_v20100803" projectName="org.eclipse.equinox.ds.source_1.2.1.R36x_v20100803" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.util.source_1.0.200.v20100503" projectName="org.eclipse.equinox.util.source_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.preferences.source_3.3.0.v20100503" projectName="org.eclipse.equinox.preferences.source_3.3.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.registry.source_3.5.0.v20100503" projectName="org.eclipse.equinox.registry.source_3.5.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.launcher.source_1.1.1.R36x_v20101122_1400" projectName="org.eclipse.equinox.launcher.source_1.1.1.R36x_v20101122_1400" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.director.source_2.0.3.R36x_v20101117-1018" projectName="org.eclipse.equinox.p2.director.source_2.0.3.R36x_v20101117-1018" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.core.source_2.0.3.R36x_v20110111" projectName="org.eclipse.equinox.p2.core.source_2.0.3.R36x_v20110111" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.engine.source_2.0.1.R36x_v20110201" projectName="org.eclipse.equinox.p2.engine.source_2.0.1.R36x_v20110201" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.jarprocessor.source_1.0.200.v20100503a" projectName="org.eclipse.equinox.p2.jarprocessor.source_1.0.200.v20100503a" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata.source_2.0.1.R36x_v20101202" projectName="org.eclipse.equinox.p2.metadata.source_2.0.1.R36x_v20101202" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata.repository.source_1.1.0.v20100513" projectName="org.eclipse.equinox.p2.metadata.repository.source_1.1.0.v20100513" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.artifact.repository.source_1.1.1.R36x_v20100901" projectName="org.eclipse.equinox.p2.artifact.repository.source_1.1.1.R36x_v20100901" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.touchpoint.eclipse.source_2.0.3.R36x_v20101202" projectName="org.eclipse.equinox.p2.touchpoint.eclipse.source_2.0.3.R36x_v20101202" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.touchpoint.natives.source_1.0.201.R36x_v20110111" projectName="org.eclipse.equinox.p2.touchpoint.natives.source_1.0.201.R36x_v20110111" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.frameworkadmin.source_2.0.0.v20100503" projectName="org.eclipse.equinox.frameworkadmin.source_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.frameworkadmin.equinox.source_1.0.200.v20100505" projectName="org.eclipse.equinox.frameworkadmin.equinox.source_1.0.200.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.console.source_1.0.200.v20100601" projectName="org.eclipse.equinox.p2.console.source_1.0.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.simpleconfigurator.manipulator.source_2.0.0.v20100503" projectName="org.eclipse.equinox.simpleconfigurator.manipulator.source_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui.source_2.0.0.v20100518" projectName="org.eclipse.equinox.p2.ui.source_2.0.0.v20100518" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui.sdk.source_1.0.100.v20100513" projectName="org.eclipse.equinox.p2.ui.sdk.source_1.0.100.v20100513" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ui.sdk.scheduler.source_1.0.0.v20100507-1815" projectName="org.eclipse.equinox.p2.ui.sdk.scheduler.source_1.0.0.v20100507-1815" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.updatechecker.source_1.1.101.R36x_v20100823" projectName="org.eclipse.equinox.p2.updatechecker.source_1.1.101.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.garbagecollector.source_1.0.100.v20100503" projectName="org.eclipse.equinox.p2.garbagecollector.source_1.0.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.directorywatcher.source_1.0.203.R36x_v20101220" projectName="org.eclipse.equinox.p2.directorywatcher.source_1.0.203.R36x_v20101220" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.reconciler.dropins.source_1.1.2.R36x_v20110114" projectName="org.eclipse.equinox.p2.reconciler.dropins.source_1.1.2.R36x_v20110114" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.metadata.generator.source_1.0.202.R36x_v20101208-1400" projectName="org.eclipse.equinox.p2.metadata.generator.source_1.0.202.R36x_v20101208-1400" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.updatesite.source_1.0.201.R36x_v20100823" projectName="org.eclipse.equinox.p2.updatesite.source_1.0.201.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.security.source_1.0.200.v20100503" projectName="org.eclipse.equinox.security.source_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.security.ui.source_1.0.200.v20100503" projectName="org.eclipse.equinox.security.ui.source_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.extensionlocation.source_1.2.0.v20100518" projectName="org.eclipse.equinox.p2.extensionlocation.source_1.2.0.v20100518" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.director.app.source_1.0.201.R36x_v20100823" projectName="org.eclipse.equinox.p2.director.app.source_1.0.201.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.publisher.source_1.1.2.v20100824-2220" projectName="org.eclipse.equinox.p2.publisher.source_1.1.2.v20100824-2220" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.repository.tools.source_2.0.1.R36x_v20100823" projectName="org.eclipse.equinox.p2.repository.tools.source_2.0.1.R36x_v20100823" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.repository.source_2.0.2.R36x_v20110111-1500" projectName="org.eclipse.equinox.p2.repository.source_2.0.2.R36x_v20110111-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.operations.source_2.0.0.v20100510" projectName="org.eclipse.equinox.p2.operations.source_2.0.0.v20100510" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.p2.ql.source_2.0.0.v20100503a" projectName="org.eclipse.equinox.p2.ql.source_2.0.0.v20100503a" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.platform.doc.isv" projectName="org.eclipse.platform.doc.isv_3.6.2.r362_v20110111" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.core.source_3.2.201.v20110203_r362" projectName="org.eclipse.ant.core.source_3.2.201.v20110203_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.compare.core.source_3.5.101.R36x_v20100929-0800" projectName="org.eclipse.compare.core.source_3.5.101.R36x_v20100929-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.compare.source_3.5.101.R36x_v20100929-0800" projectName="org.eclipse.compare.source_3.5.101.R36x_v20100929-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.filebuffers.source_3.5.100.v20100520-0800" projectName="org.eclipse.core.filebuffers.source_3.5.100.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.filesystem.source_1.3.1.R36x_v20100727-0745" projectName="org.eclipse.core.filesystem.source_1.3.1.R36x_v20100727-0745" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.net.source_1.2.100.I20100511-0800" projectName="org.eclipse.core.net.source_1.2.100.I20100511-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.resources.source_3.6.1.R36x_v20110131-1630" projectName="org.eclipse.core.resources.source_3.6.1.R36x_v20110131-1630" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility.source_3.2.100.v20100505" projectName="org.eclipse.core.runtime.compatibility.source_3.2.100.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.runtime.compatibility.registry.source_3.3.0.v20100520" projectName="org.eclipse.core.runtime.compatibility.registry.source_3.3.0.v20100520" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.osgi.util.source_3.2.100.v20100503" projectName="org.eclipse.osgi.util.source_3.2.100.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.debug.core.source_3.6.0.v20100519" projectName="org.eclipse.debug.core.source_3.6.0.v20100519" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.debug.ui.source_3.6.3.v20101201_r362" projectName="org.eclipse.debug.ui.source_3.6.3.v20101201_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.event.source_1.2.0.v20100503" projectName="org.eclipse.equinox.event.source_1.2.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.appserver.source_3.1.400.v20100427" projectName="org.eclipse.help.appserver.source_3.1.400.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ltk.core.refactoring.source_3.5.101.r362_v20101117-0800" projectName="org.eclipse.ltk.core.refactoring.source_3.5.101.r362_v20101117-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ltk.ui.refactoring.source_3.5.0.v20100526-0800" projectName="org.eclipse.ltk.ui.refactoring.source_3.5.0.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.platform.source_3.6.2.v201102101200" projectName="org.eclipse.platform.source_3.6.2.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.search.source_3.6.0.v20100520-0800" projectName="org.eclipse.search.source_3.6.0.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.core.source_3.5.101.R36x_v20110203-1036" projectName="org.eclipse.team.core.source_3.5.101.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.ui.source_3.5.102.R36x_v20110203-1036" projectName="org.eclipse.team.ui.source_3.5.102.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.text.source_3.5.0.v20100601-1300" projectName="org.eclipse.text.source_3.5.0.v20100601-1300" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jface.text.source_3.6.1.r361_v20100825-0800" projectName="org.eclipse.jface.text.source_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jsch.core.source_1.1.200.I20100505-1245" projectName="org.eclipse.jsch.core.source_1.1.200.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jsch.ui.source_1.1.300.I20100505-1245" projectName="org.eclipse.jsch.ui.source_1.1.300.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.console.source_3.5.0.v20100526" projectName="org.eclipse.ui.console.source_3.5.0.v20100526" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.presentations.r21.source_3.2.200.I20100517-1500" projectName="org.eclipse.ui.presentations.r21.source_3.2.200.I20100517-1500" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.intro.source_3.4.0.v20100427" projectName="org.eclipse.ui.intro.source_3.4.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.intro.universal.source_3.2.402.r36_v20100702" projectName="org.eclipse.ui.intro.universal.source_3.2.402.r36_v20100702" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.cheatsheets.source_3.4.0.v20100427" projectName="org.eclipse.ui.cheatsheets.source_3.4.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.browser.source_3.3.1.r36_20101216" projectName="org.eclipse.ui.browser.source_3.3.1.r36_20101216" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.navigator.source_3.5.0.I20100601-0800" projectName="org.eclipse.ui.navigator.source_3.5.0.I20100601-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.navigator.resources.source_3.4.202.M20101124-0800" projectName="org.eclipse.ui.navigator.resources.source_3.4.202.M20101124-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.net.source_1.2.100.I20100505-1245" projectName="org.eclipse.ui.net.source_1.2.100.I20100505-1245" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench.texteditor.source_3.6.1.r361_v20100714-0800" projectName="org.eclipse.ui.workbench.texteditor.source_3.6.1.r361_v20100714-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views.source_3.5.1.M20110202-0800" projectName="org.eclipse.ui.views.source_3.5.1.M20110202-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.editors.source_3.6.1.r361_v20100825-0800" projectName="org.eclipse.ui.editors.source_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.externaltools.source_3.2.0.v20100427" projectName="org.eclipse.ui.externaltools.source_3.2.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.ide.source_3.6.2.M20101201-0800" projectName="org.eclipse.ui.ide.source_3.6.2.M20101201-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.ide.application.source_1.0.201.M20100707-0800" projectName="org.eclipse.ui.ide.application.source_1.0.201.M20100707-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.core.source_3.2.402.R36x_v20100629" projectName="org.eclipse.update.core.source_3.2.402.R36x_v20100629" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.scheduler.source_3.2.300.v20100512" projectName="org.eclipse.update.scheduler.source_3.2.300.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.update.ui.source_3.2.300.v20100512" projectName="org.eclipse.update.ui.source_3.2.300.v20100512" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.workbench.compatibility.source_3.2.100.I20100511-0800" projectName="org.eclipse.ui.workbench.compatibility.source_3.2.100.I20100511-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.variables.source_3.2.400.v20100505" projectName="org.eclipse.core.variables.source_3.2.400.v20100505" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.forms.source_3.5.2.r36_v20100702" projectName="org.eclipse.ui.forms.source_3.5.2.r36_v20100702" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views.properties.tabbed.source_3.5.100.I20100509-0800" projectName="org.eclipse.ui.views.properties.tabbed.source_3.5.100.I20100509-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.core.externaltools.source_1.0.1.v20100831_r361" projectName="org.eclipse.core.externaltools.source_1.0.1.v20100831_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.cvs" projectName="org.eclipse.cvs_1.0.500.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.core" projectName="org.eclipse.team.cvs.core_3.3.301.R36x_v20110119-0815" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.ssh2" projectName="org.eclipse.team.cvs.ssh2_3.2.300.I20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.ui" projectName="org.eclipse.team.cvs.ui_3.3.302.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.cvs.source_1.0.500.v201102101200" projectName="org.eclipse.cvs.source_1.0.500.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.core.source_3.3.301.R36x_v20110119-0815" projectName="org.eclipse.team.cvs.core.source_3.3.301.R36x_v20110119-0815" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.ssh2.source_3.2.300.I20100526-0800" projectName="org.eclipse.team.cvs.ssh2.source_3.2.300.I20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.team.cvs.ui.source_3.3.302.R36x_v20110203-1036" projectName="org.eclipse.team.cvs.ui.source_3.3.302.R36x_v20110203-1036" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt" projectName="org.eclipse.jdt_3.6.1.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.ui" projectName="org.eclipse.ant.ui_3.5.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.core" projectName="org.eclipse.jdt.apt.core_3.3.402.R36_v20110120-1000" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.ui" projectName="org.eclipse.jdt.apt.ui_3.3.300.v20100513-0845" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.pluggable.core" projectName="org.eclipse.jdt.apt.pluggable.core_1.0.301.R36_v20100727-0110" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.compiler.apt" projectName="org.eclipse.jdt.compiler.apt_1.0.300.v20100513-0845" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.compiler.tool" projectName="org.eclipse.jdt.compiler.tool_1.0.100.v_A76_R36x" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.core" projectName="org.eclipse.jdt.core_3.6.2.v_A76_R36x" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.core.manipulation" projectName="org.eclipse.jdt.core.manipulation_1.3.0.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.debug.ui" projectName="org.eclipse.jdt.debug.ui_3.5.2.v20100928a_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.debug" projectName="org.eclipse.jdt.debug_3.6.1.v20100715_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit" projectName="org.eclipse.jdt.junit_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit.core" projectName="org.eclipse.jdt.junit.core_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit.runtime" projectName="org.eclipse.jdt.junit.runtime_3.4.200.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit4.runtime" projectName="org.eclipse.jdt.junit4.runtime_1.1.100.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.launching" projectName="org.eclipse.jdt.launching_3.5.200.v20110105_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.ui" projectName="org.eclipse.jdt.ui_3.6.2.r362_v20110203" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.junit4" projectName="org.junit4_4.8.1.v20100525" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.doc.user" projectName="org.eclipse.jdt.doc.user_3.6.1.r361_v20100721-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.launching" projectName="org.eclipse.ant.launching_1.0.1.v20101020_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.doc.isv" projectName="org.eclipse.jdt.doc.isv_3.6.2.r362_v20101117-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.source_3.6.1.v201102101200" projectName="org.eclipse.jdt.source_3.6.1.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.ui.source_3.5.0.v20100427" projectName="org.eclipse.ant.ui.source_3.5.0.v20100427" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.core.source_3.3.402.R36_v20110120-1000" projectName="org.eclipse.jdt.apt.core.source_3.3.402.R36_v20110120-1000" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.ui.source_3.3.300.v20100513-0845" projectName="org.eclipse.jdt.apt.ui.source_3.3.300.v20100513-0845" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.apt.pluggable.core.source_1.0.301.R36_v20100727-0110" projectName="org.eclipse.jdt.apt.pluggable.core.source_1.0.301.R36_v20100727-0110" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.compiler.apt.source_1.0.300.v20100513-0845" projectName="org.eclipse.jdt.compiler.apt.source_1.0.300.v20100513-0845" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.compiler.tool.source_1.0.100.v_A76_R36x" projectName="org.eclipse.jdt.compiler.tool.source_1.0.100.v_A76_R36x" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.core.source_3.6.2.v_A76_R36x" projectName="org.eclipse.jdt.core.source_3.6.2.v_A76_R36x" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.core.manipulation.source_1.3.0.v20100520-0800" projectName="org.eclipse.jdt.core.manipulation.source_1.3.0.v20100520-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.debug.ui.source_3.5.2.v20100928a_r362" projectName="org.eclipse.jdt.debug.ui.source_3.5.2.v20100928a_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.debug.source_3.6.1.v20100715_r361" projectName="org.eclipse.jdt.debug.source_3.6.1.v20100715_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit.source_3.6.1.r361_v20100825-0800" projectName="org.eclipse.jdt.junit.source_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit.core.source_3.6.1.r361_v20100825-0800" projectName="org.eclipse.jdt.junit.core.source_3.6.1.r361_v20100825-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit.runtime.source_3.4.200.v20100526-0800" projectName="org.eclipse.jdt.junit.runtime.source_3.4.200.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.junit4.runtime.source_1.1.100.v20100526-0800" projectName="org.eclipse.jdt.junit4.runtime.source_1.1.100.v20100526-0800" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.launching.source_3.5.200.v20110105_r362" projectName="org.eclipse.jdt.launching.source_3.5.200.v20110105_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.jdt.ui.source_3.6.2.r362_v20110203" projectName="org.eclipse.jdt.ui.source_3.6.2.r362_v20110203" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ant.launching.source_1.0.1.v20101020_r362" projectName="org.eclipse.ant.launching.source_1.0.1.v20101020_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde" projectName="org.eclipse.pde_3.6.1.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.build" projectName="org.eclipse.pde.build_3.6.2.R36x_20110203" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.core" projectName="org.eclipse.pde.core_3.6.2.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.junit.runtime" projectName="org.eclipse.pde.junit.runtime_3.4.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.runtime" projectName="org.eclipse.pde.runtime_3.4.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ui" projectName="org.eclipse.pde.ui_3.6.1.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.doc.user" projectName="org.eclipse.pde.doc.user_3.6.2.v20101118_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ui.templates" projectName="org.eclipse.pde.ui.templates_3.4.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views.log" projectName="org.eclipse.ui.views.log_1.0.100.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.api.tools" projectName="org.eclipse.pde.api.tools_1.0.202.v20100820_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.api.tools.ui" projectName="org.eclipse.pde.api.tools.ui_1.0.201.v20100820_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ds.core" projectName="org.eclipse.pde.ds.core_1.0.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ds.ui" projectName="org.eclipse.pde.ds.ui_1.0.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.launching" projectName="org.eclipse.pde.launching_3.6.0.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ua.core" projectName="org.eclipse.pde.ua.core_1.0.100.v20100504" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ua.ui" projectName="org.eclipse.pde.ua.ui_1.0.100.v20100504" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.source_3.6.1.v201102101200" projectName="org.eclipse.pde.source_3.6.1.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.build.source_3.6.2.R36x_20110203" projectName="org.eclipse.pde.build.source_3.6.2.R36x_20110203" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.core.source_3.6.2.v20110210_r362" projectName="org.eclipse.pde.core.source_3.6.2.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.junit.runtime.source_3.4.100.v20100601" projectName="org.eclipse.pde.junit.runtime.source_3.4.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.runtime.source_3.4.200.v20100601" projectName="org.eclipse.pde.runtime.source_3.4.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ui.source_3.6.1.v20110210_r362" projectName="org.eclipse.pde.ui.source_3.6.1.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ui.templates.source_3.4.200.v20100601" projectName="org.eclipse.pde.ui.templates.source_3.4.200.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.ui.views.log.source_1.0.100.v20110210_r362" projectName="org.eclipse.ui.views.log.source_1.0.100.v20110210_r362" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.api.tools.source_1.0.202.v20100820_r361" projectName="org.eclipse.pde.api.tools.source_1.0.202.v20100820_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.api.tools.ui.source_1.0.201.v20100820_r361" projectName="org.eclipse.pde.api.tools.ui.source_1.0.201.v20100820_r361" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ds.core.source_1.0.100.v20100601" projectName="org.eclipse.pde.ds.core.source_1.0.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ds.ui.source_1.0.100.v20100601" projectName="org.eclipse.pde.ds.ui.source_1.0.100.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.launching.source_3.6.0.v20100601" projectName="org.eclipse.pde.launching.source_3.6.0.v20100601" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ua.core.source_1.0.100.v20100504" projectName="org.eclipse.pde.ua.core.source_1.0.100.v20100504" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.pde.ua.ui.source_1.0.100.v20100504" projectName="org.eclipse.pde.ua.ui.source_1.0.100.v20100504" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.jetty.source_2.0.0.v20100503" projectName="org.eclipse.equinox.http.jetty.source_2.0.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.registry.source_1.1.1.R36x_v20101103" projectName="org.eclipse.equinox.http.registry.source_1.1.1.R36x_v20101103" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.http.servlet.source_1.1.0.v20100503" projectName="org.eclipse.equinox.http.servlet.source_1.1.0.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.jsp.jasper.source_1.0.201.R36x_v20101103" projectName="org.eclipse.equinox.jsp.jasper.source_1.0.201.R36x_v20101103" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.equinox.jsp.jasper.registry.source_1.0.200.v20100503" projectName="org.eclipse.equinox.jsp.jasper.registry.source_1.0.200.v20100503" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.base.source_3.5.3.v201102101200" projectName="org.eclipse.help.base.source_3.5.3.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.ui.source_3.5.3.r36_20101116" projectName="org.eclipse.help.ui.source_3.5.3.r36_20101116" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.help.webapp.source_3.5.3.r36_20101130" projectName="org.eclipse.help.webapp.source_3.5.3.r36_20101130" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="plugins/org.eclipse.sdk" projectName="org.eclipse.sdk_3.6.2.v201102101200" propertyName="destination.temp.folder" propertyValue="${eclipse.plugins}" subFolder="" />
+		<customGather dir="features/org.eclipse.rcp/" projectName="org.eclipse.rcp_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.equinox.p2.user.ui/" projectName="org.eclipse.equinox.p2.user.ui_2.0.1.r361_v20100903-897HFa-FX0z-z-ntoaavz0JPX628" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.help/" projectName="org.eclipse.help_1.2.1.r362_v20101111-7e7jEVFDr6xg-LSlC_z0w1D" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.platform/" projectName="org.eclipse.platform_3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.rcp.source/" projectName="org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.equinox.p2.user.ui.source/" projectName="org.eclipse.equinox.p2.user.ui.source_2.0.1.r361_v20100903-897HFa-FX0z-z-ntoaavz0JPX628" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.platform.source/" projectName="org.eclipse.platform.source_3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.cvs/" projectName="org.eclipse.cvs_1.2.1.r362_v20101111-7B77FKv99HL0GvIAF99I8H14B7E" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.cvs.source/" projectName="org.eclipse.cvs.source_1.2.1.r362_v20101111-7B77FKv99HL0GvIAF99I8H14B7E" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.jdt/" projectName="org.eclipse.jdt_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.jdt.source/" projectName="org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.pde/" projectName="org.eclipse.pde_3.6.2.r362_v20110203-7b7mFL2FET3dhHalh1iNZtL" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.pde.source/" projectName="org.eclipse.pde.source_3.6.2.r362_v20110203-7b7mFL2FET3dhHalh1iNZtL" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.help.source/" projectName="org.eclipse.help.source_1.2.1.r362_v20101111-7e7jEVFDr6xg-LSlC_z0w1D" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.sdk/" projectName="org.eclipse.sdk_3.6.2.r362_v20100929-7Q7m7HD5cWlFgdCBHllpZMd2M468sbnm2RJvUWIbiJnWC" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.rcp/" projectName="org.eclipse.rcp_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.platform/" projectName="org.eclipse.platform_3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.cvs/" projectName="org.eclipse.cvs_1.2.1.r362_v20101111-7B77FKv99HL0GvIAF99I8H14B7E" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+		<customGather dir="features/org.eclipse.jdt/" projectName="org.eclipse.jdt_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F" propertyName="feature.base" propertyValue="${eclipse.base}" subFolder="/features" />
+	</target>
+
+	<target name="jar.processing">
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.commands_3.6.0.I20100512-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding_1.3.100.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.observable_1.3.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.property_1.3.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.beans_1.2.100.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.jobs_3.5.1.R36x_v20100824"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.expressions_3.4.200.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime_3.6.0.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi_3.6.2.R36x_v20110210"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.services_3.2.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help_3.5.0.v20100524"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.swt_3.6.2.v3659c"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface_3.6.2.M20110210-1200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.databinding_1.4.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui_3.6.2.M20110203-1100"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench_3.6.2.M20110210-1200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.configurator_3.3.100.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.rcp_3.6.0.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.contenttype_3.4.100.v20100505-1235"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.app_1.3.1.R36x_v20100803"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.common_3.6.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.ds_1.2.1.R36x_v20100803"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.util_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.preferences_3.3.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.registry_3.5.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.touchpoint.eclipse_2.0.3.R36x_v20101202"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.touchpoint.natives_1.0.201.R36x_v20110111"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.frameworkadmin_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.frameworkadmin.equinox_1.0.200.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.console_1.0.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.simpleconfigurator.manipulator_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui_2.0.0.v20100518"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui.sdk_1.0.100.v20100513"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui.sdk.scheduler_1.0.0.v20100507-1815"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.updatechecker_1.1.101.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.garbagecollector_1.0.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.directorywatcher_1.0.203.R36x_v20101220"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.reconciler.dropins_1.1.2.R36x_v20110114"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata.generator_1.0.202.R36x_v20101208-1400"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.updatesite_1.0.201.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.security_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.security.ui_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.extensionlocation_1.2.0.v20100518"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.director.app_1.0.201.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.publisher_1.1.2.v20100824-2220"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.repository.tools_2.0.1.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.operations_2.0.0.v20100510"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ql_2.0.0.v20100503a"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.jetty_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.registry_1.1.1.R36x_v20101103"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.servlet_1.1.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.jsp.jasper_1.0.201.R36x_v20101103"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.jsp.jasper.registry_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.base_3.5.3.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.ui_3.5.3.r36_20101116"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.webapp_3.5.3.r36_20101130"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.core_3.2.201.v20110203_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.compare.core_3.5.101.R36x_v20100929-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.compare_3.5.101.R36x_v20100929-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.boot_3.1.200.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.filebuffers_3.5.100.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.net_1.2.100.I20100511-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.resources_3.6.1.R36x_v20110131-1630"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility_3.2.100.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.util_3.2.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.core_3.6.0.v20100519"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.ui_3.6.3.v20101201_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.event_1.2.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.appserver_3.1.400.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.core.refactoring_3.5.101.r362_v20101117-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.ui.refactoring_3.5.0.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.platform.doc.user_3.6.2.r362_v20101117-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.search_3.6.0.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.core_3.5.101.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.ui_3.5.102.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.text_3.5.0.v20100601-1300"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.text_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jsch.core_1.1.200.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jsch.ui_1.1.300.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.console_3.5.0.v20100526"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.presentations.r21_3.2.200.I20100517-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.intro_3.4.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.cheatsheets_3.4.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.browser_3.3.1.r36_20101216"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.navigator_3.5.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.navigator.resources_3.4.202.M20101124-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.net_1.2.100.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench.texteditor_3.6.1.r361_v20100714-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views_3.5.1.M20110202-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.editors_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.externaltools_3.2.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.ide_3.6.2.M20101201-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.ide.application_1.0.201.M20100707-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.core_3.2.402.R36x_v20100629"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.scheduler_3.2.300.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.ui_3.2.300.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.variables_3.2.400.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.forms_3.5.2.r36_v20100702"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views.properties.tabbed_3.5.100.I20100509-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.externaltools_1.0.1.v20100831_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.commands.source_3.6.0.I20100512-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.source_1.3.100.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.observable.source_1.3.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.property.source_1.3.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.databinding.beans.source_1.2.100.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.jobs.source_3.5.1.R36x_v20100824"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.expressions.source_3.4.200.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.source_3.6.0.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility.auth.source_3.2.200.v20100517"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.source_3.6.2.R36x_v20110210"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.services.source_3.2.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.source_3.5.0.v20100524"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.source_3.6.2.M20110210-1200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.databinding.source_1.4.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.source_3.6.2.M20110203-1100"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench.source_3.6.2.M20110210-1200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.configurator.source_3.3.100.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.simpleconfigurator.source_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.swt.photon.qnx.x86.source_3.6.2.v3659b"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.rcp.source_3.6.0.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.contenttype.source_3.4.100.v20100505-1235"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.app.source_1.3.1.R36x_v20100803"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.common.source_3.6.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.ds.source_1.2.1.R36x_v20100803"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.util.source_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.preferences.source_3.3.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.registry.source_3.5.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.launcher.source_1.1.1.R36x_v20101122_1400"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.director.source_2.0.3.R36x_v20101117-1018"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.core.source_2.0.3.R36x_v20110111"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.engine.source_2.0.1.R36x_v20110201"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.jarprocessor.source_1.0.200.v20100503a"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata.source_2.0.1.R36x_v20101202"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata.repository.source_1.1.0.v20100513"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.artifact.repository.source_1.1.1.R36x_v20100901"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.touchpoint.eclipse.source_2.0.3.R36x_v20101202"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.touchpoint.natives.source_1.0.201.R36x_v20110111"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.frameworkadmin.source_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.frameworkadmin.equinox.source_1.0.200.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.console.source_1.0.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.simpleconfigurator.manipulator.source_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui.source_2.0.0.v20100518"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui.sdk.source_1.0.100.v20100513"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ui.sdk.scheduler.source_1.0.0.v20100507-1815"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.updatechecker.source_1.1.101.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.garbagecollector.source_1.0.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.directorywatcher.source_1.0.203.R36x_v20101220"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.reconciler.dropins.source_1.1.2.R36x_v20110114"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.metadata.generator.source_1.0.202.R36x_v20101208-1400"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.updatesite.source_1.0.201.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.security.source_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.security.ui.source_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.extensionlocation.source_1.2.0.v20100518"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.director.app.source_1.0.201.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.publisher.source_1.1.2.v20100824-2220"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.repository.tools.source_2.0.1.R36x_v20100823"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.repository.source_2.0.2.R36x_v20110111-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.operations.source_2.0.0.v20100510"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.p2.ql.source_2.0.0.v20100503a"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.platform.doc.isv_3.6.2.r362_v20110111"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.core.source_3.2.201.v20110203_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.compare.core.source_3.5.101.R36x_v20100929-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.compare.source_3.5.101.R36x_v20100929-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.filebuffers.source_3.5.100.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.filesystem.source_1.3.1.R36x_v20100727-0745"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.net.source_1.2.100.I20100511-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.resources.source_3.6.1.R36x_v20110131-1630"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility.source_3.2.100.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility.registry.source_3.3.0.v20100520"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.util.source_3.2.100.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.core.source_3.6.0.v20100519"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.ui.source_3.6.3.v20101201_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.event.source_1.2.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.appserver.source_3.1.400.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.core.refactoring.source_3.5.101.r362_v20101117-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.ui.refactoring.source_3.5.0.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.platform.source_3.6.2.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.search.source_3.6.0.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.core.source_3.5.101.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.ui.source_3.5.102.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.text.source_3.5.0.v20100601-1300"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.text.source_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jsch.core.source_1.1.200.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jsch.ui.source_1.1.300.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.console.source_3.5.0.v20100526"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.presentations.r21.source_3.2.200.I20100517-1500"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.intro.source_3.4.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.intro.universal.source_3.2.402.r36_v20100702"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.cheatsheets.source_3.4.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.browser.source_3.3.1.r36_20101216"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.navigator.source_3.5.0.I20100601-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.navigator.resources.source_3.4.202.M20101124-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.net.source_1.2.100.I20100505-1245"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench.texteditor.source_3.6.1.r361_v20100714-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views.source_3.5.1.M20110202-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.editors.source_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.externaltools.source_3.2.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.ide.source_3.6.2.M20101201-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.ide.application.source_1.0.201.M20100707-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.core.source_3.2.402.R36x_v20100629"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.scheduler.source_3.2.300.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.ui.source_3.2.300.v20100512"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench.compatibility.source_3.2.100.I20100511-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.variables.source_3.2.400.v20100505"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.forms.source_3.5.2.r36_v20100702"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views.properties.tabbed.source_3.5.100.I20100509-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.externaltools.source_1.0.1.v20100831_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.cvs_1.0.500.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.core_3.3.301.R36x_v20110119-0815"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ssh2_3.2.300.I20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ui_3.3.302.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.cvs.source_1.0.500.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.core.source_3.3.301.R36x_v20110119-0815"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ssh2.source_3.2.300.I20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ui.source_3.3.302.R36x_v20110203-1036"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt_3.6.1.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.ui_3.5.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.core_3.3.402.R36_v20110120-1000"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.ui_3.3.300.v20100513-0845"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.pluggable.core_1.0.301.R36_v20100727-0110"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.compiler.apt_1.0.300.v20100513-0845"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.compiler.tool_1.0.100.v_A76_R36x"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.core_3.6.2.v_A76_R36x"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.core.manipulation_1.3.0.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.debug.ui_3.5.2.v20100928a_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit.core_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit.runtime_3.4.200.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit4.runtime_1.1.100.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.launching_3.5.200.v20110105_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.ui_3.6.2.r362_v20110203"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.doc.user_3.6.1.r361_v20100721-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.launching_1.0.1.v20101020_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.doc.isv_3.6.2.r362_v20101117-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.source_3.6.1.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.ui.source_3.5.0.v20100427"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.core.source_3.3.402.R36_v20110120-1000"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.ui.source_3.3.300.v20100513-0845"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.apt.pluggable.core.source_1.0.301.R36_v20100727-0110"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.compiler.apt.source_1.0.300.v20100513-0845"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.compiler.tool.source_1.0.100.v_A76_R36x"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.core.source_3.6.2.v_A76_R36x"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.core.manipulation.source_1.3.0.v20100520-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.debug.ui.source_3.5.2.v20100928a_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.debug.source_3.6.1.v20100715_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit.source_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit.core.source_3.6.1.r361_v20100825-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit.runtime.source_3.4.200.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.junit4.runtime.source_1.1.100.v20100526-0800"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.launching.source_3.5.200.v20110105_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.ui.source_3.6.2.r362_v20110203"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.launching.source_1.0.1.v20101020_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde_3.6.1.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.core_3.6.2.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.junit.runtime_3.4.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.runtime_3.4.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ui_3.6.1.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.doc.user_3.6.2.v20101118_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ui.templates_3.4.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views.log_1.0.100.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.api.tools_1.0.202.v20100820_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.api.tools.ui_1.0.201.v20100820_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ds.core_1.0.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ds.ui_1.0.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.launching_3.6.0.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ua.core_1.0.100.v20100504"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ua.ui_1.0.100.v20100504"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.source_3.6.1.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.build.source_3.6.2.R36x_20110203"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.core.source_3.6.2.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.junit.runtime.source_3.4.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.runtime.source_3.4.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ui.source_3.6.1.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ui.templates.source_3.4.200.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views.log.source_1.0.100.v20110210_r362"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.api.tools.source_1.0.202.v20100820_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.api.tools.ui.source_1.0.201.v20100820_r361"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ds.core.source_1.0.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ds.ui.source_1.0.100.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.launching.source_3.6.0.v20100601"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ua.core.source_1.0.100.v20100504"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ua.ui.source_1.0.100.v20100504"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.jetty.source_2.0.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.registry.source_1.1.1.R36x_v20101103"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.http.servlet.source_1.1.0.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.jsp.jasper.source_1.0.201.R36x_v20101103"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.equinox.jsp.jasper.registry.source_1.0.200.v20100503"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.base.source_3.5.3.v201102101200"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.ui.source_3.5.3.r36_20101116"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.webapp.source_3.5.3.r36_20101130"/>
+		</antcall>
+		<antcall target="customAssembly">
+			<param name="customTarget" value="post.jarUp"/>
+		</antcall>
+	</target>
+
+	<target name="assemble.archive">
+		<antcall target="customAssembly">
+			<param name="rootFolder" value="${eclipse.base}/qnx.photon.x86/${collectingFolder}"/>
+			<param name="customTarget" value="pre.archive"/>
+		</antcall>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding_1.3.100.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.observable_1.3.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.property_1.3.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.beans_1.2.100.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.jobs_3.5.1.R36x_v20100824.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.expressions_3.4.200.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility.auth_3.2.200.v20100517.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi_3.6.2.R36x_v20110210.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi.services_3.2.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help_3.5.0.v20100524.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.swt_3.6.2.v3659c.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface_3.6.2.M20110210-1200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface.databinding_1.4.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui_3.6.2.M20110203-1100.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.configurator_3.3.100.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.rcp_3.6.0.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.contenttype_3.4.100.v20100505-1235.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.app_1.3.1.R36x_v20100803.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.ds_1.2.1.R36x_v20100803.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.util_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.preferences_3.3.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.registry_3.5.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.touchpoint.eclipse_2.0.3.R36x_v20101202.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.touchpoint.natives_1.0.201.R36x_v20110111.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.frameworkadmin_2.0.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.frameworkadmin.equinox_1.0.200.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.console_1.0.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.simpleconfigurator.manipulator_2.0.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui_2.0.0.v20100518.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui.sdk_1.0.100.v20100513.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui.sdk.scheduler_1.0.0.v20100507-1815.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.updatechecker_1.1.101.R36x_v20100823.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.garbagecollector_1.0.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.directorywatcher_1.0.203.R36x_v20101220.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.reconciler.dropins_1.1.2.R36x_v20110114.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata.generator_1.0.202.R36x_v20101208-1400.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.updatesite_1.0.201.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.security_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.security.ui_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.extensionlocation_1.2.0.v20100518.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.director.app_1.0.201.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.publisher_1.1.2.v20100824-2220.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.repository.tools_2.0.1.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.operations_2.0.0.v20100510.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ql_2.0.0.v20100503a.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.jetty_2.0.0.v20100503.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.registry_1.1.1.R36x_v20101103.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.servlet_1.1.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.jsp.jasper_1.0.201.R36x_v20101103.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.jsp.jasper.registry_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.base_3.5.3.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.ui_3.5.3.r36_20101116.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.webapp_3.5.3.r36_20101130.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.core_3.2.201.v20110203_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.compare.core_3.5.101.R36x_v20100929-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.compare_3.5.101.R36x_v20100929-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.boot_3.1.200.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.filebuffers_3.5.100.v20100520-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.net_1.2.100.I20100511-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.resources_3.6.1.R36x_v20110131-1630.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility_3.2.100.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi.util_3.2.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.debug.core_3.6.0.v20100519.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.debug.ui_3.6.3.v20101201_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.event_1.2.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.appserver_3.1.400.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ltk.core.refactoring_3.5.101.r362_v20101117-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ltk.ui.refactoring_3.5.0.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.platform_3.6.2.v201102101200"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.platform.doc.user_3.6.2.r362_v20101117-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.search_3.6.0.v20100520-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.core_3.5.101.R36x_v20110203-1036.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.ui_3.5.102.R36x_v20110203-1036.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.text_3.5.0.v20100601-1300.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface.text_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jsch.core_1.1.200.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jsch.ui_1.1.300.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.console_3.5.0.v20100526.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.presentations.r21_3.2.200.I20100517-1500.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.intro_3.4.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.intro.universal_3.2.402.r36_v20100702"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.cheatsheets_3.4.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.browser_3.3.1.r36_20101216.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.navigator_3.5.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.navigator.resources_3.4.202.M20101124-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.net_1.2.100.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench.texteditor_3.6.1.r361_v20100714-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views_3.5.1.M20110202-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.editors_3.6.1.r361_v20100825-0800.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.externaltools_3.2.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.ide_3.6.2.M20101201-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.ide.application_1.0.201.M20100707-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.core_3.2.402.R36x_v20100629.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.scheduler_3.2.300.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.ui_3.2.300.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench.compatibility_3.2.100.I20100511-0800"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.variables_3.2.400.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.forms_3.5.2.r36_v20100702.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views.properties.tabbed_3.5.100.I20100509-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.externaltools_1.0.1.v20100831_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.commands.source_3.6.0.I20100512-1500.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.source_1.3.100.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.observable.source_1.3.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.property.source_1.3.0.I20100601-0800.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.databinding.beans.source_1.2.100.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.jobs.source_3.5.1.R36x_v20100824.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.expressions.source_3.4.200.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.source_3.6.0.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility.auth.source_3.2.200.v20100517.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi.source_3.6.2.R36x_v20110210.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi.services.source_3.2.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.source_3.5.0.v20100524.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface.source_3.6.2.M20110210-1200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface.databinding.source_1.4.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.source_3.6.2.M20110203-1100.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench.source_3.6.2.M20110210-1200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.configurator.source_3.3.100.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.simpleconfigurator.source_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.swt.photon.qnx.x86.source_3.6.2.v3659b.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.rcp.source_3.6.0.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.contenttype.source_3.4.100.v20100505-1235.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.app.source_1.3.1.R36x_v20100803.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.common.source_3.6.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.ds.source_1.2.1.R36x_v20100803.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.util.source_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.preferences.source_3.3.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.registry.source_3.5.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.launcher.source_1.1.1.R36x_v20101122_1400.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.director.source_2.0.3.R36x_v20101117-1018.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.core.source_2.0.3.R36x_v20110111.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.engine.source_2.0.1.R36x_v20110201.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.jarprocessor.source_1.0.200.v20100503a.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata.source_2.0.1.R36x_v20101202.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata.repository.source_1.1.0.v20100513.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.artifact.repository.source_1.1.1.R36x_v20100901.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.touchpoint.eclipse.source_2.0.3.R36x_v20101202.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.touchpoint.natives.source_1.0.201.R36x_v20110111.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.frameworkadmin.source_2.0.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.frameworkadmin.equinox.source_1.0.200.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.console.source_1.0.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.simpleconfigurator.manipulator.source_2.0.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui.source_2.0.0.v20100518.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui.sdk.source_1.0.100.v20100513.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ui.sdk.scheduler.source_1.0.0.v20100507-1815.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.updatechecker.source_1.1.101.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.garbagecollector.source_1.0.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.directorywatcher.source_1.0.203.R36x_v20101220.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.reconciler.dropins.source_1.1.2.R36x_v20110114.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.metadata.generator.source_1.0.202.R36x_v20101208-1400.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.updatesite.source_1.0.201.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.security.source_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.security.ui.source_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.extensionlocation.source_1.2.0.v20100518.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.director.app.source_1.0.201.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.publisher.source_1.1.2.v20100824-2220.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.repository.tools.source_2.0.1.R36x_v20100823.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.repository.source_2.0.2.R36x_v20110111-1500.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.operations.source_2.0.0.v20100510.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.p2.ql.source_2.0.0.v20100503a.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.platform.doc.isv_3.6.2.r362_v20110111.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.core.source_3.2.201.v20110203_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.compare.core.source_3.5.101.R36x_v20100929-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.compare.source_3.5.101.R36x_v20100929-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.filebuffers.source_3.5.100.v20100520-0800.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.filesystem.source_1.3.1.R36x_v20100727-0745.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.net.source_1.2.100.I20100511-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.resources.source_3.6.1.R36x_v20110131-1630.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility.source_3.2.100.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.runtime.compatibility.registry.source_3.3.0.v20100520.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.osgi.util.source_3.2.100.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.debug.core.source_3.6.0.v20100519.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.debug.ui.source_3.6.3.v20101201_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.event.source_1.2.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.appserver.source_3.1.400.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ltk.core.refactoring.source_3.5.101.r362_v20101117-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ltk.ui.refactoring.source_3.5.0.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.platform.source_3.6.2.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.search.source_3.6.0.v20100520-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.core.source_3.5.101.R36x_v20110203-1036.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.ui.source_3.5.102.R36x_v20110203-1036.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.text.source_3.5.0.v20100601-1300.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jface.text.source_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jsch.core.source_1.1.200.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jsch.ui.source_1.1.300.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.console.source_3.5.0.v20100526.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.presentations.r21.source_3.2.200.I20100517-1500.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.intro.source_3.4.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.intro.universal.source_3.2.402.r36_v20100702.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.cheatsheets.source_3.4.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.browser.source_3.3.1.r36_20101216.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.navigator.source_3.5.0.I20100601-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.navigator.resources.source_3.4.202.M20101124-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.net.source_1.2.100.I20100505-1245.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench.texteditor.source_3.6.1.r361_v20100714-0800.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views.source_3.5.1.M20110202-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.editors.source_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.externaltools.source_3.2.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.ide.source_3.6.2.M20101201-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.ide.application.source_1.0.201.M20100707-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.core.source_3.2.402.R36x_v20100629.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.scheduler.source_3.2.300.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.update.ui.source_3.2.300.v20100512.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.workbench.compatibility.source_3.2.100.I20100511-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.variables.source_3.2.400.v20100505.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.forms.source_3.5.2.r36_v20100702.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views.properties.tabbed.source_3.5.100.I20100509-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.core.externaltools.source_1.0.1.v20100831_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.cvs_1.0.500.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.core_3.3.301.R36x_v20110119-0815.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.ssh2_3.2.300.I20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.ui_3.3.302.R36x_v20110203-1036.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.cvs.source_1.0.500.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.core.source_3.3.301.R36x_v20110119-0815.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.ssh2.source_3.2.300.I20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.team.cvs.ui.source_3.3.302.R36x_v20110203-1036.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt_3.6.1.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.ui_3.5.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.core_3.3.402.R36_v20110120-1000.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.ui_3.3.300.v20100513-0845.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.pluggable.core_1.0.301.R36_v20100727-0110.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.compiler.apt_1.0.300.v20100513-0845.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.compiler.tool_1.0.100.v_A76_R36x.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.core_3.6.2.v_A76_R36x.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.core.manipulation_1.3.0.v20100520-0800.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.debug.ui_3.5.2.v20100928a_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.debug_3.6.1.v20100715_r361"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit.core_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit.runtime_3.4.200.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit4.runtime_1.1.100.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.launching_3.5.200.v20110105_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.ui_3.6.2.r362_v20110203.jar"/>
+			<arg line="${pluginArchivePrefix}/org.junit4_4.8.1.v20100525"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.doc.user_3.6.1.r361_v20100721-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.launching_1.0.1.v20101020_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.doc.isv_3.6.2.r362_v20101117-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.source_3.6.1.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.ui.source_3.5.0.v20100427.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.core.source_3.3.402.R36_v20110120-1000.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.ui.source_3.3.300.v20100513-0845.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.apt.pluggable.core.source_1.0.301.R36_v20100727-0110.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.compiler.apt.source_1.0.300.v20100513-0845.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.compiler.tool.source_1.0.100.v_A76_R36x.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.core.source_3.6.2.v_A76_R36x.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.core.manipulation.source_1.3.0.v20100520-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.debug.ui.source_3.5.2.v20100928a_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.debug.source_3.6.1.v20100715_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit.source_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit.core.source_3.6.1.r361_v20100825-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit.runtime.source_3.4.200.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.junit4.runtime.source_1.1.100.v20100526-0800.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.launching.source_3.5.200.v20110105_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.jdt.ui.source_3.6.2.r362_v20110203.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ant.launching.source_1.0.1.v20101020_r362.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde_3.6.1.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.build_3.6.2.R36x_20110203"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.core_3.6.2.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.junit.runtime_3.4.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.runtime_3.4.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ui_3.6.1.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.doc.user_3.6.2.v20101118_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ui.templates_3.4.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views.log_1.0.100.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.api.tools_1.0.202.v20100820_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.api.tools.ui_1.0.201.v20100820_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ds.core_1.0.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ds.ui_1.0.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.launching_3.6.0.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ua.core_1.0.100.v20100504.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ua.ui_1.0.100.v20100504.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.source_3.6.1.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.build.source_3.6.2.R36x_20110203.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.core.source_3.6.2.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.junit.runtime.source_3.4.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.runtime.source_3.4.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ui.source_3.6.1.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ui.templates.source_3.4.200.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.ui.views.log.source_1.0.100.v20110210_r362.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.api.tools.source_1.0.202.v20100820_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.api.tools.ui.source_1.0.201.v20100820_r361.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ds.core.source_1.0.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ds.ui.source_1.0.100.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.launching.source_3.6.0.v20100601.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ua.core.source_1.0.100.v20100504.jar"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.pde.ua.ui.source_1.0.100.v20100504.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.jetty.source_2.0.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.registry.source_1.1.1.R36x_v20101103.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.http.servlet.source_1.1.0.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.jsp.jasper.source_1.0.201.R36x_v20101103.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.equinox.jsp.jasper.registry.source_1.0.200.v20100503.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.base.source_3.5.3.v201102101200.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.ui.source_3.5.3.r36_20101116.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.help.webapp.source_3.5.3.r36_20101130.jar"/>
+			<arg line="${pluginArchivePrefix}/org.eclipse.sdk_3.6.2.v201102101200"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.rcp_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+		</exec>
+		<exec executable="zip" dir="${assemblyTempDir}">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos;"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.equinox.p2.user.ui_2.0.1.r361_v20100903-897HFa-FX0z-z-ntoaavz0JPX628"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.help_1.2.1.r362_v20101111-7e7jEVFDr6xg-LSlC_z0w1D"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.platform_3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.rcp.source_3.6.2.r362_v20101104-9SAxFMKFkSAqi8axkv1ZjegmiBLY"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.equinox.p2.user.ui.source_2.0.1.r361_v20100903-897HFa-FX0z-z-ntoaavz0JPX628"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.platform.source_3.6.2.r362_v20110210-9gF78Gs1FrIGnHDHWkEcopoN8AmxeZflGDGKQi"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.cvs_1.2.1.r362_v20101111-7B77FKv99HL0GvIAF99I8H14B7E"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.cvs.source_1.2.1.r362_v20101111-7B77FKv99HL0GvIAF99I8H14B7E"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.jdt_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.jdt.source_3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.pde_3.6.2.r362_v20110203-7b7mFL2FET3dhHalh1iNZtL"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.pde.source_3.6.2.r362_v20110203-7b7mFL2FET3dhHalh1iNZtL"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.help.source_1.2.1.r362_v20101111-7e7jEVFDr6xg-LSlC_z0w1D"/>
+			<arg line="${featureArchivePrefix}/org.eclipse.sdk_3.6.2.r362_v20100929-7Q7m7HD5cWlFgdCBHllpZMd2M468sbnm2RJvUWIbiJnWC"/>
+		</exec>
+		<exec executable="zip" dir="${eclipse.base}/qnx.photon.x86">
+			<arg line="-r -q ${zipargs} &apos;${archiveFullPath}&apos; . "/>
+		</exec>
+	</target>
+
+	<target name="cleanup.assembly">
+		<delete dir="${assemblyTempDir}"/>
+	</target>
+
+	<target name="customAssembly" if="customAssembly">
+		<ant antfile="${customAssembly}" target="${customTarget}" inheritAll="true"/>
+	</target>
+
+	<target name="generate.p2.metadata" if="generate.p2.metadata">
+		<property name="p2.append" value="true"/>
+		<property name="p2.compress" value="false"/>
+		<property name="p2.metadata.repo.name" value=""/>
+		<property name="p2.artifact.repo.name" value=""/>
+		<p2.generator  source="${eclipse.base}" append="${p2.append}" flavor="${p2.flavor}" compress="${p2.compress}" metadataRepository="${p2.metadata.repo}" artifactRepository="${p2.artifact.repo}" metadataRepositoryName="${p2.metadata.repo.name}" artifactRepositoryName="${p2.artifact.repo.name}" publishArtifacts="${p2.publish.artifacts}" site="${p2.category.site}" siteVersion="${p2.category.version}" p2OS="qnx" mode="incremental"		/>
+		<p2.generator  config="${eclipse.base}/qnx.photon.x86/${collectingFolder}" append="${p2.append}" flavor="${p2.flavor}" compress="${p2.compress}" metadataRepository="${p2.metadata.repo}" artifactRepository="${p2.artifact.repo}" metadataRepositoryName="${p2.metadata.repo.name}" artifactRepositoryName="${p2.artifact.repo.name}" launcherConfig="qnx_photon_x86" p2OS="qnx" publishArtifacts="${p2.publish.artifacts}" mode="incremental" root="${p2.root.name}" rootVersion="${p2.root.version}"		/>
+	</target>
+
+	<target name="runDirector.condition">
+		<condition property="runDirector.condition" value="true"		>
+			<or>
+				<isset property="runPackager"/>
+				<isset property="skipDirector"/>
+			</or>
+		</condition>
+	</target>
+	<target name="runDirector" depends="runDirector.condition" unless="runDirector.condition">
+		<ant antfile="${genericTargets}" target="runDirector" inheritAll="true">
+			<property name="p2.director.installPath" value="${eclipse.base}"/>
+			<property name="os" value="${os}"/>
+			<property name="p2.director.version" value="${p2.root.version}"/>
+			<property name="arch" value="${arch}"/>
+			<property name="p2.director.iu" value="${p2.root.name}"/>
+			<property name="ws" value="${ws}"/>
+			<property name="p2.repo" value="${p2.build.repo}"/>
+		</ant>
+
+	</target>
+
+</project>

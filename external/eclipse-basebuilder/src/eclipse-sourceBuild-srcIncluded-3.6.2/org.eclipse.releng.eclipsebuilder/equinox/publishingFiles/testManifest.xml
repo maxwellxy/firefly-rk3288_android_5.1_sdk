@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<topLevel>
+	<zipTypes>
+		
+		<zipType name="Equinox">			
+			<platform id="EBS" name="&lt;img src = &quot;repo.gif&quot;>All" fileName="equinox-SDK-@buildid@.zip">
+			</platform>			
+		</zipType>
+
+		<zipType name="Framework">
+			<platform id="system" name="All" fileName="@org.eclipse.osgi@.jar">
+			</platform>
+		</zipType>
+
+		<zipType name="ExtraBundles">
+			<platform id="app" name="All" fileName="@org.eclipse.equinox.app@.jar">
+			</platform>
+			<platform id="cm" name="All" fileName="@org.eclipse.equinox.cm@.jar">
+			</platform>	
+			<platform id="common" name="All" fileName="@org.eclipse.equinox.common@.jar">
+			</platform>
+			<platform id="device" name="All" fileName="@org.eclipse.equinox.device@.jar">
+			</platform>
+			<platform id="ds" name="All" fileName="@org.eclipse.equinox.ds@.jar">
+			</platform>			
+			<platform id="event" name="All" fileName="@org.eclipse.equinox.event@.jar">
+			</platform>
+			<platform id="io" name="All" fileName="@org.eclipse.equinox.io@.jar">
+			</platform>
+			<platform id="ip" name="All" fileName="@org.eclipse.equinox.ip@.jar">
+			</platform>
+			<platform id="equinoxlauncher" name="All" fileName="@org.eclipse.equinox.launcher@.jar">0
+			</platform>			
+			<platform id="log" name="All" fileName="@org.eclipse.equinox.log@.jar">
+			</platform>			
+			<platform id="jspjasper" name="All" fileName="@org.eclipse.equinox.jsp.jasper@.jar">0
+			</platform>					
+			<platform id="jspjasperregistry" name="All" fileName="@org.eclipse.equinox.jsp.jasper.registry@.jar">
+			</platform>					
+			<platform id="metatype" name="All" fileName="@org.eclipse.equinox.metatype@.jar">
+			</platform>
+			<platform id="preferences" name="All" fileName="@org.eclipse.equinox.preferences@.jar">
+			</platform>
+			<platform id="registry" name="All" fileName="@org.eclipse.equinox.registry@.jar">
+			</platform>			
+			<platform id="services" name="All" fileName="@org.eclipse.osgi.services@.jar">
+			</platform>			
+			<platform id="supplement" name="All" fileName="@org.eclipse.equinox.supplement@.jar">
+			</platform>			
+			<platform id="transforms" name="All" fileName="@org.eclipse.equinox.transforms.xslt@.jar">
+			</platform>
+			<platform id="transformshook" name="All" fileName="@org.eclipse.equinox.transforms.hook@.jar">
+			</platform>
+			<platform id="equinoxutil" name="All" fileName="@org.eclipse.equinox.util@.jar">
+			</platform>
+			<platform id="useradmin" name="All" fileName="@org.eclipse.equinox.useradmin@.jar">
+			</platform>			
+			<platform id="util" name="All" fileName="@org.eclipse.osgi.util@.jar">
+			</platform>			
+			<platform id="equinoxservletbridge" name="All" fileName="@org.eclipse.equinox.servletbridge@.jar">
+			</platform>			
+			<platform id="http" name="All" fileName="@org.eclipse.equinox.http@.jar">
+			</platform>
+			<platform id="httpjetty" name="All" fileName="@org.eclipse.equinox.http.jetty_1.1.100@.jar">
+			</platform>
+			<platform id="equinoxjetty" name="All" fileName="@org.eclipse.equinox.http.jetty_2.0.0@.jar">
+			</platform>
+			<platform id="httpjettyregistry" name="All" fileName="@org.eclipse.equinox.http.registry@.jar">
+			</platform>				
+			<platform id="httpservletbridge" name="All" fileName="@org.eclipse.equinox.http.servletbridge@.jar">
+			</platform>
+			<platform id="httpservlet" name="All" fileName="@org.eclipse.equinox.http.servlet_1.1.0@.jar">
+			</platform>
+			<platform id="wireadmin" name="All" fileName="@org.eclipse.equinox.wireadmin@.jar">
+			</platform>
+			<platform id="simpleconfigurator" name="All" fileName="@org.eclipse.equinox.simpleconfigurator@.jar">
+			</platform>
+			<platform id="concurrent" name="All" fileName="@org.eclipse.equinox.concurrent@.jar">
+			</platform>						
+		</zipType>	
+
+		<zipType name="Other">
+			<platform id="javaxservlet_2.4.0" name="All" fileName="@javax.servlet_2.4.0@.jar">
+			</platform>
+			<platform id="javaxservlet_2.5.0" name="All" fileName="@javax.servlet_2.5.0@.jar">
+			</platform>			
+			<platform id="javaxservletjsp" name="All" fileName="@javax.servlet.jsp@.jar">
+			</platform>
+			<platform id="apachecommonsel" name="All" fileName="@org.apache.commons.el@.jar">
+			</platform>					
+			<platform id="apachecomminglogging" name="All" fileName="@org.apache.commons.logging@.jar">
+			</platform>													
+			<platform id="mortbayjetty" name="All" fileName="@org.mortbay.jetty@.jar">
+			</platform>		
+			<platform id="mortbayjettyutil" name="All" fileName="@org.mortbay.jetty.util@.jar">
+			</platform>
+			<platform id="mortbayjettyserver" name="All" fileName="@org.mortbay.jetty.server@.jar">
+			</platform>											
+		 </zipType>	
+					
+		<zipType name="Incubator"> 	    								
+		 	<platform id="initializer" name="All &lt;img src = &quot;egg.gif&quot; >" fileName="@org.eclipse.equinox.initializer@.jar">
+			</platform>	
+			<platform id="equinoxjmxcommon" name="All &lt;img src = &quot;egg.gif&quot; > &lt;img src = &quot;repo.gif&quot;>" fileName="equinox-jmx-common-@buildid@.zip">
+			</platform>						
+			<platform id="equinoxjmxclient" name="All &lt;img src = &quot;egg.gif&quot; > &lt;img src = &quot;repo.gif&quot;>" fileName="equinox-jmx-client-@buildid@.zip">
+			</platform>
+			<platform id="equinoxjmxserver" name="All &lt;img src = &quot;egg.gif&quot; > &lt;img src = &quot;repo.gif&quot;>" fileName="equinox-jmx-server-@buildid@.zip">
+ 			</platform>	 								    		 									
+    	</zipType> 	
+    	   	    	    	
+    	<zipType name="Provisioning">
+			<platform id="provagentrcpwin32" name="Windows **early access**" fileName="equinox-p2-agent-@buildid@-win32.zip">			
+ 			</platform>
+			<platform id="provagentrcplinux" name="Linux **early access**" fileName="equinox-p2-agent-@buildid@-linux.tar.gz">			
+ 			</platform>	
+ 			<platform id="provagentrcpmac" name="MacOSX **early access**" fileName="equinox-p2-agent-@buildid@-macosx.tar.gz">			
+ 			</platform>		
+ 			<platform id="provinstallerwin" name="Windows **early access**" fileName="equinox.p2.installer-@buildid@-win32.win32.x86.zip">			
+ 			</platform>	
+ 			<platform id="provinstallerlin" name="Linux **early access**" fileName="equinox.p2.installer-@buildid@-linux.gtk.x86.tar.gz">			
+ 			</platform>
+ 			<platform id="provinstallermac" name="MacOSX **early access**" fileName="equinox.p2.installer-@buildid@-macosx.carbon.x86.tar.gz">			
+ 			</platform>
+ 			
+ 		</zipType>
+
+		<zipType name="Launchers">
+			<platform id="SW" name="Windows (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-win32.win32.x86.@buildid@.zip">
+			</platform>
+			<platform id="SW64" name="Windows (x86_64) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-win32.win32.x86_64.@buildid@.zip">
+			</platform>
+			<platform id="SLG2" name="Linux (x86/GTK 2) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-linux.gtk.x86.@buildid@.tar.gz">
+			</platform>
+			<platform id="SLG264" name="Linux (x86_64/GTK 2) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-linux.gtk.x86_64.@buildid@.tar.gz">
+			</platform>
+			<platform id="SLG2PPC" name="Linux (PPC/GTK 2) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-linux.gtk.ppc.@buildid@.tar.gz">
+			</platform>		
+			<platform id="SLG2PPC64" name="Linux (PPC64/GTK 2) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-linux.gtk.ppc64.@buildid@.tar.gz">
+			</platform>			
+			<platform id="SSG" name="Solaris 10 (SPARC/GTK 2)" fileName="launchers-solaris.gtk.sparc.@buildid@.zip">
+			</platform>	
+			<platform id="SSGX" name="Solaris 10 (x86/GTK 2)" fileName="launchers-solaris.gtk.x86.@buildid@.zip">
+			</platform>	
+			<platform id="SHPUX" name="HP-UX (ia64_32/Motif)" fileName="launchers-hpux.motif.ia64_32.@buildid@.zip">
+			</platform>		
+			<platform id="SAM" name="AIX (PPC/Motif)" fileName="launchers-aix.motif.ppc.@buildid@.zip">
+			</platform>			
+			<platform id="SAG" name="AIX (PPC/GTK 2)" fileName="launchers-aix.gtk.ppc64.@buildid@.zip">
+			</platform>			
+			<platform id="SMC" name="Mac OSX (Mac/Carbon) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-macosx.carbon.x86.@buildid@.tar.gz">
+			</platform>
+			<platform id="SMCC" name="Mac OSX (Mac/Cocoa) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-macosx.cocoa.x86.@buildid@.tar.gz">
+			</platform>
+			<platform id="SMCC64" name="Mac OSX (Mac/Cocoa/x86_64) (&lt;a href=&quot;http://www.eclipse.org/projects/project-plan.php?projectid=eclipse#target_environments&quot;>Supported Versions&lt;/a>)" fileName="launchers-macosx.cocoa.x86_64.@buildid@.tar.gz">
+			</platform>
+		</zipType>
+
+	</zipTypes>
+
+	<logFiles>
+		<logFile name="plugins\org.eclipse.osgi_*\@dot.bin.xml">
+			<effectedFile id="system"></effectedFile>
+		</logFile>
+	</logFiles>
+
+
+</topLevel>

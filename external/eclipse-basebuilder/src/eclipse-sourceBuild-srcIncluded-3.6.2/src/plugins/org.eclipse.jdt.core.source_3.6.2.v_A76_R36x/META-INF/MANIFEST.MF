@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.core;version="3.6.2.v_A76_R36x";
+ roots:=".,jdtCompilerAdaptersrc"
+Bundle-Version: 3.6.2.v_A76_R36x
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.core.source
+

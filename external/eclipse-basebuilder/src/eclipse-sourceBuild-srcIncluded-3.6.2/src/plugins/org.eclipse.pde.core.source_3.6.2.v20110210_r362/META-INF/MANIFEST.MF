@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %provider-name
+Eclipse-SourceBundle: org.eclipse.pde.core;version="3.6.2.v20110210_r3
+ 62";roots:="ant_tasks/pde-antsrc,."
+Bundle-Version: 3.6.2.v20110210_r362
+Bundle-Name: %name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.core.source
+

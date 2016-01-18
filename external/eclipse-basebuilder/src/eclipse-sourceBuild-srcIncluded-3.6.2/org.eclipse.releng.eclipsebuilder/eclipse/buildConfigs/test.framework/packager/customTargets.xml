@@ -1,0 +1,30 @@
+<project default="noDefault">
+
+<target name="noDefault" />
+
+<!-- set the root of the output file name -->
+<property name="archiveRoot" value="eclipse-test-framework-${buildId}"/>
+	
+<!-- Target to get the packaging map files for the components of interest
+     The files must be fetched into the downloadDirectory folder -->
+<target name="getMapFiles" unless="mapsFetched">
+	<copy file="${packagingInfo}/../../../../packaging.map" tofile="${downloadDirectory}/packaging.map" />
+</target>
+
+<target name="assemble.common.common.common.xml">
+	<antcall target="assembler">
+		<param name="archiveName" value="${archiveRoot}.zip"/>
+	</antcall>
+</target>
+	
+<target name="assembler">
+	<mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
+	<property name="archiveFullPath" value="${postingDirectory}/${buildLabel}/${archiveName}" />
+	<ant antfile="${assembleScriptName}" />
+	<checksum file="${archiveFullPath}" property="md5"/>
+	<checksum file="${archiveFullPath}" algorithm="SHA" property="sha"/>
+	<echo message="${md5} *${archiveName}" file="${postingDirectory}/${buildLabel}/checksum/${archiveName}.md5"/>
+	<echo message="${sha} *${archiveName}" file="${postingDirectory}/${buildLabel}/checksum/${archiveName}.sha1"/>
+</target>
+
+</project>

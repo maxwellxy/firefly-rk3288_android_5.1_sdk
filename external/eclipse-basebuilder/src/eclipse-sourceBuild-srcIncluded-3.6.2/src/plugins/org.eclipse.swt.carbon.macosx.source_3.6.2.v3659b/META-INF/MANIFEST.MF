@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.carbon.macosx;version="3.6.2.v36
+ 59b"
+Bundle-Version: 3.6.2.v3659b
+Eclipse-PlatformFilter: (& (osgi.ws=carbon) (osgi.os=macosx) (|(osgi.a
+ rch=x86)(osgi.arch=ppc)) )
+Bundle-Name: %fragmentName
+Bundle-Localization: fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.carbon.macosx.source
+

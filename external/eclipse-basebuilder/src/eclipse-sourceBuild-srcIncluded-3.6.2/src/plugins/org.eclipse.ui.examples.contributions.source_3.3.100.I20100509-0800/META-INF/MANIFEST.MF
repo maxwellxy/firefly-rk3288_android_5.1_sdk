@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %contributions.Activator.providerName
+Eclipse-SourceBundle: org.eclipse.ui.examples.contributions;version="3
+ .3.100.I20100509-0800";roots:="."
+Bundle-Version: 3.3.100.I20100509-0800
+Bundle-Name: %contributions.Activator.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.contributions.source
+

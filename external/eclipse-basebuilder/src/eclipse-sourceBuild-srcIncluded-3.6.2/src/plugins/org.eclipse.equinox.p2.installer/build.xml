@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.equinox.p2.installer" default="build.jars" basedir=".">
+
+	<property name="p2.build.repo" value="file:${buildDirectory}/buildRepo"/>
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="org.eclipse.equinox.p2.installer"/>
+	<property name="bundleVersion" value="1.0.200.v20100503a"/>
+	<property name="p2.publishonerror" value="false"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="compilation.prereq.log" value="${buildDirectory}/prereqErrors.log"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<property name="bundleJavacSource" value="1.5"/>
+	<property name="bundleJavacTarget" value="jsr14"/>
+	<condition property="bundleBootClasspath" value="${J2SE-1.5}"	>
+		<isset property="J2SE-1.5"/>
+	</condition>
+	<condition property="bundleBootClasspath" value="${J2SE-1.4}"	>
+		<isset property="J2SE-1.4"/>
+	</condition>
+	<condition property="bundleBootClasspath" value="${CDC-1.1/Foundation-1.1}"	>
+		<isset property="CDC-1.1/Foundation-1.1"/>
+	</condition>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+		<condition property="p2.publish.parts" value="true"		>
+			<istrue value="${p2.gathering}"/>
+		</condition>
+		<property name="compilation.problem.marker" value="${build.result.folder}/compilation.problem"/>
+		<condition property="compilation.problem.marker.exists" value="true"		>
+			<and>
+			<available file="${compilation.problem.marker}"/>
+			<isfalse value="${p2.publishonerror}"/>
+			</and>
+		</condition>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.equinox.p2.installer for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a.jar" basedir="${temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: org.eclipse.equinox.p2.installer @dot.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<mkdir dir="${build.result.folder}/@dot"/>
+		<path id="@dot.classpath">
+			<pathelement path="../org.eclipse.osgi/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi_3.6.2.R36x_v20110210/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi_3.6.2.R36x_v20110210/@dot"/>
+			<pathelement path="../org.eclipse.equinox.servletbridge.extensionbundle/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.servletbridge.extensionbundle_1.2.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.weaving.hook/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.weaving.hook_1.0.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.weaving.hook/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.weaving.hook_1.0.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.weaving.hook/@dot"/>
+			<pathelement path="../org.eclipse.equinox.transforms.hook/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.transforms.hook_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.transforms.hook/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.transforms.hook_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.transforms.hook/@dot"/>
+			<pathelement path="../org.eclipse.equinox.app/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app_1.3.1.R36x_v20100803/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.app_1.3.1.R36x_v20100803/@dot"/>
+			<pathelement path="../org.eclipse.osgi.services"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services_3.2.100.v20100503/."/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.osgi.services_3.2.100.v20100503/@dot"/>
+			<pathelement path="../javax.servlet_2.5.0.v200910301333.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry/runtime_registry_compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/runtime_registry_compatibility.jar"/>
+			<pathelement path="../org.eclipse.core.runtime.compatibility.registry/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/@dot"/>
+			<pathelement path="../org.eclipse.core.runtime.compatibility.registry/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/bin/"/>
+			<pathelement path="../org.eclipse.equinox.registry/runtime_registry_compatibility.jar"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/runtime_registry_compatibility.jar"/>
+			<pathelement path="../org.eclipse.equinox.registry/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.registry_3.5.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.core.jobs/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs_3.5.1.R36x_v20100824/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.jobs_3.5.1.R36x_v20100824/@dot"/>
+			<pathelement path="../org.eclipse.equinox.common/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common_3.6.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.common_3.6.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.director/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.director/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.core/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.core/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111/@dot"/>
+			<pathelement path="../org.eclipse.equinox.simpleconfigurator/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.simpleconfigurator/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.engine/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.engine/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201/@dot"/>
+			<pathelement path="../org.eclipse.equinox.preferences/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences_3.3.0.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.preferences_3.3.0.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.metadata/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.repository/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.repository/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.win32.x86/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.win32.x86/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.macosx/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx_1.100.100.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.security.macosx_1.100.100.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.equinox.security.macosx/@dot"/>
+			<pathelement path="../org.eclipse.ecf.filetransfer_4.0.0.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.ecf_3.1.0.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.ecf.ssl_1.0.100.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.equinox.concurrent/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.concurrent_1.0.100.v20100503/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.concurrent/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.concurrent_1.0.100.v20100503/@dot"/>
+			<pathelement path="../org.eclipse.ecf.identity_3.1.0.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.ecf.provider.filetransfer_3.1.0.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.ecf.provider.filetransfer.ssl_1.0.0.v20100906-1425.jar"/>
+			<pathelement path="../org.eclipse.core.net/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net_1.2.100.I20100511-0800/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net_1.2.100.I20100511-0800/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_64_1.0.100.I20100505-1245/@dot"/>
+			<pathelement path="../org.eclipse.core.net.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_64_1.1.0.I20100505-1245/@dot"/>
+			<pathelement path="../org.eclipse.core.net.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.linux.x86_1.1.100.R36x_v20100825-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.net.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.core.net.win32.x86_1.0.100.I20100511-0800/@dot"/>
+			<pathelement path="../org.eclipse.core.net.win32.x86/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.metadata.repository/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata.repository/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513/@dot"/>
+			<pathelement path="../org.sat4j.core_2.2.0.v20100429.jar"/>
+			<pathelement path="../org.sat4j.pb_2.2.0.v20100429.jar"/>
+			<pathelement path="../org.eclipse.equinox.p2.artifact.repository/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.artifact.repository/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901/@dot"/>
+			<pathelement path="../org.eclipse.equinox.p2.jarprocessor/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a/bin/"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.jarprocessor/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a/@dot"/>
+			<pathelement path="../org.eclipse.swt/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.solaris.sparc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.ppc64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.win32.win32.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.s390x/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.s390x_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.sparc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.photon.qnx.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.s390/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.s390_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.aix.ppc64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.aix.ppc64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.gtk.solaris.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.x86_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.cocoa.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.cocoa.macosx_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.aix.ppc/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.aix.ppc_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.cocoa.macosx.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.cocoa.macosx.x86_64_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.win32.wce_ppc.arm/@dot"/>
+			<pathelement path="../org.eclipse.swt.carbon.macosx/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.carbon.macosx_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.ia64_32_3.6.2.v3659b/@dot"/>
+			<pathelement path="../org.eclipse.swt.win32.win32.x86_64/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86_64_3.6.2.v3659c/@dot"/>
+			<pathelement path="../org.eclipse.swt.motif.linux.x86/@dot"/>
+			<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.linux.x86_3.6.2.v3659b/@dot"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${build.result.folder}/@dot" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}" errorProperty="compilation.error.occured"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="@dot.classpath" />
+			<src path="src/"			/>
+			<compilerarg value="@${basedir}/javaCompiler...args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"			/>
+			<compilerarg line="-log &apos;${build.result.folder}/@dot${logExtension}&apos;" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"			/>
+		</javac>
+		<antcall target="checkCompilationResults"/>
+		<!-- Copy necessary resources -->
+		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="src.zip" depends="init" unless="src.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<antcall target="zip.src.zip"/>
+	</target>
+	<target name="zip.src.zip">
+		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="copy.src.zip">
+		<copy todir="${source.destination.folder}/" failonerror="true" overwrite="true">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: org.eclipse.equinox.p2.installer.">
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+		<available property="@dot" file="${build.result.folder}/@dot"/>
+		<antcall target="@dot"/>
+	</target>
+
+	<target name="checkCompilationResults" if="compilation.error.occured">
+		<echo file="${compilation.problem.marker}" message="org.eclipse.equinox.p2.installer_1.0.200.v20100503a${line.separator}compilation.error.occured=${compilation.error.occured}"/>
+		<eclipse.logCompileError bundle="org.eclipse.equinox.p2.installer_1.0.200.v20100503a" log="${compilation.prereq.log}">
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.engine/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.engine_2.0.1.R36x_v20110201/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.metadata/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.metadata_2.0.1.R36x_v20101202/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.carbon.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.carbon.macosx_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security.win32.x86_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.linux.x86_1.1.100.R36x_v20100825-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.win32.x86_1.0.100.I20100511-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.win32.wce_ppc.arm/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.win32.wce_ppc.arm_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.metadata.repository/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.metadata.repository_1.1.0.v20100513/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.concurrent/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.concurrent_1.0.100.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.win32.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.win32.x86_64_1.0.100.I20100505-1245/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.registry/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.registry_3.5.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.solaris.sparc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.solaris.sparc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net.linux.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net.linux.x86_64_1.1.0.I20100505-1245/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.simpleconfigurator/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.simpleconfigurator_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.ppc64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.ppc64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.osgi.services/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.osgi.services_3.2.100.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.app/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.app_1.3.1.R36x_v20100803/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.artifact.repository/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.artifact.repository_1.1.1.R36x_v20100901/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.common/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.common_3.6.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.s390x/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.s390x_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.jobs/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.jobs_3.5.1.R36x_v20100824/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.win32.win32.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.win32.win32.x86_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.net/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.net_1.2.100.I20100511-0800/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.cocoa.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.cocoa.macosx_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.ppc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.win32.win32.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.win32.win32.x86_64_3.6.2.v3659c/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.solaris.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.solaris.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.repository/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.repository_2.0.2.R36x_v20110111-1500/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.preferences/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.preferences_3.3.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.transforms.hook/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.transforms.hook_1.0.200.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.hpux.ia64_32/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.hpux.ia64_32_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.security.macosx/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.security.macosx_1.100.100.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.weaving.hook/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.weaving.hook_1.0.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.core.runtime.compatibility.registry/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.core.runtime.compatibility.registry_3.3.0.v20100520/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.linux.s390/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.linux.s390_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.photon.qnx.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.photon.qnx.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.osgi/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.osgi_3.6.2.R36x_v20110210/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.director/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.director_2.0.3.R36x_v20101117-1018/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.solaris.sparc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.solaris.sparc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.linux.x86/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.linux.x86_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.cocoa.macosx.x86_64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.cocoa.macosx.x86_64_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.core/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.core_2.0.3.R36x_v20110111/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.jarprocessor/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.p2.jarprocessor_1.0.200.v20100503a/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.equinox.servletbridge.extensionbundle/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.equinox.servletbridge.extensionbundle_1.2.0.v20100503/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.motif.aix.ppc/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.motif.aix.ppc_3.6.2.v3659b/compilation.problem"/>
+			<include name="/builds/M201102101200/src/plugins/org.eclipse.swt.gtk.aix.ppc64/compilation.problem"/>
+			<include name="${pluginTemp}/org.eclipse.swt.gtk.aix.ppc64_3.6.2.v3659b/compilation.problem"/>
+		</eclipse.logCompileError>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="src.zip" file="${build.result.folder}/src.zip"/>
+		<antcall target="src.zip"/>
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts" unless="compilation.problem.marker.exists">
+		<mkdir dir="${build.result.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+		<copy todir="${build.result.folder}" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="META-INF/MANIFEST.MF"/>
+				<include name="plugin.xml"/>
+				<include name="fragment.xml"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${build.result.folder}" attributes="Eclipse-SourceReferences|scm:cvs:pserver:dev.eclipse.org:/cvsroot/rt:org.eclipse.equinox/p2/bundles/org.eclipse.equinox.p2.installer;tag=v20100503a" version="1.0.200.v20100503a"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${build.result.folder}"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="${build.result.folder}/@dot"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+		<eclipse.gatherBundle 
+		   metadataRepository="${p2.build.repo}"
+		   artifactRepository="${p2.build.repo}"
+		   buildResultFolder="${build.result.folder}"
+		   unpack="false"
+		   baseDirectory="${basedir}"
+		/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}/@dot">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" failonerror="true" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="plugin.xml"/>
+				<include name="META-INF/"/>
+				<include name="product_lg.gif"/>
+				<include name="about.html"/>
+				<include name="plugin.properties"/>
+			</fileset>
+		</copy>
+		<eclipse.versionReplacer path="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" attributes="Eclipse-SourceReferences|scm:cvs:pserver:dev.eclipse.org:/cvsroot/rt:org.eclipse.equinox/p2/bundles/org.eclipse.equinox.p2.installer;tag=v20100503a" version="1.0.200.v20100503a"/>
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="${build.result.folder}/@dot"/>
+			<param name="projectName" value="${bundleId}_${bundleVersion}"/>
+		</antcall>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" failonerror="false" overwrite="false"/>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+		</antcall>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<antcall target="copy.src.zip">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+		<copy todir="${source.destination.folder}" failonerror="false" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="about.html"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a" failonerror="false" overwrite="false">
+			<fileset dir="${build.result.folder}">
+				<include name="@dot${logExtension}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.equinox.p2.installer of all the zips, jars and logs created.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<delete file="${build.result.folder}/src.zip"/>
+		<delete file="${plugin.destination}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a.zip"/>
+		<delete dir="${temp.folder}"/>
+		<delete file="${compilation.problem.marker}" quiet="true"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/M201102101200/src/plugins/org.eclipse.equinox.p2.installer" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.equinox.p2.installer.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.equinox.p2.installer_1.0.200.v20100503a.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="apitools.generation" if="generateAPIDescription">
+		<apitooling.apigeneration  projectName="${projectName}" project="${projectLocation}" binary="${binary.folders}" target="${target.folder}" extramanifests="${extraManifests}"		/>
+	</target>
+
+</project>

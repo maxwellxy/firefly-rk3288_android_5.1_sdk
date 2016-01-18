@@ -1,0 +1,87 @@
+{
+{%if key is defined %}
+  "key": "{{key}}",
+{% endif %}
+  "manifest_version": 2,
+  "name": "ChromeVox",
+  "version": "{{set_version}}",
+  "description": "ChromeVox - Giving Voice to Chrome.",
+{% if is_guest_manifest == '1' %}
+  "incognito": "split",
+{% endif %}
+  "background": {
+{% if use_chromevox_next == '1' %}
+    "page": "cvox2/background/background.html"
+{% else %}
+    "page": "chromevox/background/background.html"
+{% endif %}
+  },
+  "permissions": [
+    "accessibilityPrivate",
+    "bookmarks",
+    "brailleDisplayPrivate",
+{% if use_chromevox_next == '1' %}
+    "commands.accessibility",
+{% endif %}
+    "commandLinePrivate",
+    "experimental",
+    "history",
+    "storage",
+    "systemPrivate",
+    "tabs",
+    "tts",
+    "virtualKeyboardPrivate",
+    "<all_urls>"
+  ],
+{% if use_chromevox_next == '0' %}
+  "content_scripts": [
+    {
+      "matches": [ "<all_urls>" ],
+      "exclude_globs": [ "chrome-extension://mndnfokpggljbaajbnioimlmbfngpief/chromevox/background/background.html" ],
+      "all_frames": true,
+      "js": [
+        "chromeVoxChromePageScript.js"
+      ]
+    }
+  ],
+{% endif %}
+"web_accessible_resources": [
+    "chromevox/injected/api.js",
+    "chromevox/injected/api_util.js",
+    "chromevox/injected/mathjax.js",
+    "chromevox/injected/mathjax_external_util.js"
+  ],
+{% if use_chromevox_next == '1' %}
+  "automation": {
+    "desktop": true
+  },
+  "commands": {
+    "nextElement": {
+      "description": "Moves to the next element",
+      "suggested_key": {
+        "chromeos": "Search+Shift+Right"
+      }
+    },
+    "previousElement": {
+      "description": "Moves to the previous element",
+      "suggested_key": {
+        "chromeos": "Search+Shift+Left"
+      }
+    },
+    "nextLine": {
+      "description": "Moves to the next line",
+      "suggested_key": {
+        "chromeos": "Search+Shift+Down"
+      }
+    },
+    "previousLine": {
+      "description": "Moves to the previous line",
+      "suggested_key": {
+        "chromeos": "Search+Shift+Up"
+      }
+    }
+  },
+{% endif %}
+  "options_page": "chromevox/background/options.html",
+  "default_locale": "en"
+}

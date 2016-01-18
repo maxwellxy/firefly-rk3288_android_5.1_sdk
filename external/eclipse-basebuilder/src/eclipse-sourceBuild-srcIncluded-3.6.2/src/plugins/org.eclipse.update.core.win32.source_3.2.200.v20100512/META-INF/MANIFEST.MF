@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.update.core.win32;version="3.2.200.v
+ 20100512"
+Bundle-Version: 3.2.200.v20100512
+Eclipse-PlatformFilter: (osgi.os=win32)
+Bundle-Name: %fragmentNameWin
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.update.core.win32.source
+

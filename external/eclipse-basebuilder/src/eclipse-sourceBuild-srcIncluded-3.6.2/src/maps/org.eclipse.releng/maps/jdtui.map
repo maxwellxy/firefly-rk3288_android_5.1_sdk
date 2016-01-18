@@ -1,0 +1,23 @@
+!***************  JDT UI CONTRIBUTION  ******************************************************** 
+plugin@org.eclipse.search=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.search.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.ltk.core.refactoring=r362_v20101117-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ltk.core.refactoring.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ltk.ui.refactoring=v20100526-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.ltk.ui.refactoring.tests=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt=r361_v20100714-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt.core.manipulation=v20100520-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt.ui=r362_v20110203,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.ui.tests=r361_v20100818-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.ui.tests.refactoring=v20100526-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.jdt.junit=r361_v20100825-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.junit.core=r361_v20100825-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.junit.runtime=v20100526-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.jdt.junit4.runtime=v20100526-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.junit4=v20100525,kmoir@dev.eclipse.org:/cvsroot/eclipse,

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.pde.junit.runtime;version="3.4.100.v
+ 20100601";roots:="."
+Bundle-Version: 3.4.100.v20100601
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.junit.runtime.source
+

@@ -1,0 +1,10 @@
+!***************  COMPARE CONTRIBUTION  ******************************************************** 
+
+plugin@org.eclipse.compare=R36x_v20100929-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.compare/plugins/org.eclipse.compare
+plugin@org.eclipse.compare.core=R36x_v20100929-0800,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.compare/plugins/org.eclipse.compare.core
+plugin@org.eclipse.compare.win32=R36x_v20101103-0618,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.compare/plugins/org.eclipse.compare.win32
+
+plugin@org.eclipse.compare.examples=I20100505-1245,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.compare.examples.xml=I20100505-1245,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.compare.tests=I20100505-1245,kmoir@dev.eclipse.org:/cvsroot/eclipse,

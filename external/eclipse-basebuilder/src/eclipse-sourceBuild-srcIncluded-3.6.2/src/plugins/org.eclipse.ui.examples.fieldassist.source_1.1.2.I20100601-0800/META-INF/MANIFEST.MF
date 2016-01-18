@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Eclipse-SourceBundle: org.eclipse.ui.examples.fieldassist;version="1.1
+ .2.I20100601-0800";roots:="."
+Bundle-Version: 1.1.2.I20100601-0800
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.fieldassist.source
+

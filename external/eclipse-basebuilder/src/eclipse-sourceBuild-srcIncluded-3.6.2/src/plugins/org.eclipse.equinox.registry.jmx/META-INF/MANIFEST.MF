@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resource Monitoring Equinox Registry Extensions (Incubation)
+Bundle-SymbolicName: org.eclipse.equinox.registry.jmx;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.equinox.internal.registry.jmx.Activator
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ CDC-1.0/Foundation-1.0,
+ J2SE-1.3
+Import-Package: javax.management,
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.jmx.server,
+ org.osgi.framework,
+ org.osgi.util.tracker

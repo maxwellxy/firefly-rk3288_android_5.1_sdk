@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.update.core;version="3.2.402.R36x_v2
+ 0100629";roots:="."
+Bundle-Version: 3.2.402.R36x_v20100629
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.update.core.source
+

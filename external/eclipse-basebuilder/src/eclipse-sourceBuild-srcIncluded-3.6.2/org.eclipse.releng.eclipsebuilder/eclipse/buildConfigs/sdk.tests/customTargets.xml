@@ -1,0 +1,319 @@
+<project name="Build specific targets and properties" default="noDefault">
+
+	<property name="postingDirectory" value="${buildDirectory}" />
+	<property name="archiveName" value="eclipse-junit-tests-${buildId}.zip" />
+	<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveName}" />
+	<property name="mapsRoot" value="${buildDirectory}/maps/org.eclipse.releng/maps" />
+
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- Add on <ant> task for each top level element being built. -->
+	<!-- ===================================================================== -->
+	<available property="allElementsFile" file="${builder}/allElements.xml" value="${builder}/allElements.xml" />
+	<property name="allElementsFile" location="${eclipse.pdebuild.templates}/headless-build/allElements.xml" />
+
+	<import file="${allElementsFile}" />
+	<target name="allElements">
+		<antcall target="allElementsDelegator" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- ===================================================================== -->
+	<target name="getBaseComponents" depends="checkLocalBase" unless="skipBase">
+		<get src="${eclipseBaseURL}" dest="${buildDirectory}/../temp-base.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-base.zip" />
+	</target>
+
+	<target name="checkLocalBase">
+		<available file="${base}" property="skipBase" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for mapsCheckoutTag as desired. -->
+	<!-- ===================================================================== -->
+	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
+		<property name="mapsCheckoutTag" value="${mapVersionTag}" />
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+	</target>
+
+	<target name="checkLocalMaps">
+		<available property="skipMaps" file="${buildDirectory}/maps" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<cvs dest="${buildDirectory}/maps/${mapsRoot}" command="tag ${mapsTagTag}" />
+	</target>
+
+	<target name="compareMapFiles" if="compareMaps">
+		<property file="${mapTag.properties}" />
+		<property name="cvsDiffFile" value="${buildDirectory}/cvsDiff.txt" />
+		<cvs cvsRoot="${mapCvsRoot}" dest="${buildDirectory}/maps" command="diff -w -r ${lastMapTag}" output="${cvsDiffFile}" />
+		<modifiedMaps mapDiffFile="${cvsDiffFile}" />
+	</target>
+
+	<!-- ===================================================================== -->
+
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<target name="gatherLogs">
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+		<unzip dest="${postingDirectory}/${buildLabel}/compilelogs" overwrite="true">
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/*.log.zip" />
+			</fileset>
+		</unzip>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+		<antcall target="getBaseComponents" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch" if="performance.base">
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${localmirror}" token="download.eclipse.org" />
+		<replace dir="${buildDirectory}/maps/org.eclipse.releng/maps" value="${cvsuser}" token=":pserver:anonymous" />
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+		<property name="eclipse.base" value="${downloadUrl}/eclipse-SDK-${testedBuildId}-win32.zip" />
+		<property name="linux.base" value="${downloadUrl}/eclipse-SDK-${testedBuildId}-linux-gtk.tar.gz" />
+		<get src="${eclipse.base}" dest="${buildDirectory}/${buildLabel}/eclipse-SDK-${buildId}-win32.zip" usetimestamp="true" />
+		<parallel>
+			<get src="${linux.base}" dest="${buildDirectory}/${buildLabel}/eclipse-SDK-${buildId}-linux-gtk.tar.gz" usetimestamp="true" />
+			<unzip src="${buildDirectory}/${buildLabel}/eclipse-SDK-${buildId}-win32.zip" dest="${buildDirectory}" />
+		</parallel>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+		<replace dir="${buildDirectory}/plugins" value="${buildId}" token="@buildid@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the repositories are being processed -->
+	<!-- ===================================================================== -->
+	<target name="preProcessRepos">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the repositories have been processed -->
+	<!-- ===================================================================== -->
+	<target name="postProcessRepos">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+		<replace dir="${buildDirectory}/plugins" value="${buildId}" token="@build@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running package. -->
+	<!-- ===================================================================== -->
+	<target name="prePackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running package. -->
+	<!-- ===================================================================== -->
+	<target name="postPackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the build is done. -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+		<antcall target="gatherLogs" />
+		<antcall target="packageTestFramework" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to test the build results -->
+	<!-- ===================================================================== -->
+	<target name="test">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to publish the build results -->
+	<!-- ===================================================================== -->
+	<target name="publish">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Helper targets -->
+	<!-- ===================================================================== -->
+
+	<target name="packageTestFramework">
+		<!--package automated test framework used in Eclipse builds-->
+		<property name="workingDirectory" value="${buildDirectory}/test.assembly" />
+		<copy todir="${workingDirectory}/eclipse">
+			<fileset dir="${buildDirectory}/buildRepoTests" />
+		</copy>
+
+
+		<!-- create top level testing directory-->
+		<mkdir dir="${workingDirectory}/eclipse-testing" />
+
+		<!--eclipse.home is relative to the scripts directory in the org.eclipse.pde.build plugin.  Assume the plugins used in the classpath are in the same directory as org.eclipse.pde.build-->
+		<property name="eclipse.home" value="../../.." />
+
+		<!--copy label.properties file for use in performance testing-->
+		<copy file="${buildDirectory}/label.properties" tofile="${workingDirectory}/eclipse-testing/label.properties" />
+
+		<property name="test.properties" value="${workingDirectory}/eclipse-testing/test.properties" />
+
+		<!--generate test.properties.  Custom Ant task contributed by org.eclipse.build.tools in org.eclipse.releng.basebuilder.-->
+		<generateTestProperties buildDirectory="${buildDirectory}" featureId="org.eclipse.sdk.tests" outputFile="${test.properties}" />
+
+		<!--load the property file created with the directory names for all test plugins-->
+		<property file="${test.properties}" />
+
+		<!--copy comparator log to test directory-->
+		<copy file="${buildlogs}/comparatorlog.txt" todir="${workingDirectory}/eclipse-testing" failonerror="false"/>	
+
+		<!--create properties file for use in equinoxp2 tests -->
+		<property name="equinoxp2tests.properties" value="${workingDirectory}/eclipse-testing/equinoxp2tests.properties" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.platform.archive.win32" value="c:\\buildtest\\${buildId}\\eclipse-testing\\eclipse-platform-${buildId}-win32.zip" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.platform.archive.linux" value="/buildtest/${buildId}/eclipse-testing/eclipse-platform-${buildId}-linux-gtk.tar.gz" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.platform.archive.macosx" value="/Users/ibmemployee/buildtest/${buildId}/eclipse-testing/eclipse-platform-${buildId}-macosx-cocoa.tar.gz" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.win32" value="c:\\buildtest\\${buildId}\\eclipse-testing\\eclipse-platform-3.5-win32.zip" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.linux" value="/buildtest/${buildId}/eclipse-testing/eclipse-platform-3.5-linux-gtk.tar.gz" />
+		<property name="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.macosx" value="/Users/ibmemployee/buildtest/${buildId}/eclipse-testing/eclipse-platform-3.5-macosx-cocoa.tar.gz" />
+		<propertyfile file="${equinoxp2tests.properties}" comment="Properties required by equinox p2 tests">
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.platform.archive.win32" value="${org.eclipse.equinox.p2.reconciler.tests.platform.archive.win32}" />
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.platform.archive.linux" value="${org.eclipse.equinox.p2.reconciler.tests.platform.archive.linux}" />
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.platform.archive.macosx" value="${org.eclipse.equinox.p2.reconciler.tests.platform.archive.macosx}" />
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.win32" value="${org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.win32}" />
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.linux" value="${org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.linux}" />
+			<entry key="org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.macosx" value="${org.eclipse.equinox.p2.reconciler.tests.35.platform.archive.macosx}" />
+			<entry key="org.eclipse.equinox.p2.tests.current.build.repo" value="${org.eclipse.equinox.p2.tests.current.build.repo}" />
+			<entry key="org.eclipse.equinox.p2.tests.last.release.build.repo" value="${org.eclipse.equinox.p2.tests.last.release.build.repo}" />
+		</propertyfile>
+
+		<!-- rezip the JUnit plugin tests -->
+		<exec dir="${workingDirectory}/eclipse" executable="zip">
+			<arg line="-r -q ${workingDirectory}/eclipse-junit-tests-${buildId}.zip ." />
+		</exec>
+
+		<delete dir="${workingDirectory}/eclipse" includeEmptyDirs="true" />
+
+		<!--Copy javadoc logs to the testing directory for use by relEng tests-->
+		<copy file="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/doc.bin.log" tofile="${workingDirectory}/eclipse-testing/org.eclipse.platform.doc.isv.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/doc.bin.log" tofile="${workingDirectory}/eclipse-testing/org.eclipse.jdt.doc.isv.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/jdtapt.doc.bin.log" tofile="${workingDirectory}/eclipse-testing/org.eclipse.jdt.apt.javadoc.txt" failonerror="false" />
+		<copy file="${buildDirectory}/plugins/org.eclipse.pde.doc.user/doc.bin.log" tofile="${workingDirectory}/eclipse-testing/org.eclipse.pde.doc.user.javadoc.txt" failonerror="false" />
+
+		<!--Copy scripts and doc used in the automated testing to the testing directory-->
+		<copy todir="${workingDirectory}/eclipse-testing">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.test" includes="testframework.html" />
+		</copy>
+		<copy todir="${workingDirectory}/eclipse-testing">
+			<fileset dir="${builderDirectory}/testScripts" />
+		</copy>
+
+		<!--convert .bat files to dos just in case-->
+		<condition property="${unix2dos}" value="/usr/local/bin/unix2dos">
+			<equals arg1="${hudson}" arg2="true" />
+		</condition>
+		<property name="unix2dos" value="unix2dos" />
+		<exec executable="${unix2dos}" dir="${workingDirectory}/eclipse-testing">
+			<arg line="runtests.bat" />
+		</exec>
+		<!--convert runtests files to unix just in case-->
+		<exec executable="dos2unix" dir="${workingDirectory}/eclipse-testing">
+			<arg line="runtests" />
+		</exec>
+
+		<move file="${workingDirectory}/eclipse-junit-tests-${buildId}.zip" todir="${workingDirectory}/eclipse-testing" />
+
+		<!--set execute permission on *nix shell script-->
+		<chmod file="${workingDirectory}/eclipse-testing/runtests" perm="755" />
+		<property name="postingDirectory" value="${buildDirectory}" />
+
+		<!--create zip file of the automated testing framework-->
+		<exec dir="${workingDirectory}" executable="zip">
+			<arg line="-r -q ${postingDirectory}/${buildLabel}/eclipse-Automated-Tests-${buildId}.zip eclipse-testing" />
+		</exec>
+		<mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-Automated-Tests-${buildId}.zip" property="md5" />
+		<checksum file="${postingDirectory}/${buildLabel}/eclipse-Automated-Tests-${buildId}.zip" algorithm="SHA" property="sha" />
+		<echo message="${md5} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-Automated-Tests-${buildId}.zip.md5" />
+		<echo message="${sha} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/eclipse-Automated-Tests-${buildId}.zip.sha1" />
+		<delete file="${buildDirectory}/${buildLabel}/eclipse-junit-tests-${buildId}.zip" />
+		<!-- get to store previous release's platform zips -->
+		<exec executable="/usr/bin/wget" dir="${previousPlatformZips}" failonerror="false">
+			<arg line="-q -O ${previousPlatformZips}/eclipse-platform-3.5-win32.zip http://archive.eclipse.org/eclipse/downloads/drops/R-3.5-200906111540/eclipse-platform-3.5-win32.zip" />
+		</exec>
+		<exec executable="/usr/bin/wget" dir="${previousPlatformZips}" failonerror="false">
+			<arg line="-q -O ${previousPlatformZips}/eclipse-platform-3.5-linux-gtk.tar.gz http://archive.eclipse.org/eclipse/downloads/drops/R-3.5-200906111540/eclipse-platform-3.5-linux-gtk.tar.gz" />
+		</exec>
+		<exec executable="/usr/bin/wget" dir="${previousPlatformZips}" failonerror="false">
+			<arg line="-q -O ${previousPlatformZips}/eclipse-platform-3.5-macosx-cocoa.tar.gz http://archive.eclipse.org/eclipse/downloads/drops/R-3.5-200906111540/eclipse-platform-3.5-macosx-cocoa.tar.gz" />
+		</exec>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+</project>

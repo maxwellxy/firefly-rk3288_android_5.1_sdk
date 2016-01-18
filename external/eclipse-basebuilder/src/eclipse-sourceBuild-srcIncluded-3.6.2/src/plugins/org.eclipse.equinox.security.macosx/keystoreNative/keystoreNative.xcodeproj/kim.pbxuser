@@ -1,0 +1,359 @@
+// !$*UTF8*$!
+{
+	00E6828EFEC88D1A11DB9C8B /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 6A9FA6570246BA6C0CC91562 /* keystoreNative */;
+		activeTarget = EB9FD8610AEECCF5008E157E /* keystoreNative */;
+		addToTargets = (
+			4CEBA78E08679EF10015D03E /* JNILib */,
+		);
+		breakpoints = (
+			3BC514A90DBF825600B1EEFC /* keystoreNative.java:14 */,
+			3BC515130DBF8DD500B1EEFC /* keystoreNativejnilib.c:72 */,
+		);
+		codeSenseManager = 0AB364DB0B2F66FD00788B6C /* Code sense */;
+		executables = (
+			6A9FA6570246BA6C0CC91562 /* keystoreNative */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					131,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					864,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					203,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 251064692;
+			PBXWorkspaceStateSaveDate = 251064692;
+		};
+		perUserProjectItems = {
+			3B0258160EF6F33B007501E6 /* PBXTextBookmark */ = 3B0258160EF6F33B007501E6 /* PBXTextBookmark */;
+			3B0258170EF6F33B007501E6 /* PBXTextBookmark */ = 3B0258170EF6F33B007501E6 /* PBXTextBookmark */;
+			3BC514B80DBF830E00B1EEFC /* PBXTextBookmark */ = 3BC514B80DBF830E00B1EEFC /* PBXTextBookmark */;
+			3BC514B90DBF830E00B1EEFC /* PBXTextBookmark */ = 3BC514B90DBF830E00B1EEFC /* PBXTextBookmark */;
+			3BC515DD0DBFB03100B1EEFC /* PBXTextBookmark */ = 3BC515DD0DBFB03100B1EEFC /* PBXTextBookmark */;
+			3BC515E50DBFB03100B1EEFC /* PBXTextBookmark */ = 3BC515E50DBFB03100B1EEFC /* PBXTextBookmark */;
+			3BC516030DBFBB3C00B1EEFC /* PBXTextBookmark */ = 3BC516030DBFBB3C00B1EEFC /* PBXTextBookmark */;
+			3BC5163A0DBFCA2B00B1EEFC /* PBXTextBookmark */ = 3BC5163A0DBFCA2B00B1EEFC /* PBXTextBookmark */;
+			3BC5163B0DBFCA2B00B1EEFC /* PBXTextBookmark */ = 3BC5163B0DBFCA2B00B1EEFC /* PBXTextBookmark */;
+			3BC516480DBFCC3400B1EEFC /* PBXTextBookmark */ = 3BC516480DBFCC3400B1EEFC /* PBXTextBookmark */;
+			3BC516490DBFCC3400B1EEFC /* PBXTextBookmark */ = 3BC516490DBFCC3400B1EEFC /* PBXTextBookmark */;
+		};
+		sourceControlManager = 0AB364DA0B2F66FD00788B6C /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	0A3CC35E0B94BB8800F6BA26 /* java */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = java;
+		path = /usr/bin/java;
+		sourceTree = "<absolute>";
+	};
+	0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1014, 1904}}";
+			sepNavSelRange = "{3486, 0}";
+			sepNavVisRange = "{2158, 1463}";
+			sepNavWindowFrame = "{{395, 224}, {919, 634}}";
+		};
+	};
+	0AB364DA0B2F66FD00788B6C /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	0AB364DB0B2F66FD00788B6C /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	3B0258160EF6F33B007501E6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		name = "keystoreNativejnilib.c: 7";
+		rLen = 0;
+		rLoc = 380;
+		rType = 0;
+		vrLen = 1065;
+		vrLoc = 695;
+	};
+	3B0258170EF6F33B007501E6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		name = "keystoreNativejnilib.c: 85";
+		rLen = 0;
+		rLoc = 3486;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 2158;
+	};
+	3BC514A50DBF825400B1EEFC /* keystoreNative.java */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.java;
+		name = keystoreNative.java;
+		path = /Users/kim/keystoreNative/src/keystoreNative.java;
+		sourceTree = "<group>";
+	};
+	3BC514A90DBF825600B1EEFC /* keystoreNative.java:14 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 3BC514A50DBF825400B1EEFC /* keystoreNative.java */;
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 14;
+		modificationTime = 230662847.530626;
+		state = 2;
+	};
+	3BC514B80DBF830E00B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		name = "keystoreNativejnilib.c: 10";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 53;
+		vrLoc = 159;
+	};
+	3BC514B90DBF830E00B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3BC514BA0DBF830E00B1EEFC /* keystoreNative.java */;
+		name = "keystoreNative.java: 29";
+		rLen = 0;
+		rLoc = 1104;
+		rType = 0;
+		vrLen = 200;
+		vrLoc = 786;
+	};
+	3BC514BA0DBF830E00B1EEFC /* keystoreNative.java */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.java;
+		name = keystoreNative.java;
+		path = /Users/kim/keystoreNative/src/keystoreNative.java;
+		sourceTree = "<absolute>";
+	};
+	3BC514BE0DBF830E00B1EEFC /* keystoreNative.java */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.java;
+		name = keystoreNative.java;
+		path = /Users/kim/keystoreNative/src/keystoreNative.java;
+		sourceTree = "<absolute>";
+	};
+	3BC515130DBF8DD500B1EEFC /* keystoreNativejnilib.c:72 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		functionName = "getPassword()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 72;
+		modificationTime = 230662847.530743;
+		state = 1;
+	};
+	3BC515DD0DBFB03100B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = EB9FD8720AEECD83008E157E /* build.xml */;
+		name = "build.xml: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 383;
+		vrLoc = 0;
+	};
+	3BC515E50DBFB03100B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = EB9FD8720AEECD83008E157E /* build.xml */;
+		name = "build.xml: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 383;
+		vrLoc = 0;
+	};
+	3BC515FD0DBFB0EB00B1EEFC /* keystoreNative.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {488, 966}}";
+			sepNavSelRange = "{1551, 0}";
+			sepNavVisRange = "{0, 377}";
+			sepNavWindowFrame = "{{107, 155}, {919, 634}}";
+		};
+	};
+	3BC516030DBFBB3C00B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3BC514BE0DBF830E00B1EEFC /* keystoreNative.java */;
+		name = "keystoreNative.java: 33";
+		rLen = 0;
+		rLoc = 1104;
+		rType = 0;
+		vrLen = 333;
+		vrLoc = 627;
+	};
+	3BC5163A0DBFCA2B00B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3BC515FD0DBFB0EB00B1EEFC /* keystoreNative.h */;
+		name = "keystoreNative.h: 41";
+		rLen = 0;
+		rLoc = 1551;
+		rType = 0;
+		vrLen = 377;
+		vrLoc = 0;
+	};
+	3BC5163B0DBFCA2B00B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 3BC515FD0DBFB0EB00B1EEFC /* keystoreNative.h */;
+		name = "keystoreNative.h: 41";
+		rLen = 0;
+		rLoc = 1551;
+		rType = 0;
+		vrLen = 377;
+		vrLoc = 0;
+	};
+	3BC516480DBFCC3400B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		name = "keystoreNativejnilib.c: 51";
+		rLen = 0;
+		rLoc = 1963;
+		rType = 0;
+		vrLen = 191;
+		vrLoc = 1075;
+	};
+	3BC516490DBFCC3400B1EEFC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0A603B8B0B913C8D009D4747 /* keystoreNativejnilib.c */;
+		name = "keystoreNativejnilib.c: 85";
+		rLen = 0;
+		rLoc = 3486;
+		rType = 0;
+		vrLen = 1609;
+		vrLoc = 1945;
+	};
+	4CEBA78E08679EF10015D03E /* JNILib */ = {
+		activeExec = 0;
+	};
+	6A9FA6570246BA6C0CC91562 /* keystoreNative */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+			YES,
+		);
+		argumentStrings = (
+			"-cp keystoreNative.jar keystoreNative",
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				displayName = "Executable Runner";
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+			"PBXLSLaunchAction-1" = {
+				PBXLSLaunchAction = 1;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXJavaDebuggingNativeLaunchConfig;
+				displayName = "Java Debugger";
+				identifier = com.apple.Xcode.launch.JavaDebugNativeConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 0A3CC35E0B94BB8800F6BA26 /* java */;
+		libgmallocEnabled = 0;
+		name = keystoreNative;
+		sourceDirectories = (
+		);
+		startupPath = dist;
+	};
+	EB9FD8610AEECCF5008E157E /* keystoreNative */ = {
+		activeExec = 0;
+	};
+	EB9FD8720AEECD83008E157E /* build.xml */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 1288}}";
+			sepNavSelRange = "{2402, 5}";
+			sepNavVisRange = "{1635, 1940}";
+			sepNavVisRect = "{{0, 8}, {847, 783}}";
+			sepNavWindowFrame = "{{752, 39}, {886, 839}}";
+		};
+	};
+}

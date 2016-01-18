@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.core.contenttype;version="3.4.100.v2
+ 0100505-1235";roots:="."
+Bundle-Version: 3.4.100.v20100505-1235
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.core.contenttype.source
+

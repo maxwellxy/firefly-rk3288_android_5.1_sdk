@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.sdk"
+      label="%featureName"
+      version="3.6.2.qualifier"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/eclipse/updates/3.6"/>
+      <discovery label="%updateSiteName" url="http://download.eclipse.org/eclipse/updates/3.6"/>
+      <discovery label="%secondaryUpdateSiteName" url="http://download.eclipse.org/releases/helios"/>
+   </url>
+
+   <includes
+         id="org.eclipse.platform"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.platform.source"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.cvs"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.cvs.source"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jdt"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jdt.source"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.pde"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.pde.source"
+         version="0.0.0"/> 
+ 
+   <includes
+         id="org.eclipse.help"
+         version="0.0.0"/>
+         
+   <includes
+         id="org.eclipse.help.source"
+         version="0.0.0"/>
+ 
+   <plugin
+         id="org.eclipse.sdk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

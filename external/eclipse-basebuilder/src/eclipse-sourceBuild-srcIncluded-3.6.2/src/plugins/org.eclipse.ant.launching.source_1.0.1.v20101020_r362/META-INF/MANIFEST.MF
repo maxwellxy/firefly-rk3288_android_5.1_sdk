@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.ant.launching;version="1.0.1.v201010
+ 20_r362";roots:="lib/antdebugsrc,.,lib/remotesrc,lib/loggerssrc"
+Bundle-Version: 1.0.1.v20101020_r362
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ant.launching.source
+

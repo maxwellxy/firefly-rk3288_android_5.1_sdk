@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %provider_name
+Eclipse-SourceBundle: org.eclipse.ui.intro.universal;version="3.2.402.
+ r36_v20100702";roots:="universalsrc"
+Bundle-Version: 3.2.402.r36_v20100702
+Bundle-Name: %plugin_name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.intro.universal.source
+

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %Plugin.providerName
+Eclipse-SourceBundle: org.eclipse.ui.examples.readmetool;version="3.3.
+ 100.I20100509-0800";roots:="readmetoolsrc"
+Bundle-Version: 3.3.100.I20100509-0800
+Bundle-Name: %Plugin.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.examples.readmetool.source
+

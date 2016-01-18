@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.team.examples.filesystem;version="3.
+ 4.100.I20100526-0800";roots:="teamfilesystemsrc"
+Bundle-Version: 3.4.100.I20100526-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.team.examples.filesystem.source
+

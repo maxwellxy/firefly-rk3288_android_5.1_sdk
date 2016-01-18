@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.compare;version="3.5.101.R36x_v20100
+ 929-0800";roots:="."
+Bundle-Version: 3.5.101.R36x_v20100929-0800
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.compare.source
+

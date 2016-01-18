@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resource Monitoring VM Extensions (Incubation)
+Bundle-SymbolicName: org.eclipse.equinox.jmx.vm;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Import-Package: javax.management,
+ javax.management.remote,
+ org.eclipse.core.runtime; common=split,
+ org.eclipse.equinox.jmx.common,
+ org.eclipse.equinox.jmx.common.util,
+ org.eclipse.equinox.jmx.server,
+ org.eclipse.osgi.util,
+ org.osgi.framework
+Bundle-Vendor: Eclipse.org
+Eclipse-LazyStart: true
+Bundle-Activator: org.eclipse.equinox.jmx.internal.vm.Activator
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="transport" name="JMX Transport" schema="schema/transport.exsd"/>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.equinox.jmx.internal.client.ui.ClientPerspectiveFactory"
+            fixed="true"
+            icon="icons/perspective.gif"
+            id="org.eclipse.equinox.jmx.client.ui.ClientPerspectiveFactory"
+            name="%clientPerspectiveName"/>
+   </extension>
+   <!-- Perspective extensions -->
+    <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.eclipse.equinox.jmx.client.ui.ClientPerspectiveFactory">
+    	 	 <!-- Load perspective specific action set -->
+         <actionSet id="org.eclipse.equinox.jmx.client.ui.actions.ClientActionSet"/>
+      </perspectiveExtension>
+   </extension>
+   <!-- UI Action sets -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Manage JMX Connections"
+            id="org.eclipse.equinox.jmx.client.ui.actions.ClientActionSet"
+            label="%connectionActionSet"
+            visible="false">
+         <menu
+               id="jmxclient.main"
+               label="%connectionMenu"
+               path="additions">
+            <separator name="group1"/>
+         </menu>
+         <action
+               class="org.eclipse.equinox.jmx.internal.client.ui.actions.NewConnectionAction"
+               id="org.eclipse.equinox.jmx.client.ui.actions.NewConnectionAction"
+               label="%newConnectionAction"
+               menubarPath="jmxclient.main/group1"
+               style="push"/>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.eclipse.equinox.jmx.internal.client.ui.contributionsview.ContributionsViewPart"
+            icon="icons/contributions_view.gif"
+            id="org.eclipse.equinox.jmx.client.ui.contributionsview"
+            name="%contributionsViewName">
+      </view>
+      <view
+            allowMultiple="false"
+            class="org.eclipse.equinox.jmx.internal.client.ui.mbeaninfoview.MBeanInfoViewPart"
+            icon="icons/contribution_desc_view.gif"
+            id="org.eclipse.equinox.jmx.client.ui.mbeaninfoview"
+            name="%mbeanInfoViewName"/>
+      <view
+            allowMultiple="false"
+            class="org.eclipse.equinox.jmx.internal.client.ui.invocationView.InvocationView"
+            icon="icons/perspective.gif"
+            id="org.eclipse.equinox.jmx.client.ui.invocationView"
+            name="Invocation View"/>
+   </extension>
+  
+ </plugin>

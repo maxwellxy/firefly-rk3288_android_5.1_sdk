@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.examples.layouts;version="3.1.10
+ 0.v3659b";roots:="layoutssrc"
+Bundle-Version: 3.1.100.v3659b
+Bundle-Name: %plugin.SWTLayoutExample.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.examples.layouts.source
+

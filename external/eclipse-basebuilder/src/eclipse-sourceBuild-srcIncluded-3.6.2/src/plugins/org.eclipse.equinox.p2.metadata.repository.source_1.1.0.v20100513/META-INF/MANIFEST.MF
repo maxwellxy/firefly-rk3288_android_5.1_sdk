@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.p2.metadata.repository;versi
+ on="1.1.0.v20100513";roots:=".,ant_tasks/metadataRepository-antsrc"
+Bundle-Version: 1.1.0.v20100513
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.p2.metadata.repository.source
+

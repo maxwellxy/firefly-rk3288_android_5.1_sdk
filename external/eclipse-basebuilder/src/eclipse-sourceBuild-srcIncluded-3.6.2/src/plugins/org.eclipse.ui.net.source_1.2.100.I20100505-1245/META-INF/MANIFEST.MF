@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %PLUGIN_PROVIDER
+Eclipse-SourceBundle: org.eclipse.ui.net;version="1.2.100.I20100505-12
+ 45";roots:="."
+Bundle-Version: 1.2.100.I20100505-1245
+Bundle-Name: %PLUGIN_NAME
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.ui.net.source
+

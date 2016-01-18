@@ -1,0 +1,19 @@
+!****************  RELENG CONTRIBUTION  ******************************************************** 
+feature@master=v20091019,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master
+feature@master-equinox=r362_v20101118,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master-equinox
+feature@master-equinox-p2=v20091106,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master-equinox-p2
+feature@master-equinox-weaving=v20090817,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master-equinox-weaving
+feature@master-jetty=r362_v20101014,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master-jetty
+feature@master-ecf=v20090316,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/master-ecf
+
+feature@com.ibm.icu.base=v20090119,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/com.ibm.icu.base
+
+feature@org.eclipse.releng.tools=v20100427,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/org.eclipse.releng.tools
+
+plugin@org.eclipse.releng.tools=v20100531,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.releng.tests=r362_v20110203,kmoir@dev.eclipse.org:/cvsroot/eclipse,
+
+plugin@org.eclipse.pde.tools.versioning=r20080922,kmoir@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk.tests-feature/plugins/org.eclipse.pde.tools.versioning
+
+!sample projects
+feature@org.eclipse.jdt.test.feature.sample=HEAD,kmoir@dev.eclipse.org:/cvsroot/eclipse,,platform-releng-home/examples/org.eclipse.jdt.test.feature.sample

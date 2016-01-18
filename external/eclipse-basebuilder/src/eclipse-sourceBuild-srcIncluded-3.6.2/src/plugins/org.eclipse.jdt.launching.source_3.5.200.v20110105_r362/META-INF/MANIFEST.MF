@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.jdt.launching;version="3.5.200.v2011
+ 0105_r362";roots:="lib/launchingsupportsrc,."
+Bundle-Version: 3.5.200.v20110105_r362
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.jdt.launching.source
+

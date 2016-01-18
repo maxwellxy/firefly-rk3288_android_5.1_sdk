@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.swt.examples;version="3.4.0.v3659b";
+ roots:="swtexamplessrc"
+Bundle-Version: 3.4.0.v3659b
+Bundle-Name: %plugin.SWTStandaloneExampleSet.name
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.swt.examples.source
+

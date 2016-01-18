@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Fragment-Host: org.eclipse.swt; bundle-version="[3.0.0,4.0.0)"
+Bundle-Name: %fragmentName
+Bundle-Vendor: %providerName
+Bundle-SymbolicName: org.eclipse.swt.win32.wce_ppc.arm; singleton:=true
+Bundle-Version: 3.6.2.qualifier
+Bundle-ManifestVersion: 2
+Bundle-Localization: fragment
+Export-Package: 
+ org.eclipse.swt.internal.win32; x-internal:=true
+Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=wce_ppc) (osgi.arch=arm))
+Bundle-RequiredExecutionEnvironment: CDC-1.0/Foundation-1.0,
+ J2SE-1.3
+

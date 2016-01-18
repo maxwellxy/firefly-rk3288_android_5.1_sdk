@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.compare.win32;version="1.0.101.R36x_
+ v20101103-0618";roots:="."
+Bundle-Version: 1.0.101.R36x_v20101103-0618
+Eclipse-PlatformFilter: (osgi.os=win32)
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.compare.win32.source
+

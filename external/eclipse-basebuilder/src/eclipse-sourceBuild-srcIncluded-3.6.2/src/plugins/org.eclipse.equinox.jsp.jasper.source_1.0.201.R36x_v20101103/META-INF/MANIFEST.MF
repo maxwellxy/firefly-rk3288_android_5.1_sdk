@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.equinox.jsp.jasper;version="1.0.201.
+ R36x_v20101103";roots:="."
+Bundle-Version: 1.0.201.R36x_v20101103
+Bundle-Name: %bundleName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.equinox.jsp.jasper.source
+

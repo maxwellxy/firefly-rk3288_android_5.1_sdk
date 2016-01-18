@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %providerName
+Eclipse-SourceBundle: org.eclipse.pde.api.tools;version="1.0.202.v2010
+ 0820_r361";roots:="lib/apitooling-antsrc,."
+Bundle-Version: 1.0.202.v20100820_r361
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.pde.api.tools.source
+

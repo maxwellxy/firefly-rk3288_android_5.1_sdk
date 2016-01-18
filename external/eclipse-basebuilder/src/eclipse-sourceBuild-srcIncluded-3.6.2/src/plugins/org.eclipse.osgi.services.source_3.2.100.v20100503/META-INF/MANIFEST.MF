@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Vendor: %eclipse.org
+Eclipse-SourceBundle: org.eclipse.osgi.services;version="3.2.100.v2010
+ 0503";roots:="."
+Bundle-Version: 3.2.100.v20100503
+Bundle-Name: %osgiServices
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.osgi.services.source
+
