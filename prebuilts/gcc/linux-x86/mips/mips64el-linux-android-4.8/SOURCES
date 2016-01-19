@@ -1,0 +1,17 @@
+toolchain/build.git                    2f00bce0ef2fe4bd07ade43c4abc0fd4c498bdc4 Change the triplet to aarch64-linux-android for aarch64-gcc.
+toolchain/gmp.git                      e6b9669dafc6a5f83c80b4b4176359b78bccdc90 Add gmp-5.0.5.tar.bz2
+toolchain/mpfr.git                     bfcf1bfa38469208aaad8873cd4c68781061d90f add mpfr-3.1.1.tar.bz2
+toolchain/mpc.git                      835d16e92eed875638a8b5d552034c3b1aae045b add mpc-1.0.1.tar.gz
+toolchain/cloog.git                    98972d5434ffcb4d11d2c81a46600e9a1cda9110 MinGW-w64 build fix (lacks ffs declaration)
+toolchain/isl.git                      b05d4572958c5d497da793f3317084bab90c3033 add isl-0.11.1.tar.bz2 needed by GCC 4.8 with graphite
+toolchain/ppl.git                      8ba1875b4c5341d902321761022a6d2a0b5b19a4 add ppl-1.0.tar.bz2
+toolchain/expat.git                    40172a0ae9d40a068f1e1a48ffcf6a1ccf765ed5 expat package for building gdb-7.3
+toolchain/binutils.git                 c2fdb07e6f6933f689e92d024293b649667dd493 [2.21], [2.22], [2.23] Backport of several patches for fixing        build of binutils with texinfo-5.0.
+toolchain/gcc.git                      bfad6b9d996c13f4be3625f095152eb9f0a175bc [4.8] fix for GCC 4.8.2 libstdc++ bug in std::nth_element
+toolchain/gdb.git                      899a2eec7872cfdcf06e84c49b307c46df64ef69 [7.3.x] Fix build with texinfo-5.0
+toolchain/python.git                   30bef47fac04bd5e99da7d09c8ed4260e1fbf09c Python 2.7.5: Regen configure and pyconfig.h.in
+toolchain/perl.git                     1121daca35c6c692602621eab28d4de19f0b347d Add -Dcc_as_ld to configure
+toolchain/mclinker.git                 7eaf69bfeba8d6530f7325a8982634a0f2616528 Merge branch 'master' of persistent-https://android.googlesource.com/toolchain/mclinker into aosp
+toolchain/clang.git (release_33)       dc17763dfc527ec82f088e6f1bdce2b2bb2ce5ec Fix to compile ARM atomic __*atomic_fetch_add/sub/or/...
+toolchain/llvm.git (release_33)        55eb0302f698d7733f83d8ff10c09397bb6b8159 Recognize -Ox options and set optimizatoin-level in bitcode wrapper header.
+toolchain/compiler-rt.git (release_33) c880feaaa8829681a025d29a33704c18e21e87e1 Misc fixes for compiler_rt
