@@ -1,0 +1,4 @@
+# 此为注释 – 将被 Git 忽略
+prebuilts/qemu-kernel/x86_64/vmlinux-qemu
+*.img
+*.bin

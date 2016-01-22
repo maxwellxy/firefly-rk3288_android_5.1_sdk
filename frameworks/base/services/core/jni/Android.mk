@@ -17,6 +17,7 @@ LOCAL_SRC_FILES += \
     $(LOCAL_REL_DIR)/com_android_server_lights_LightsService.cpp \
     $(LOCAL_REL_DIR)/com_android_server_location_GpsLocationProvider.cpp \
     $(LOCAL_REL_DIR)/com_android_server_location_FlpHardwareProvider.cpp \
+    $(LOCAL_REL_DIR)/com_android_server_LedService.cpp \
     $(LOCAL_REL_DIR)/com_android_server_power_PowerManagerService.cpp \
     $(LOCAL_REL_DIR)/com_android_server_SerialService.cpp \
     $(LOCAL_REL_DIR)/com_android_server_SystemServer.cpp \
